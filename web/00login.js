@@ -1,3 +1,6 @@
+//
+
+
 function fncInit()
 {
 	data = "com=,,";
