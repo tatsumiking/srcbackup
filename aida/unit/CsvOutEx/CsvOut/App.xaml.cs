@@ -64,7 +64,7 @@ namespace CsvOut
                     fs.Close();
                     fs.Dispose();
                 }
-                sHead = "NORMAL," + dt.ToString("yyyy/mm/dd hh:MM:ss") + ",";
+                sHead = "NORMAL," + dt.ToString("yyyy/MM/dd hh:mm:ss") + ",";
                 System.IO.File.AppendAllText(sFileName, sHead + msg + "\r\n");
             }
             catch (Exception ex)
@@ -91,7 +91,7 @@ namespace CsvOut
                     fs.Close();
                     fs.Dispose();
                 }
-                sHead = "ERROR," + dt.ToString("yyyy/mm/dd hh:MM:ss") + ",";
+                sHead = "ERROR," + dt.ToString("yyyy/MM/dd hh:mm:ss") + ",";
                 System.IO.File.AppendAllText(sFileName, sHead+msg + "\r\n");
             }
             catch (Exception ex)
@@ -118,7 +118,7 @@ namespace CsvOut
                     fs.Close();
                     fs.Dispose();
                 }
-                sHead = "ERROR," + dt.ToString("yyyy/mm/dd hh:MM:ss") + ",";
+                sHead = "ERROR," + dt.ToString("yyyy/MM/dd hh:mm:ss") + ",";
                 System.IO.File.AppendAllText(sFileName, sHead+msg + "\r\n");
             }
             catch (Exception ex)

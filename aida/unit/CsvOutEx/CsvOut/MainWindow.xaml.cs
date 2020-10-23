@@ -680,7 +680,7 @@ namespace CsvOut
                         }
                     }
                     if(setflag == 0){
-                        nDD++;
+                        // nDD++;
                         sHHMin = m_lstCheckTime[0];
                         sChkHH = sHHMin.Substring(0,2);
                         sChkMin = sHHMin.Substring(2, 2);
@@ -691,6 +691,7 @@ namespace CsvOut
                         try
                         {
                             m_dtCheckTime = new DateTime(nYY, nMM, nDD, nHH, nMin, 0);
+                            m_dtCheckTime = m_dtCheckTime.AddDays(1);
                         }
                         catch (Exception ex5)
                         {
