@@ -1,0 +1,85 @@
+﻿<!--
+        Title="CsvEx"
+        Icon="csvex.ico"
+        Background="#FFF8CBAD"
+    
+        Title="CsvOut"
+        Icon="csvout.ico"
+        Background="#FFADF8D6"
+-->
+<Window x:Class="CsvOut.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Height="460" Width="460"
+        Loaded="Window_Loaded" 
+        ContentRendered="Window_ContentRendered"
+        Closed="Window_Closed"
+        Title="CsvOut"
+        Icon="csvout.ico"
+        Background="#FFADF8D6"
+    >
+    <Grid Margin="0,0,2,0">
+        <Label Content="状態" Margin="10,0,0,0" Height="26" Width="35" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Label x:Name="lblMsg" Content="待機中" Margin="50,0,0,0" Height="26" Width="218" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Label Content="CSV保存場所" Margin="10,30,0,0" Height="26" Width="102" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtPath" Height="23" Margin="110,30,0,0" TextWrapping="Wrap" Text="TextBox" Width="270" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Label x:Name="lblbtnSlct" Content="参照" Margin="380,33,0,0" Width="60" HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="0,0,2,2" BorderBrush="Black" Background="#DDD" Height="20" PreviewMouseDown="lblbtnSlct_PreviewMouseDown" PreviewMouseUp="lblbtnSlct_PreviewMouseUp" Padding="15,0,0,0" MouseLeave="lblbtnSlct_MouseLeave"/>
+        <Label Content="UNIS定義位置" Margin="10,60,0,0" Height="26" Width="102" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtMDBPath" Height="23" Margin="110,60,0,0" TextWrapping="Wrap" Text="TextBox" Width="264" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Label x:Name="lblbtnMDBSlct" Content="参照" Margin="380,60,0,0" Width="60" HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="0,0,2,2" BorderBrush="Black" Background="#DDD" Height="20" PreviewMouseDown="lblbtnMDBSlct_PreviewMouseDown" PreviewMouseUp="lblbtnMDBSlct_PreviewMouseUp" Padding="15,0,0,0" MouseLeave="lblbtnMDBSlct_MouseLeave"/>
+        <Label Content="ファイル名" Margin="9,90,0,0" Height="26" Width="85" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtPreFileName" Width="100" Height="23" Margin="110,90,0,0" Text=""  HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtDateFileName" Width="140" Height="23" Margin="215,90,0,0" Text="" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <TextBox x:Name="txtPostFileName" Width="80" Height="23" Margin="360,90,0,0" Text="" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <Label Content="区切文字形式" Margin="9,120,356,284" Height="26" Width="85"/>
+        <ComboBox x:Name="cmbDelimiter" Width="120" Margin="110,120,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <Label Content="出力ID" Margin="9,150,0,0" Height="26" Width="85" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <ComboBox x:Name="cmbOutputID" Margin="110,150,0,0" Width="180" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Label Content="出力方法" Margin="9,180,0,0" Height="26" Width="85" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <ComboBox x:Name="cmbOutputType" Margin="110,180,0,0" Width="180" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <RadioButton x:Name="rdoInterval" Content="間隔指定" Margin="10,210,0,0" Width="84" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="True"/>
+        <ComboBox x:Name="cmbInterval" Margin="110,210,0,0" Width="100" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <RadioButton x:Name="rdoCheckTime" Content="時刻指定" Margin="10,240,0,0" Width="84" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Label Content="①" Margin="90,240,0,0" Height="26" Width="24" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <ComboBox x:Name="cmbCheckHH1" Margin="110,240,0,0" Width="40" HorizontalAlignment="Left" VerticalAlignment="Top" SelectionChanged="cmbCheckHH1_SelectionChanged"/>
+        <Label Content="時" Margin="150,240,0,0" Height="26" Width="24" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <ComboBox x:Name="cmbCheckMM1" Margin="170,240,0,0" Width="40" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Label Content="分" Margin="210,240,0,0" Height="26" Width="24" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Label Content="②" Margin="230,240,0,0" Height="26" Width="24" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <ComboBox x:Name="cmbCheckHH2" Margin="250,240,0,0" Width="40" HorizontalAlignment="Left" VerticalAlignment="Top" SelectionChanged="cmbCheckHH2_SelectionChanged"/>
+        <Label Content="時" Margin="290,240,0,0" Height="26" Width="24" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <ComboBox x:Name="cmbCheckMM2" Margin="310,240,0,0" Width="40" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Label Content="分" Margin="350,240,0,0" Height="26" Width="24" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Label Content="③" Margin="90,270,0,0" Height="26" Width="24" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <ComboBox x:Name="cmbCheckHH3" Margin="110,270,0,0" Width="40" HorizontalAlignment="Left" VerticalAlignment="Top" SelectionChanged="cmbCheckHH3_SelectionChanged"/>
+        <Label Content="時" Margin="150,270,0,0" Height="26" Width="24" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <ComboBox x:Name="cmbCheckMM3" Margin="170,270,0,0" Width="40" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Label Content="分" Margin="210,270,0,0" Height="26" Width="24" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Label Content="④" Margin="230,270,0,0" Height="26" Width="24" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <ComboBox x:Name="cmbCheckHH4" Margin="250,270,0,0" Width="40" HorizontalAlignment="Left" VerticalAlignment="Top" SelectionChanged="cmbCheckHH4_SelectionChanged"/>
+        <Label Content="時" Margin="290,270,0,0" Height="26" Width="24" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <ComboBox x:Name="cmbCheckMM4" Margin="310,270,0,0" Width="40" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Label Content="分" Margin="350,270,0,0" Height="26" Width="24" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Label Content="⑤" Margin="90,300,0,0" Height="26" Width="24" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <ComboBox x:Name="cmbCheckHH5" Margin="110,300,0,0" Width="40" HorizontalAlignment="Left" VerticalAlignment="Top" SelectionChanged="cmbCheckHH5_SelectionChanged"/>
+        <Label Content="時" Margin="150,300,0,0" Height="26" Width="24" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <ComboBox x:Name="cmbCheckMM5" Margin="170,300,0,0" Width="40" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Label Content="分" Margin="210,300,0,0" Height="26" Width="24" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Label Content="⑥" Margin="230,300,0,0" Height="26" Width="24" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <ComboBox x:Name="cmbCheckHH6" Margin="250,300,0,0" Width="40" HorizontalAlignment="Left" VerticalAlignment="Top" SelectionChanged="cmbCheckHH6_SelectionChanged"/>
+        <Label Content="時" Margin="290,300,0,0" Height="26" Width="24" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <ComboBox x:Name="cmbCheckMM6"  Margin="310,300,0,0" Width="40" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Label Content="分"  Margin="350,300,0,0" Height="26" Width="24" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Label x:Name="lblF1" Content="F1" Margin="35,330,0,0" Height="26" Width="24" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtF1"  Height="23" Margin="10,350,0,0" TextWrapping="Wrap" Text="出勤" Width="80" HorizontalAlignment="Left" VerticalAlignment="Top" TextAlignment="Center"/>
+        <Label x:Name="lblF2" Content="F2"  Margin="125,330,0,0" Height="26" Width="24" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtF2"  Height="23" Margin="100,350,0,0" TextWrapping="Wrap" Text="退勤" Width="80" HorizontalAlignment="Left" VerticalAlignment="Top" TextAlignment="Center"/>
+        <Label x:Name="lblF3" Content="F3"  Margin="215,330,0,0" Height="26" Width="24" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtF3"  Height="23" Margin="190,350,0,0" TextWrapping="Wrap" Text="外出" Width="80" HorizontalAlignment="Left" VerticalAlignment="Top" TextAlignment="Center" RenderTransformOrigin="1.012,2.13"/>
+        <Label x:Name="lblF4" Content="F4"  Margin="305,330,0,0" Height="26" Width="24" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtF4" Height="23" Margin="280,350,0,0" TextWrapping="Wrap" Text="戻り" Width="80" HorizontalAlignment="Left" VerticalAlignment="Top" TextAlignment="Center" RenderTransformOrigin="1.012,2.13"/>
+        <Label x:Name="lblbtnSet" Content="適用" Margin="250,381,0,0" Width="60" HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="0,0,2,2" BorderBrush="Black" Background="#DDD" Height="20" PreviewMouseDown="lblbtnSet_PreviewMouseDown" PreviewMouseUp="lblbtnSet_PreviewMouseUp" Padding="15,0,0,0" MouseLeave="lblbtnSet_MouseLeave"/>
+        <Label x:Name="lblbtnMini" Content="最小化" Margin="315,381,0,0" Width="60" HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="0,0,2,2" BorderBrush="Black" Background="#DDD" Height="20" PreviewMouseDown="lblbtnMini_PreviewMouseDown" PreviewMouseUp="lblbtnMini_PreviewMouseUp" Padding="10,0,0,0" MouseLeave="lblbtnMini_MouseLeave"/>
+        <Label x:Name="lblbtnExit" Content="終了" Margin="380,381,0,0" Width="60" HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="0,0,2,2" BorderBrush="Black" Background="#DDD" Height="20" PreviewMouseDown="lblbtnExit_PreviewMouseDown" PreviewMouseUp="lblbtnExit_PreviewMouseUp" Padding="15,0,0,0" MouseLeave="lblbtnExit_MouseLeave"/>
+    </Grid>
+</Window>
