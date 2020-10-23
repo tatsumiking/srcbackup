@@ -33,6 +33,36 @@ namespace Observe
         {
             m_dFontSize = size;
         }
+        public void setFillBrush(Brush brush)
+        {
+            m_brushFill = brush;
+        }
+        public void setStrokeBrush(Brush brush, double thick)
+        {
+            m_brushStroke = brush;
+            m_dStrokeThick = thick;
+        }
+        public Brush createBruch(int rgb)
+        {
+            int r, g, b;
+            Color clr;
+            Brush brush;
+
+            if (rgb == -1)
+            {
+                return (null);
+            }
+            else
+            {
+                r = (rgb >> 16) & 0x00ff;
+                g = (rgb >> 8) & 0x00ff;
+                b = (rgb) & 0x00ff;
+                clr = Color.FromArgb(255, (byte)r, (byte)g, (byte)b);
+                brush = new SolidColorBrush(clr);
+                return (brush);
+            }
+
+        }
         public void setImageSource(Canvas canvas, Image img, string sFileName)
         {
             string err;
@@ -85,7 +115,30 @@ namespace Observe
             }
             return (img);
         }
-        public Canvas drawCenterText(Canvas canvas, double sx, double sy, double wd, double hi, string str)
+        public Canvas drawCenterText(Canvas canvas, double sx, double sy, double wd, double hi, double adx, double ady, string str)
+        {
+            TextBlock tb;
+            Canvas cvText = new Canvas();
+            Canvas.SetLeft(cvText, sx);
+            Canvas.SetTop(cvText, sy);
+            cvText.Width = wd;
+            cvText.Height = hi;
+
+            tb = new TextBlock();
+            Canvas.SetLeft(tb, adx);
+            Canvas.SetTop(tb, ady);
+            tb.Width = wd;
+            tb.TextAlignment = TextAlignment.Center;
+            tb.Text = str;
+            tb.FontFamily = new FontFamily(m_sFontName);
+            tb.FontSize = m_dFontSize;
+            tb.Foreground = m_brushFill;
+
+            cvText.Children.Add(tb);
+            canvas.Children.Add(cvText);
+            return (cvText);
+        }
+        public Canvas drawLeftText(Canvas canvas, double sx, double sy, double wd, double hi, double adx, double ady, string str)
         {
             TextBlock tb;
             Canvas cvText = new Canvas();
@@ -96,36 +149,13 @@ namespace Observe
 
             tb = new TextBlock();
             Canvas.SetLeft(tb, 0);
-            Canvas.SetTop(tb, 10);
-            tb.Width = wd;
-            tb.TextAlignment = TextAlignment.Center;
-            tb.Text = str;
-            tb.FontFamily = new FontFamily(m_sFontName);
-            tb.FontSize = m_dFontSize;
-            tb.Foreground = Brushes.Black;
-
-            cvText.Children.Add(tb);
-            canvas.Children.Add(cvText);
-            return (cvText);
-        }
-        public Canvas drawLeftText(Canvas canvas, double sx, double sy, double wd, double hi, string str)
-        {
-            TextBlock tb;
-            Canvas cvText = new Canvas();
-            Canvas.SetLeft(cvText, sx);
-            Canvas.SetTop(cvText, sy);
-            cvText.Width = wd;
-            cvText.Height = hi;
-
-            tb = new TextBlock();
-            Canvas.SetLeft(tb, 2);
-            Canvas.SetTop(tb, 10);
+            Canvas.SetTop(tb, 7);
             tb.Width = wd;
             tb.TextAlignment = TextAlignment.Left;
             tb.Text = str;
             tb.FontFamily = new FontFamily(m_sFontName);
             tb.FontSize = m_dFontSize;
-            tb.Foreground = Brushes.Black;
+            tb.Foreground = m_brushFill;
 
             cvText.Children.Add(tb);
             canvas.Children.Add(cvText);
@@ -140,7 +170,7 @@ namespace Observe
             cvText.Width = wd;
             cvText.Height = hi;
             tb = CreateTextBlock(0, 0, str);
-            tb.Foreground = Brushes.Black;
+            tb.Foreground = m_brushFill;
             cvText.Children.Add(tb);
             canvas.Children.Add(cvText);
             return (cvText);
@@ -190,36 +220,6 @@ namespace Observe
             tb.FontFamily = new FontFamily(m_sFontName);
             tb.FontSize = m_dFontSize;
             return tb;
-        }
-        public void setFillBrush(Brush brush)
-        {
-            m_brushFill = brush;
-        }
-        public void setStrokeBrush(Brush brush, double thick)
-        {
-            m_brushStroke = brush;
-            m_dStrokeThick = thick;
-        }
-        public Brush createBruch(int rgb)
-        {
-            int r, g, b;
-            Color clr;
-            Brush brush;
-
-            if (rgb == -1)
-            {
-                return (null);
-            }
-            else
-            {
-                r = (rgb >> 16) & 0x00ff;
-                g = (rgb >> 8) & 0x00ff;
-                b = (rgb) & 0x00ff;
-                clr = Color.FromArgb(255, (byte)r, (byte)g, (byte)b);
-                brush = new SolidColorBrush(clr);
-                return (brush);
-            }
-
         }
         public void drawLine(Canvas canvas, double sx, double sy, double ex, double ey)
         {

@@ -229,7 +229,7 @@ namespace Observe
             }
             if (1.95 < m_dZoomTime)
             {
-                if (15 > m_nMapBase && m_bRetouMode == false)
+                if (18 > m_nMapBase && m_bRetouMode == false)
                 {
                     m_nAddX = m_nAddX + m_nWidthDiv * Constants.MAPDOTSIZE + (int)(m_nZoomAddX / m_dZoomTime);
                     m_nAddY = m_nAddY + m_nHeightDiv * Constants.MAPDOTSIZE + (int)(m_nZoomAddY / m_dZoomTime);

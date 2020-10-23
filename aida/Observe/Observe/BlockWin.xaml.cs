@@ -33,125 +33,85 @@ namespace Observe
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            SetCardElement();
+            SetListElement();
         }
-        public void SetCardElement()
+        public void SetListElement()
         {
-            ClsCard clsCard;
             double dWidth, dHeight;
-            double dLineSize, dClmSize;
-            double sx, sy, ex, ey, cx, cy;
+            double dLineSize;
+            double dFontSize;
+            double x1, x2;
             double wd, hi;
+            double sx, sy, ex, ey;
+            double addx, addy;
+            int max, idx;
 
-            clsCard = m_wndMain.m_clsCardCrt;
-            if (clsCard == null)
+            m_libCnvs.setStrokeBrush(Brushes.Black, 1.0);
+            dWidth = cnvsList.ActualWidth;
+            dHeight = cnvsList.ActualHeight;
+            dLineSize = 38.0;
+            dFontSize = 30.0;
+            addx = 0;
+            addy = 4;
+            sx = 0; ex = dWidth;
+            max = 11;
+            for (idx = 0; idx < max; idx++)
+            {
+                sy = idx * dLineSize;
+                m_libCnvs.drawLine(cnvsList, sx, sy, ex, sy);
+            }
+            sy = 0;
+            ey = dHeight;
+            sx = 0;
+            m_libCnvs.drawLine(cnvsList, sx, sy, sx, ey);
+            x1 = dFontSize * 12;
+            m_libCnvs.drawLine(cnvsList, x1, sy, x1, ey);
+            x2 = dFontSize * 22;
+            m_libCnvs.drawLine(cnvsList, x2, sy, x2, ey);
+            ex = dWidth;
+            m_libCnvs.drawLine(cnvsList, ex, sy, ex, ey);
+
+            m_libCnvs.setFontSize(dFontSize);
+
+            sx = dFontSize * 0.5;
+            wd = dFontSize * 5;
+            sy = 0;
+            hi = dLineSize;
+            m_libCnvs.setFillBrush(Brushes.Black);
+            m_libCnvs.drawLeftText(cnvsList, sx, sy, wd, hi, addx, addy, "稼動●警報");
+            sx = sx + wd;
+            wd = dFontSize;
+            m_libCnvs.setFillBrush(Brushes.Red);
+            m_libCnvs.drawLeftText(cnvsList, sx, sy, wd, hi, addx, addy, "●");
+            sx = sx + wd;
+            wd = dFontSize*4;
+            m_libCnvs.setFillBrush(Brushes.Black);
+            m_libCnvs.drawLeftText(cnvsList, sx, sy, wd, hi, addx, addy, "持ち去り");
+            sx = sx + wd;
+            wd = dFontSize * 4;
+            m_libCnvs.setFillBrush(Brushes.Green);
+            m_libCnvs.drawLeftText(cnvsList, sx, sy, wd, hi, addx, addy, "●");
+
+            sx = x1;
+            wd = x2 - x1;
+            m_libCnvs.setFillBrush(Brushes.Black);
+            m_libCnvs.drawCenterText(cnvsList, sx, sy, wd, hi, addx, addy, "警報装置番号");
+
+            sx = x2;
+            wd = dWidth - x2;
+            m_libCnvs.setFillBrush(Brushes.Black);
+            m_libCnvs.drawCenterText(cnvsList, sx, sy, wd, hi, addx, addy, "警報装置署番号");
+
+            if (m_wndMain == null || m_wndMain.m_clsObserve == null
+             || m_wndMain.m_clsObserve.m_lstClsCard == null)
             {
                 return;
             }
-            cnvsCard.Children.Clear();
+            max = m_wndMain.m_clsObserve.m_lstClsCard.Count;
+            for (idx = 0; idx < max; idx++)
+            {
 
-            dWidth = cnvsCard.ActualWidth;
-            dHeight = cnvsCard.ActualHeight;
-            dLineSize = dHeight / 8.0;
-            dClmSize = dWidth / 53;
-
-            m_libCnvs.setFontSize(dClmSize);
-            wd = dClmSize * 10; hi = dLineSize;
-            sx = 0;
-            sy = 0;
-            m_libCnvs.drawCenterText(cnvsCard, sx, sy, wd, hi, "警報装置番号");
-            sy = dLineSize;
-            m_libCnvs.drawCenterText(cnvsCard, sx, sy, wd, hi, "警報装置署番号");
-            sy = dLineSize * 2;
-            m_libCnvs.drawCenterText(cnvsCard, sx, sy, wd, hi, "設置場所");
-            sy = dLineSize * 4;
-            m_libCnvs.drawCenterText(cnvsCard, sx, sy, wd, hi, "設置場所連絡先");
-            sy = dLineSize * 6;
-            m_libCnvs.drawCenterText(cnvsCard, sx, sy, wd, hi, "設置場所代表者");
-            sy = dLineSize * 7;
-            m_libCnvs.drawCenterText(cnvsCard, sx, sy, wd, hi, "備考");
-
-            wd = dClmSize * 8; hi = dLineSize;
-            sx = dClmSize * 10;
-            sy = 0;
-            m_libCnvs.drawCenterText(cnvsCard, sx, sy, wd, hi, clsCard.m_sSetNo);
-            sy = dLineSize;
-            m_libCnvs.drawCenterText(cnvsCard, sx, sy, wd, hi, clsCard.m_sSyoNo);
-            sy = dLineSize * 2;
-            m_libCnvs.drawCenterText(cnvsCard, sx, sy, wd, hi, "住所１");
-            sy = dLineSize * 3;
-            m_libCnvs.drawCenterText(cnvsCard, sx, sy, wd, hi, "住所２");
-            sy = dLineSize * 4;
-            m_libCnvs.drawCenterText(cnvsCard, sx, sy, wd, hi, "電話番号１");
-            sy = dLineSize * 5;
-            m_libCnvs.drawCenterText(cnvsCard, sx, sy, wd, hi, "電話番号２");
-
-
-            wd = dClmSize * 35; hi = dLineSize;
-            sx = dClmSize * 18;
-            sy = dLineSize * 2;
-            m_libCnvs.drawLeftText(cnvsCard, sx, sy, wd, hi, clsCard.m_sAddress1);
-            sy = dLineSize * 3;
-            m_libCnvs.drawLeftText(cnvsCard, sx, sy, wd, hi, clsCard.m_sAddress2);
-            sy = dLineSize * 6;
-            m_libCnvs.drawLeftText(cnvsCard, sx, sy, wd, hi, clsCard.m_sName);
-            sy = dLineSize * 7;
-            m_libCnvs.drawLeftText(cnvsCard, sx, sy, wd, hi, clsCard.m_sBikou);
-
-            wd = dClmSize * 12; hi = dLineSize;
-            sy = dLineSize * 4;
-            m_libCnvs.drawLeftText(cnvsCard, sx, sy, wd, hi, clsCard.m_sTel1);
-            sy = dLineSize * 5;
-            m_libCnvs.drawLeftText(cnvsCard, sx, sy, wd, hi, clsCard.m_sTel2);
-
-            sx = 0; ex = dWidth;
-            cy = 0;
-            m_libCnvs.drawLine(cnvsCard, sx, cy, ex, cy);
-            cy = dLineSize;
-            m_libCnvs.drawLine(cnvsCard, sx, cy, ex, cy);
-            cy = dLineSize*2;
-            m_libCnvs.drawLine(cnvsCard, sx, cy, ex, cy);
-            cy = dLineSize * 3;
-            m_libCnvs.drawLine(cnvsCard, sx, cy, ex, cy);
-            cy = dLineSize * 4;
-            m_libCnvs.drawLine(cnvsCard, sx, cy, ex, cy);
-            cy = dLineSize * 5;
-            m_libCnvs.drawLine(cnvsCard, sx, cy, ex, cy);
-            cy = dLineSize * 6;
-            m_libCnvs.drawLine(cnvsCard, sx, cy, ex, cy);
-            cy = dLineSize * 7;
-            m_libCnvs.drawLine(cnvsCard, sx, cy, ex, cy);
-            cy = dLineSize * 8;
-            m_libCnvs.drawLine(cnvsCard, sx, cy, ex, cy);
-
-            sy = 0; ey = dHeight;
-            cx = 0;
-            m_libCnvs.drawLine(cnvsCard, cx, sy, cx, ey);
-            cx = dClmSize * 10;
-            m_libCnvs.drawLine(cnvsCard, cx, sy, cx, ey);
-            cx = dClmSize * 18;
-            m_libCnvs.drawLine(cnvsCard, cx, sy, cx, ey);
-            cx = dClmSize * 53;
-            m_libCnvs.drawLine(cnvsCard, cx, sy, cx, ey);
-            cx = dClmSize * 32;
-
-            sy = 0; ey = dLineSize * 2;
-            m_libCnvs.drawLine(cnvsCard, cx, sy, cx, ey);
-            sy = dLineSize * 4; ey = dLineSize * 6;
-            m_libCnvs.drawLine(cnvsCard, cx, sy, cx, ey);
-
-
-            /*
-
-                ;
-                clsCard.m_sSyoNo;
-                clsCard.m_sAddress1;
-                clsCard.m_sAddress2;
-                clsCard.m_sTel1;
-                clsCard.m_sTel2;
-                clsCard.m_sName;
-                clsCard.m_sBikou;
-            */
+            }
         }
     }
 }

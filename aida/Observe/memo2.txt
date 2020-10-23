@@ -1,0 +1,69 @@
+虹彩認証
+https://www.neuro-tec.co.jp/outline/index.html
+
+国土地理院Web地図
+https://maps.gsi.go.jp
+
+国土地理院分割地図
+https://maps.gsi.go.jp/development/tileCoordCheck.html#10/35.7142/139.4398
+
+国土地理院地図
+http://www.gsi.go.jp/MAP/NEWOLDBL/25000-50000/index25000-50000.html
+
+国土交通省番地緯度経度
+http://nlftp.mlit.go.jp/
+国土交通省番地緯度経度東京都
+http://nlftp.mlit.go.jp/cgi-bin/isj/dls/_download_files.cgi
+
+基盤地図情報表示ビューワプログラム
+https://fgd.gsi.go.jp/download/documents.html
+https://fgd.gsi.go.jp/download/menu.php
+
+
+東京都範囲
+29030/12878～29118/12922
+35.903928/138.937584～35.508054/139.93
+
+
+https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.6278/139.8815
+15/29116/12909
+
+https://www.google.co.jp/maps/place/東京都東京/@35.6278,139.8815,15z
+
+
+https://maps.gsi.go.jp/development/tileCoordCheck.html#10/35.7142/139.4398
+10　907～909 402～403　// 東京都を含む領域
+　　900～915 395～410　// 地図表示用に拡張した領域
+11　1814～1819 804～807
+　　1810～1823 800～811
+12　3628～3639 1609～1615
+　　3624～3643 1605～1619
+13　7257～7279 3219～3230
+　　7253～7283 3215～3234
+14　14515～14559 6439～6461
+　　14511～14563 6435～6465
+15　29030～29119 12878～12923
+　　29026～29123 12874～12927
+16　58061～58239 25757～25846
+　　58057～58243 25753～25850
+17　116123～116479 51515～51693
+　　116119～116483 51509～51697
+18　232247～232959 103031～103387
+　　232243～232963 103027～103391
+
+
+c:\\Observeフォルダに作成されるファイルについて
+Observe.xml 位置情報構造体格納ファイル
+Observe.env センサー状態格納MDB関連情報及びGPS位置取得関連情報
+１行目　コメント行です
+２行目　mdb保存パスになります
+３行目　自分のローカルIPアドレスです
+４行目　UDP通信時に使用するポート番号になります
+５行目　CoralEdgeのIPアドレス です
+
+mdb.env センサー状態MDB取得済み情報関連ファイル（プログラム内部でのみ使用）
+
+ku.txt 東京都区位置情報ファイル
+si.txt 東京都市町位置情報ファイル
+tou.txt 東京都離島位置情報ファイル
+

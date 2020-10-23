@@ -48,10 +48,21 @@ namespace Observe
         public string m_sMapPath;
         private int m_nMapBase;
         private int m_nMapTblIdx;
-        private int[] m_tblTopX = { 900, 1810, 3624, 7253, 14511, 29026 }; // + 10
-        private int[] m_tblTopY = { 395, 800, 1605, 3215, 6435, 12874 };
-        private int[] m_tblEndX = { 915, 1823, 3643, 7283, 14563, 29123 };
-        private int[] m_tblEndY = { 410, 811, 1619, 3234, 6465, 12927 };
+        //                          10   11    12    13    14     15     16     17      18
+        private int[] m_tblTopX = { 900, 1810, 3624, 7253, 14511, 29026, 58057, 116119, 232243 };
+        private int[] m_tblTopY = { 395,  800, 1605, 3215,  6435, 12874, 25748,  51496, 102992 };
+        private int[] m_tblEndX = { 915, 1823, 3643, 7283, 14563, 29123, 58247, 116495, 232991 };
+        private int[] m_tblEndY = { 410,  811, 1619, 3234,  6465, 12927, 25855,  51711, 103423 };
+        //                               10         11         12         13         14
+        //                               15         16         17         18
+        private double[] m_tblTopLat = { 35.906629, 35.906629, 35.906629, 35.906629, 35.906629 
+                                       , 35.90685, 35.906629, 35.906629, 35.906629, };
+        private double[] m_tblTopLnd = { 138.93274, 138.93274, 138.93274, 138.93274, 138.93274
+                                       , 138.9331, 138.93274, 138.93274, 138.93274, };
+        private double[] m_tblLatBlock = { -0.0089050, -0.0089050, -0.0089050, -0.0089050, -0.0089050
+                                         , -0.0089050, -0.0089050, -0.0089050, -0.0089050, };
+        private double[] m_tblLndBlock = {  0.0109850,  0.0109850,  0.0109850,  0.0109850,  0.0109850
+                                         ,  0.0109850,  0.0109850,  0.0109850,  0.0109850, };
         private int m_nCanvasWidth, m_nCanvasHeight;
         private int m_nWidthDiv, m_nHeightDiv;
         private int m_nCenterXBlock, m_nCenterYBlock;
@@ -64,7 +75,7 @@ namespace Observe
         private TextBlock m_tbCrt;
         public ClsCard m_clsCardCrt;
         private ClsCard m_clsCardBack;
-        private ClsObserve m_clsObserve;
+        public ClsObserve m_clsObserve;
 
         public MainWindow()
         {
@@ -84,16 +95,20 @@ namespace Observe
 
             m_sMapPath = m_sEnvPath + "\\東京都";
             m_nMapBase = 15;
-            m_nMapTblIdx = m_nMapBase - 10;
-            m_nLastX = m_tblEndX[m_nMapTblIdx] - m_tblTopX[m_nMapTblIdx] - m_nWidthDiv * 3 + 2;
-            m_nLastY = m_tblEndY[m_nMapTblIdx] - m_tblTopY[m_nMapTblIdx] - m_nHeightDiv * 3 + 2;
+            setTableElement();
             m_bRetouMode = false;
             m_clsCardCrt = null;
             m_tbCrt = null;
 
-            m_dLatDotStep = Constants.TOKYOULATADD / Constants.MAPDOTSIZE;
-            m_dLndDotStep = Constants.TOKYOULNDADD / Constants.MAPDOTSIZE;
             m_clsObserve = new ClsObserve();
+        }
+        private void setTableElement()
+        {
+            m_nMapTblIdx = m_nMapBase - 10;
+            m_nLastX = m_tblEndX[m_nMapTblIdx] - m_tblTopX[m_nMapTblIdx] - m_nWidthDiv * 3 + 2;
+            m_nLastY = m_tblEndY[m_nMapTblIdx] - m_tblTopY[m_nMapTblIdx] - m_nHeightDiv * 3 + 2;
+            m_dLatDotStep = m_tblLatBlock[m_nMapTblIdx] / Constants.MAPDOTSIZE;
+            m_dLndDotStep = m_tblLndBlock[m_nMapTblIdx] / Constants.MAPDOTSIZE;
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -120,17 +135,13 @@ namespace Observe
             m_cnvsMove = new Canvas();
             initMapElement();
             initMouseEvent();
-            //m_nCrtX = (int)(3 - m_nWidthDiv);
-            //m_nCrtY = (int)(3 - m_nHeightDiv);
-            //m_nCrtX = (int)(76 - m_nWidthDiv);
-            //m_nCrtY = (int)(40 - m_nHeightDiv);
             initCmbGroup();
             initCmbPlaceName();
             m_dZoomTime = 1.0;
             m_cnvsMove.RenderTransform = null;
             initMapArea();
             initBlockWin();
-            //initUnderWin();
+            initUnderWin();
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -201,8 +212,16 @@ namespace Observe
         private string initEnvPath()
         {
             string sEnvPath;
+            string sOptFIleName;
+            string[] aryLine;
 
             sEnvPath = "c:\\Observe";
+            sOptFIleName = m_sExecPath + "\\observeopt.txt";
+            aryLine = m_libCmn.LoadFileLineSJIS(sOptFIleName);
+            if (aryLine[0] != "")
+            {
+                sEnvPath = aryLine[1];
+            }
             m_libCmn.CreatePath(sEnvPath);
             return (sEnvPath);
 
@@ -376,12 +395,12 @@ namespace Observe
             m_nMapTblIdx = m_nMapBase - 10;
             m_nLastX = m_tblEndX[m_nMapTblIdx] - m_tblTopX[m_nMapTblIdx] - m_nWidthDiv * 3 + 2;
             m_nLastY = m_tblEndY[m_nMapTblIdx] - m_tblTopY[m_nMapTblIdx] - m_nHeightDiv * 3 + 2;
-            dSubLat = (dLat - Constants.TOKYOUTOPLAT);
-            dSubLnd = (dLnd - Constants.TOKYOUTOPLND);
-            setyblock = (int)(dSubLat / Constants.TOKYOULATADD);
-            setxblock = (int)(dSubLnd / Constants.TOKYOULNDADD);
-            setydot = (int)((dSubLat - setyblock * Constants.TOKYOULATADD) / m_dLatDotStep);
-            setxdot = (int)((dSubLnd - setxblock * Constants.TOKYOULNDADD) / m_dLndDotStep);
+            dSubLat = (dLat - m_tblTopLat[m_nMapTblIdx]);
+            dSubLnd = (dLnd - m_tblTopLnd[m_nMapTblIdx]);
+            setyblock = (int)(dSubLat / m_tblLatBlock[m_nMapTblIdx]);
+            setxblock = (int)(dSubLnd / m_tblLndBlock[m_nMapTblIdx]);
+            setydot = (int)((dSubLat - setyblock * m_tblLatBlock[m_nMapTblIdx]) / m_dLatDotStep);
+            setxdot = (int)((dSubLnd - setxblock * m_tblLndBlock[m_nMapTblIdx]) / m_dLndDotStep);
 
             m_nCrtX = setxblock - m_nCenterXBlock;
             m_nCrtY = setyblock - m_nCenterYBlock;
@@ -424,8 +443,8 @@ namespace Observe
             double subx, suby;
             int sx, sy;
 
-            suby = (dLat - (Constants.TOKYOUTOPLAT + m_nCrtY * Constants.TOKYOULATADD));
-            subx = (dLnd - (Constants.TOKYOUTOPLND + m_nCrtX * Constants.TOKYOULNDADD));
+            suby = (dLat - (m_tblTopLat[m_nMapTblIdx] + m_nCrtY * m_tblLatBlock[m_nMapTblIdx]));
+            subx = (dLnd - (m_tblTopLnd[m_nMapTblIdx] + m_nCrtX * m_tblLndBlock[m_nMapTblIdx]));
             sy = (int)(suby / m_dLatDotStep * m_dZoomTime);
             sx = (int)(subx / m_dLndDotStep * m_dZoomTime);
             sx = sx + (int)(m_nAddX * m_dZoomTime + m_nMoveX + m_nZoomAddX);
@@ -443,7 +462,7 @@ namespace Observe
             m_imgCamera = new Image();
             Canvas.SetLeft(m_imgCamera, sx);
             Canvas.SetTop(m_imgCamera, sy);
-            m_imgCamera.Width = 24;
+            m_imgCamera.Width = 64;
             m_imgCamera.Stretch = Stretch.Fill;
             m_imgCamera.Source = new BitmapImage(new Uri("pic/camera.png", UriKind.Relative));
             cnvsMarkArea.Children.Add(m_imgCamera);
@@ -454,8 +473,8 @@ namespace Observe
             int sx, sy;
             TextBlock tb;
 
-            suby = (dLat - (Constants.TOKYOUTOPLAT + m_nCrtY * Constants.TOKYOULATADD));
-            subx = (dLnd - (Constants.TOKYOUTOPLND + m_nCrtX * Constants.TOKYOULNDADD));
+            suby = (dLat - (m_tblTopLat[m_nMapTblIdx] + m_nCrtY * m_tblLatBlock[m_nMapTblIdx]));
+            subx = (dLnd - (m_tblTopLnd[m_nMapTblIdx] + m_nCrtX * m_tblLndBlock[m_nMapTblIdx]));
             sy = (int)(suby / m_dLatDotStep * m_dZoomTime);
             sx = (int)(subx / m_dLndDotStep * m_dZoomTime);
             sx = sx + (int)(m_nAddX * m_dZoomTime + m_nMoveX + m_nZoomAddX);
@@ -535,8 +554,6 @@ namespace Observe
             m_clsCardCrt.m_sBikou = clsCard.m_sBikou;
             m_clsCardCrt.m_lstGpsPos.Clear();
 
-            m_blockWin.SetCardElement();
-
             addCardMark();
         }
         public void ResetClsCardElement()
@@ -561,7 +578,6 @@ namespace Observe
                 m_clsCardCrt.m_sBikou = m_clsCardBack.m_sBikou;
                 addCnvsMoveCardMark(m_clsCardCrt.m_dLat, m_clsCardCrt.m_dLnd, m_clsCardCrt.m_sSyoNo);
             }
-            m_blockWin.SetCardElement();
 
             addCardMark();
         }
@@ -576,8 +592,8 @@ namespace Observe
             dPosY = (double)(ny);
             dCanvasOffsetX = dPosX;
             dCanvasOffsetY = dPosY;
-            clsLatLnd.m_dLat = Constants.TOKYOUTOPLAT + m_nCrtY * Constants.TOKYOULATADD + dCanvasOffsetY * m_dLatDotStep;
-            clsLatLnd.m_dLnd = Constants.TOKYOUTOPLND + m_nCrtX * Constants.TOKYOULNDADD + dCanvasOffsetX * m_dLndDotStep;
+            clsLatLnd.m_dLat = m_tblTopLat[m_nMapTblIdx] + m_nCrtY * m_tblLatBlock[m_nMapTblIdx] + dCanvasOffsetY * m_dLatDotStep;
+            clsLatLnd.m_dLnd = m_tblTopLnd[m_nMapTblIdx] + m_nCrtX * m_tblLndBlock[m_nMapTblIdx] + dCanvasOffsetX * m_dLndDotStep;
             return (clsLatLnd);
         }
         private void cmbPlaceName_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -620,20 +636,6 @@ namespace Observe
                 moveLatLnd(dLat, dLnd);
             }
         }
-        private void btnTool_Click(object sender, RoutedEventArgs e)
-        {
-            string sFileName;
-            string[] aryLine;
-            string msg;
-
-            m_libOdbc.createAdrsLatLndTable();
-            sFileName = m_sEnvPath + "\\adrslatlnd.csv";
-            aryLine = m_libCmn.LoadFileLineSJIS(sFileName);
-            m_libOdbc.initAdrsLatLndTable(aryLine);
-            msg = "adrslatlndテーブルを作成しました";
-            MessageBox.Show(msg, "確認", MessageBoxButton.OK);
-        }
-
         private void btnMove_Click(object sender, RoutedEventArgs e)
         {
             string sAddress;

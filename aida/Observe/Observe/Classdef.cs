@@ -11,10 +11,6 @@ namespace Observe
 {
     static class Constants
     {
-        public const double TOKYOUTOPLAT = 35.906629; // Y
-        public const double TOKYOUTOPLND = 138.93274; // X
-        public const double TOKYOULATADD = -0.0089050;
-        public const double TOKYOULNDADD = 0.0109850;
         public const int MAPDOTSIZE = 256;
     }
     public partial class ClsXYPos
