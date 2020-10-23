@@ -1020,6 +1020,12 @@ namespace CsvOut
                 m_sUnisDBPath = txtMDBPath.Text;
 
                 MainWindowODBCInit();
+                if (System.IO.File.Exists(m_sUnisDBFile) == false)
+                {
+                    sMsg = "データベースファイル「" + m_sUnisDBFile + "」が見つかりません";
+                    MessageBox.Show(sMsg);
+                    return;
+                }
                 m_sPreFileName = txtPreFileName.Text;
                 m_sDateFileName = txtDateFileName.Text;
                 m_sPostFileName = txtPostFileName.Text;
