@@ -33,6 +33,7 @@ namespace CsvOut
         private string[] m_aryFildKeyTbl;
         private string[] m_aryFucStrTbl;
 
+        private string m_sBackupUnisDBPath;
         private string m_sSavePath;
         private string m_sUnisDBPath;
         private string m_sPostFileName;
@@ -57,6 +58,7 @@ namespace CsvOut
             m_dsptCheckTime = null;
             m_bCheckOutIn = false;
             m_libCmn = new LibCommon();
+            m_sBackupUnisDBPath = "";
             m_sExecPath = InitExePath();
             m_sEnvPath = InitEnvPath();
             string sFileName = m_sEnvPath + "\\csvoutlog.txt";
@@ -355,8 +357,7 @@ namespace CsvOut
             m_sBaseTime = "0";
             sLoadFileName = m_sEnvPath + "\\csvout.env";
             sData = m_libCmn.LoadFileSJIS(sLoadFileName);
-            if (sData != "")
-            {
+            if(CheckEnvFileVerjion(sData) == true){
                 sData = sData.Replace("\r\n", "\n");
                 aryLine = sData.Split('\n');
                 m_sSavePath = aryLine[1];
@@ -395,7 +396,7 @@ namespace CsvOut
                 m_sFncStrs = m_sFncStrs + "," + m_aryFucStrTbl[idx];
             }
             sSaveFileName = m_sEnvPath + "\\csvout.env";
-            sData = "// csvout env\n";
+            sData = "//,1006,csvout env\n";
             sData = sData + m_sSavePath + "\n";
             sData = sData + m_sUnisDBPath + "\n";
             sData = sData + m_sPostFileName + "\n";
@@ -410,6 +411,28 @@ namespace CsvOut
             m_libCmn.SaveFileSJIS(sSaveFileName, sData);
             sSaveFileName = "c:\\csvout.env";
             m_libCmn.SaveFileSJIS(sSaveFileName, sData);
+        }
+        private Boolean CheckEnvFileVerjion(string sData)
+        {
+            string[] aryLine;
+            string[] aryColumn;
+
+            if (sData == "")
+            {
+                return (false);
+            }
+            sData = sData.Replace("\r\n", "\n");
+            aryLine = sData.Split('\n');
+            aryColumn = aryLine[0].Split(',');
+            if (aryColumn.Length < 2)
+            {
+                return (false);
+            }
+            if (aryColumn[1] != "1006")
+            {
+                return (false);
+            }
+            return (true);
         }
         private void FildKeyFileLoad()
         {
@@ -501,19 +524,41 @@ namespace CsvOut
         }
         private void btnMDBSlct_Click(object sender, RoutedEventArgs e)
         {
+            string sMsg;
+            string sFileName;
+
+            m_sBackupUnisDBPath = txtMDBPath.Text;
             System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
             fbd.SelectedPath = txtMDBPath.Text;
             System.Windows.Forms.DialogResult result = fbd.ShowDialog();
             if (result == System.Windows.Forms.DialogResult.OK)
             {
+                sFileName = fbd.SelectedPath + "\\unis.mdb";
+                if (File.Exists(sFileName) == false)
+                {
+                    sMsg = fbd.SelectedPath + "にUNISDBファイルが見つかりません";
+                    MessageBox.Show(sMsg);
+                    if (m_sBackupUnisDBPath != "")
+                    {
+                        txtMDBPath.Text = m_sBackupUnisDBPath;
+                    }
+                    return;
+                }
                 txtMDBPath.Text = fbd.SelectedPath;
             }
         }
 
         private void btnSet_Click(object sender, RoutedEventArgs e)
         {
+            string sMsg;
             int nSelect;
 
+            if (System.IO.Directory.Exists(txtPath.Text) == false)
+            {
+                sMsg = "CSV保存場所「"+txtPath.Text+"」が見つかりません";
+                MessageBox.Show(sMsg);
+                return;
+            }
             m_sSavePath = txtPath.Text;
             m_sUnisDBPath = txtMDBPath.Text;
             m_sPostFileName = txtPostFileName.Text;
