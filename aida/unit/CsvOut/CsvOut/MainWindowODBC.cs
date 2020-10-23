@@ -80,6 +80,37 @@ namespace CsvOut
             m_conn.Close();
             m_conn = null;
         }
+        public void ODBCSelecttEnterAll()
+        {
+            string sSql;
+            OdbcDataReader reader;
+            string sCsvStr;
+            string sDate;
+            string sTime;
+
+            sSql = "SELECT ";
+            sSql = sSql + "C_Date,C_Time,L_TID,L_UID";
+            sSql = sSql + ",C_Name,L_Mode,C_Unique";
+            sSql = sSql + " FROM tEnter";
+            m_com = new OdbcCommand(sSql, m_conn);
+            try
+            {
+                reader = m_com.ExecuteReader();
+                while (reader.Read())
+                {
+                    sDate = GetReaderString(reader, 0);
+                    sTime = GetReaderString(reader, 1);
+                    sCsvStr = PicupCsvStrRecordElement(reader);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                App.LogOut(ex.ToString());
+                return;
+            }
+
+        }
         public void ODBCSelecttEnter()
         {
             string sSql;
@@ -100,8 +131,8 @@ namespace CsvOut
                 sSql = sSql + " FROM tEnter";
                 sSql = sSql + " WHERE (";
                 sSql = sSql + "(StrComp(C_Date,'" + m_sBaseDate + "') = 0)";
-                sSql = sSql + "AND(StrComp(C_Time, '" + m_sBaseTime + "00') >= 0)";
-                sSql = sSql + "AND(StrComp(C_Time, '" + sCheckTime + "00') < 0)";
+                sSql = sSql + "AND(StrComp(C_Time, '" + m_sBaseTime + "') >= 0)";
+                sSql = sSql + "AND(StrComp(C_Time, '" + sCheckTime +"') < 0)";
                 sSql = sSql + ");";
                 m_com = new OdbcCommand(sSql, m_conn);
                 try
@@ -133,7 +164,7 @@ namespace CsvOut
                 sSql = sSql + " FROM tEnter";
                 sSql = sSql + " WHERE (";
                 sSql = sSql + "(StrComp(C_Date,'" + m_sBaseDate + "') = 0)";
-                sSql = sSql + "AND(StrComp(C_Time, '" + m_sBaseTime + "00') >= 0)";
+                sSql = sSql + "AND(StrComp(C_Time, '" + m_sBaseTime + "') >= 0)";
                 sSql = sSql + ");";
                 m_com = new OdbcCommand(sSql, m_conn);
                 try

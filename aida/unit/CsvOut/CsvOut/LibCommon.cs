@@ -181,17 +181,33 @@ namespace CsvOut
             }
             return (strData);
         }
-        public void SaveFileSJIS(string sFileName, string sData)
+        public Boolean SaveFileSJIS(string sFileName, string sData)
         {
-            StreamWriter sw = new StreamWriter(sFileName, false, Encoding.GetEncoding("shift_jis"));
-            sw.Write(sData);
-            sw.Close();
+            try
+            {
+                StreamWriter sw = new StreamWriter(sFileName, false, Encoding.GetEncoding("shift_jis"));
+                sw.Write(sData);
+                sw.Close();
+                return (true);
+            }
+            catch (Exception ex)
+            {
+                return (false);
+            }
         }
-        public void SaveFileUTF8(string sFileName, string sData)
+        public Boolean SaveFileUTF8(string sFileName, string sData)
         {
-            StreamWriter sw = new StreamWriter(sFileName);
-            sw.Write(sData);
-            sw.Close();
+            try
+            {
+                StreamWriter sw = new StreamWriter(sFileName);
+                sw.Write(sData);
+                sw.Close();
+                return (true);
+            }
+            catch (Exception ex)
+            {
+                return (false);
+            }
         }
         public void CopyFile(string sSrcFileName, string sDstFileName)
         {

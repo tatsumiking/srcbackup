@@ -163,6 +163,19 @@ namespace CsvOut
             txtF2.Text = m_aryFucStrTbl[1];
             txtF3.Text = m_aryFucStrTbl[2];
             txtF4.Text = m_aryFucStrTbl[3];
+
+            //testDataLoad();
+        }
+        private void testDataLoad()
+        {
+            if (ODBCOpenUnisDB() == true)
+            {
+                App.LogOut("SQL実行。");
+                ODBCSelecttEnterAll();
+                App.LogOut("MDBファイルクローズ。");
+                ODBCCloseUnisDB();
+            }
+
         }
         private void TickCheckTimeLoop(object sender, EventArgs e)
         {
@@ -187,6 +200,7 @@ namespace CsvOut
             string sMsg;
             string sCrtDate;
             string sSaveFileName;
+            Boolean ret;
 
             DateTime dt = DateTime.Now;
             App.LogOut(dt.ToString("yyyy/MM/dd HH:mm:ss"));
@@ -213,18 +227,22 @@ namespace CsvOut
                 App.LogOut("MDBファイルクローズ。");
                 ODBCCloseUnisDB();
                 App.LogOut("ファイル保存中。");
-                SaveCsvFile(sSaveFileName);
-                App.LogOut("ベース時間更新。");
-                m_sBaseDate = m_sCheckTime.Substring(0, 8);
-                m_sBaseTime = m_sCheckTime.Substring(8, 6);
-                App.LogOut("チェック日時更新。");
-                SetNextCheckTime(m_sBaseDate, m_sBaseTime);
+                ret = SaveCsvFile(sSaveFileName);
+                if (ret == true)
+                {
+                    App.LogOut("ベース時間更新。");
+                    m_sBaseDate = m_sCheckTime.Substring(0, 8);
+                    m_sBaseTime = m_sCheckTime.Substring(8, 6);
+                    App.LogOut("チェック日時更新。");
+                    SetNextCheckTime(m_sBaseDate, m_sBaseTime);
+                }
             }
         }
-        private void SaveCsvFile(string sSaveFileName)
+        private Boolean SaveCsvFile(string sSaveFileName)
         {
             string sData;
             int idx, max;
+            Boolean ret;
 
             lblMsg.Content = "保存中";
             sData = "";
@@ -240,20 +258,23 @@ namespace CsvOut
             if (max == 0)
             {
                 lblMsg.Content = "待機中";
-                return;
+                return(true);
             }
             for (idx = 0; idx < max; idx++)
             {
                 sData = sData + m_lstCsvStr[idx];
             }
 
-            m_libCmn.SaveFileSJIS(sSaveFileName, sData);
+            ret = m_libCmn.SaveFileSJIS(sSaveFileName, sData);
             lblMsg.Content = "待機中";
+            return (ret);
         }
         // 次にチェックする時分
         private void SetNextCheckTime(string sBaseDate, string sBaseTime)
         {
             DateTime dt;
+            int nCrtYYMMDD, nCrtHHMINSS;
+            int nYYMMDD, nHHMINSS;
             string sYY, sMM, sDD, sHH, sMin, sSS;
             int nYY, nMM, nDD, nHH, nMin, nSS;
             string sAddHH, sAddMin, sHHMin, sChkHH, sChkMin;
@@ -261,8 +282,8 @@ namespace CsvOut
             int max, idx, setflag;
 
             dt = DateTime.Now;
-            int nYYMMDD = m_libCmn.StrToInt(sBaseDate);
-            int nHHMINSS = m_libCmn.StrToInt(sBaseTime);
+            nYYMMDD = m_libCmn.StrToInt(sBaseDate);
+            nHHMINSS = m_libCmn.StrToInt(sBaseTime);
             if (nYYMMDD == 0 && nHHMINSS == 0)
             {
                 // 最初にこれまでのデータを収集
@@ -275,6 +296,21 @@ namespace CsvOut
                 sSS = "00";
                 sBaseDate = sYY + sMM + sDD;
                 sBaseTime = sHH + sMin + sSS;
+            }
+            else
+            {
+                nCrtYYMMDD = m_libCmn.StrToInt(dt.ToString("yyyyMMdd"));
+                nCrtHHMINSS = m_libCmn.StrToInt(dt.ToString("HHmmss"));
+                if (nYYMMDD < nCrtYYMMDD)
+                {
+                    sBaseDate = dt.ToString("yyyyMMdd");
+                    sBaseTime = dt.ToString("HHmmss");
+                }
+                else if (nYYMMDD == nCrtYYMMDD && nHHMINSS < nCrtHHMINSS)
+                {
+                    sBaseDate = dt.ToString("yyyyMMdd");
+                    sBaseTime = dt.ToString("HHmmss");
+                }
             }
 
             sYY = sBaseDate.Substring(0, 4);
@@ -306,9 +342,27 @@ namespace CsvOut
                 if (24 <= nHH)
                 {
                     nHH = nHH - 24;
-                    nDD++;
+                    try
+                    {
+                        dt = new DateTime(nYY, nMM, nDD, nHH, nMin, 0);
+                        dt = dt.AddDays(1);
+                    }
+                    catch (Exception ex)
+                    {
+                        dt = DateTime.Now;
+                    }
                 }
-                dt = new DateTime(nYY, nMM, nDD, nHH, nMin, 0);
+                else
+                {
+                    try
+                    {
+                        dt = new DateTime(nYY, nMM, nDD, nHH, nMin, 0);
+                    }
+                    catch (Exception ex)
+                    {
+                        dt = DateTime.Now;
+                    }
+                }
             }else{
                 setflag = 0;
                 max = m_lstCheckTime.Count;
@@ -323,14 +377,28 @@ namespace CsvOut
                         setflag = 1;
                         nHH = nChkHH;
                         nMin = nChkMin;
-                        dt = new DateTime(nYY, nMM, nDD, nHH, nMin, 0);
+                        try
+                        {
+                            dt = new DateTime(nYY, nMM, nDD, nHH, nMin, 0);
+                        }
+                        catch (Exception ex)
+                        {
+                            dt = DateTime.Now;
+                        }
                         break;
                     }
                     else if(nHH < nChkHH){
                         setflag = 1;
                         nHH = nChkHH;
                         nMin = nChkMin;
-                        dt = new DateTime(nYY, nMM, nDD, nHH, nMin, 0);
+                        try
+                        {
+                            dt = new DateTime(nYY, nMM, nDD, nHH, nMin, 0);
+                        }
+                        catch (Exception ex)
+                        {
+                            dt = DateTime.Now;
+                        }
                         break;
                     }
                 }
@@ -343,10 +411,18 @@ namespace CsvOut
                     nChkMin = m_libCmn.StrToInt(sChkMin);
                     nHH = nChkHH;
                     nMin = nChkMin;
-                    dt = new DateTime(nYY, nMM, nDD, nHH, nMin, 0);
+                    try
+                    {
+                        dt = new DateTime(nYY, nMM, nDD, nHH, nMin, 0);
+                    }
+                    catch (Exception ex)
+                    {
+                        dt = DateTime.Now;
+                    }
                 }
             }
             m_sCheckTime = dt.ToString("yyyyMMddHHmmss");
+            EnvFileSave();
         }
         private void EnvFileLoad()
         {
