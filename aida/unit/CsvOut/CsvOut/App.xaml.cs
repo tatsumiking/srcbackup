@@ -25,7 +25,7 @@ namespace CsvOut
         {
             if (m_sArgv != "")
             {
-                string sFileName = "c:\\ProgramData\\uniscsv\\csvoutlog.txt";
+                string sFileName = "c:\\ProgramData\\csvout\\csvoutlog.txt";
                 System.IO.File.AppendAllText(sFileName, msg+"\r\n");
             }
         }

@@ -13,7 +13,7 @@ namespace CsvOut
 {
     public partial class MainWindow : Window
     {
-        private string m_sUnisDBPath;
+        private string m_sUnisDBFile;
         private OdbcConnection m_conn = null;
         private OdbcCommand m_com;
 
@@ -22,30 +22,22 @@ namespace CsvOut
 
         public void MainWindowODBCInit()
         {
-            string sPath;
-
-            sPath = System.Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
-            sPath = sPath + "\\UNIS\\unis.mdb";
-#if DEBUG
-            sPath = "d:\\temp\\unis.mdb";
-#endif
-            m_sUnisDBPath = sPath;
+            m_sUnisDBFile = m_sUnisDBPath+"\\unis.mdb";
         }
         public string GetODBCDBPath()
         {
-            return (m_sUnisDBPath);
+            return (m_sUnisDBFile);
         }
         public Boolean ODBCOpenUnisDB()
         {
             Boolean bFlag;
-            string sMsg;
             int idx, max;
 
             m_lstCsvStr = new List<string>();
             bFlag = false;
             max = 10;
             m_conn = new OdbcConnection();
-            m_conn.ConnectionString = "Driver={Microsoft Access Driver (*.mdb)};DBQ=" + m_sUnisDBPath + ";PWD=unisamho";
+            m_conn.ConnectionString = "Driver={Microsoft Access Driver (*.mdb)};DBQ=" + m_sUnisDBFile + ";PWD=unisamho";
             for (idx = 0; idx < max; idx++)
             {
                 try
@@ -75,7 +67,6 @@ namespace CsvOut
             Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Background, new DispatcherOperationCallback(ExitFrames), frame);
             Dispatcher.PushFrame(frame);
         }
-
         public object ExitFrames(object frames)
         {
             ((DispatcherFrame)frames).Continue = false;
@@ -98,77 +89,125 @@ namespace CsvOut
             string sCheckTime;
             string sDate;
             string sTime;
-            string str;
 
             sCheckDate = m_sCheckTime.Substring(0, 8);
             sCheckTime = m_sCheckTime.Substring(8, 6);
-            // 最後に集計した日の集計時間以降に発生したデータを取得
-            sSql = "SELECT * FROM tEnter WHERE (";
-            sSql = sSql + "(StrComp(C_Date,'" + m_sBaseDate + "') = 0)";
-            sSql = sSql + "AND(StrComp(C_Time, '" + m_sBaseTime + "00') >= 0)";
-            sSql = sSql + ");";
-            m_com = new OdbcCommand(sSql, m_conn);
-            try
+            if (m_sBaseDate == sCheckDate)
             {
-                reader = m_com.ExecuteReader();
-                while (reader.Read())
+                sSql = "SELECT ";
+                sSql = sSql + "C_Date,C_Time,L_TID,L_UID";
+                sSql = sSql + ",C_Name,L_Mode,C_Unique";
+                sSql = sSql + " FROM tEnter";
+                sSql = sSql + " WHERE (";
+                sSql = sSql + "(StrComp(C_Date,'" + m_sBaseDate + "') = 0)";
+                sSql = sSql + "AND(StrComp(C_Time, '" + m_sBaseTime + "00') >= 0)";
+                sSql = sSql + "AND(StrComp(C_Time, '" + sCheckTime + "00') < 0)";
+                sSql = sSql + ");";
+                m_com = new OdbcCommand(sSql, m_conn);
+                try
                 {
-                    sDate = GetReaderString(reader, 0);
-                    sTime = GetReaderString(reader, 1);
-                    UpdateLastDateTime(reader);
-                    sCsvStr = PicupCsvStrRecordElement(reader);
-                    m_lstCsvStr.Add(sCsvStr);
+                    reader = m_com.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        sDate = GetReaderString(reader, 0);
+                        sTime = GetReaderString(reader, 1);
+                        UpdateLastDateTime(reader);
+                        sCsvStr = PicupCsvStrRecordElement(reader);
+                        m_lstCsvStr.Add(sCsvStr);
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    App.LogOut(ex.ToString());
+                    return;
                 }
 
             }
-            catch (Exception ex)
+            else
             {
-                return;
-            }
-            // 最後に集計した日以降で締め日前までに発生したデータを取得
-            sSql = "SELECT * FROM tEnter WHERE (";
-            sSql = sSql + "(StrComp(C_Date,'" + m_sBaseDate + "') > 0)";
-            sSql = sSql + "AND (StrComp(C_Date,'" + sCheckDate + "') < 0)";
-            sSql = sSql + ");";
-            m_com = new OdbcCommand(sSql, m_conn);
-            try
-            {
-                reader = m_com.ExecuteReader();
-                while (reader.Read())
+                // 最後に集計した日の集計時間以降に発生したデータを取得
+                sSql = "SELECT ";
+                sSql = sSql + "C_Date,C_Time,L_TID,L_UID";
+                sSql = sSql + ",C_Name,L_Mode,C_Unique";
+                sSql = sSql + " FROM tEnter";
+                sSql = sSql + " WHERE (";
+                sSql = sSql + "(StrComp(C_Date,'" + m_sBaseDate + "') = 0)";
+                sSql = sSql + "AND(StrComp(C_Time, '" + m_sBaseTime + "00') >= 0)";
+                sSql = sSql + ");";
+                m_com = new OdbcCommand(sSql, m_conn);
+                try
                 {
-                    sDate = GetReaderString(reader, 0);
-                    sTime = GetReaderString(reader, 1);
-                    UpdateLastDateTime(reader);
-                    sCsvStr = PicupCsvStrRecordElement(reader);
-                    m_lstCsvStr.Add(sCsvStr);
+                    reader = m_com.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        sDate = GetReaderString(reader, 0);
+                        sTime = GetReaderString(reader, 1);
+                        UpdateLastDateTime(reader);
+                        sCsvStr = PicupCsvStrRecordElement(reader);
+                        m_lstCsvStr.Add(sCsvStr);
+                    }
+
                 }
-            }
-            catch (Exception ex)
-            {
-                return;
-            }
-            // 最後に集計した日以降で締め日前までに発生したデータを取得
-            sSql = "SELECT * FROM tEnter WHERE (";
-            sSql = sSql + "(StrComp(C_Date,'" + sCheckDate + "') = 0)";
-            sSql = sSql + "AND (StrComp(C_Time,'" + sCheckTime + "') < 0)";
-            sSql = sSql + ");";
-            m_com = new OdbcCommand(sSql, m_conn);
-            try
-            {
-                reader = m_com.ExecuteReader();
-                while (reader.Read())
+                catch (Exception ex)
                 {
-                    sDate = GetReaderString(reader, 0);
-                    sTime = GetReaderString(reader, 1);
-                    UpdateLastDateTime(reader);
-                    sCsvStr = PicupCsvStrRecordElement(reader);
-                    m_lstCsvStr.Add(sCsvStr);
+                    App.LogOut(ex.ToString());
+                    return;
                 }
-            }
-            catch (Exception ex)
-            {
-                str = ex.ToString();
-                return;
+                // 最後に集計した日以降で締め日前までに発生したデータを取得
+                sSql = "SELECT ";
+                sSql = sSql + "C_Date,C_Time,L_TID,L_UID";
+                sSql = sSql + ",C_Name,L_Mode,C_Unique";
+                sSql = sSql + " FROM tEnter";
+                sSql = sSql + " WHERE (";
+                sSql = sSql + "(StrComp(C_Date,'" + m_sBaseDate + "') > 0)";
+                sSql = sSql + "AND (StrComp(C_Date,'" + sCheckDate + "') < 0)";
+                sSql = sSql + ");";
+                m_com = new OdbcCommand(sSql, m_conn);
+                try
+                {
+                    reader = m_com.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        sDate = GetReaderString(reader, 0);
+                        sTime = GetReaderString(reader, 1);
+                        UpdateLastDateTime(reader);
+                        sCsvStr = PicupCsvStrRecordElement(reader);
+                        m_lstCsvStr.Add(sCsvStr);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    App.LogOut(ex.ToString());
+                    return;
+                }
+                // 最後に集計した日以降で締め日前までに発生したデータを取得
+                sSql = "SELECT ";
+                sSql = sSql + "C_Date,C_Time,L_TID,L_UID";
+                sSql = sSql + ",C_Name,L_Mode,C_Unique";
+                sSql = sSql + " FROM tEnter";
+                sSql = sSql + " WHERE (";
+                sSql = sSql + "(StrComp(C_Date,'" + sCheckDate + "') = 0)";
+                sSql = sSql + "AND (StrComp(C_Time,'" + sCheckTime + "') < 0)";
+                sSql = sSql + ");";
+                m_com = new OdbcCommand(sSql, m_conn);
+                try
+                {
+                    reader = m_com.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        sDate = GetReaderString(reader, 0);
+                        sTime = GetReaderString(reader, 1);
+                        UpdateLastDateTime(reader);
+                        sCsvStr = PicupCsvStrRecordElement(reader);
+                        m_lstCsvStr.Add(sCsvStr);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    App.LogOut(ex.ToString());
+                    return;
+                }
             }
             return;
         }
@@ -240,10 +279,10 @@ namespace CsvOut
                     sTmp = sStr.Substring(0, 2) + ":" + sStr.Substring(2, 2);
                     sStr = sTmp;
                 }
-                else if (fldno == 10)
+                else if (fldno == 5)
                 {
                     nLMode = m_libCmn.StrToInt(sStr);
-                    if (0 <= nLMode && nLMode < m_aryFucStrTbl.Length)
+                    if (0 <= nLMode && nLMode <= m_aryFucStrTbl.Length)
                     {
                         sStr = m_aryFucStrTbl[nLMode-1];
                     }
@@ -261,16 +300,19 @@ namespace CsvOut
 
             type = reader.GetFieldType(idx);
             sType = type.Name;
-            if(sType == "String"){
-                str = reader.GetString(idx); 
-            }else if(sType == "Int32"){
+            if (sType == "String")
+            {
+                str = reader.GetString(idx);
+            }
+            else if (sType == "Int32")
+            {
                 str = reader.GetInt32(idx).ToString();
             }
             else
             {
                 str = "";
             }
-            return(str);
+            return (str);
         }
         private int CnvOdbcKeyToIndex(string key)
         {
@@ -294,29 +336,13 @@ namespace CsvOut
             {
                 return (4);
             }
-            else if (key == "%C_Unique%")
+            else if (key == "%L_Mode%")
             {
                 return (5);
             }
-            else if (key == "%C_Office%")
+            else if (key == "%C_OCODE%")
             {
                 return (6);
-            }
-            else if (key == "%C_Post%")
-            {
-                return (7);
-            }
-            else if (key == "%C_Card%")
-            {
-                return (8);
-            }
-            else if (key == "%L_UserType%")
-            {
-                return (8);
-            }
-            else if (key == "%L_Mode%")
-            {
-                return (10);
             }
             return (-1);
         }

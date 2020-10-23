@@ -155,7 +155,6 @@ namespace CsvOut
             aryLine = strData.Split(';');
             return (aryLine);
         }
-
         public string LoadFileSJIS(string sFileName)
         {
             string strData;
