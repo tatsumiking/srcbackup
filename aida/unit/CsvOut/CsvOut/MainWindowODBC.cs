@@ -64,13 +64,8 @@ namespace CsvOut
             }
             if (bFlag == false)
             {
+                App.LogOut("データーベースに接続できません。");
                 return (false);
-                /*
-                sMsg = "データーベースに接続できません。";
-                m_conn.Close();
-                MessageBox.Show(sMsg);
-                m_conn = null;
-                */
             }
             return (true);
         }
@@ -103,13 +98,14 @@ namespace CsvOut
             string sCheckTime;
             string sDate;
             string sTime;
+            string str;
 
             sCheckDate = m_sCheckTime.Substring(0, 8);
             sCheckTime = m_sCheckTime.Substring(8, 6);
             // 最後に集計した日の集計時間以降に発生したデータを取得
             sSql = "SELECT * FROM tEnter WHERE (";
             sSql = sSql + "(StrComp(C_Date,'" + m_sBaseDate + "') = 0)";
-            sSql = sSql + "AND(StrComp(C_Time, '" + m_sBaseTime + "') >= 0)";
+            sSql = sSql + "AND(StrComp(C_Time, '" + m_sBaseTime + "00') >= 0)";
             sSql = sSql + ");";
             m_com = new OdbcCommand(sSql, m_conn);
             try
@@ -171,6 +167,7 @@ namespace CsvOut
             }
             catch (Exception ex)
             {
+                str = ex.ToString();
                 return;
             }
             return;

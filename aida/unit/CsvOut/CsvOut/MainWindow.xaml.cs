@@ -38,19 +38,24 @@ namespace CsvOut
         private string m_sCheckDDHHmm;
         private string m_sBaseDate;
         private string m_sBaseTime;
-        private Boolean m_bCheckFlag;
         private string m_sLastDate;
         private string m_sLastTime;
         private string m_sCheckTime;
+        private Boolean m_bCheckOutIn;
 
         public MainWindow()
         {
             InitializeComponent();
             m_dsptCheckTime = null;
+            m_bCheckOutIn = false;
             m_libCmn = new LibCommon();
             m_sExecPath = InitExePath();
             m_sEnvPath = InitEnvPath();
-
+            string sFileName = m_sEnvPath + "\\csvoutlog.txt";
+            if (File.Exists(sFileName))
+            {
+                App.m_sArgv = "log";
+            }
             EnvFileLoad();
             FildKeyFileLoad();
             InitcmbDelimiter();
@@ -58,7 +63,11 @@ namespace CsvOut
             InitCmbHour();
             InitCmbMinute();
             MainWindowODBCInit();
-            m_bCheckFlag = true;
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            EnvFileSave();
         }
 
         private void Window_ContentRendered(object sender, EventArgs e)
@@ -118,23 +127,18 @@ namespace CsvOut
         {
             string sCrtTime;
 
+            if (m_bCheckOutIn == true)
+            {
+                return;
+            }
             DateTime dt = DateTime.Now;
             sCrtTime = dt.ToString("yyyyMMddHHmmss");
             if (m_sCheckTime.CompareTo(sCrtTime) < 0)
             {
-                if (m_bCheckFlag == true)
-                {
-                    lblMsg.Content = "データ取得中";
-                    GetODBCDataToFile();
-                    m_bCheckFlag = false;
-                }
-            }
-            else
-            {
-                if (m_bCheckFlag == false)
-                {
-                    m_bCheckFlag = true;
-                }
+                m_bCheckOutIn = true;
+                lblMsg.Content = "データ取得中";
+                GetODBCDataToFile();
+                m_bCheckOutIn = false;
             }
         }
         private void GetODBCDataToFile()
@@ -143,7 +147,11 @@ namespace CsvOut
             string sCrtDate;
             string sSaveFileName;
 
+            DateTime dt = DateTime.Now;
+            App.LogOut(dt.ToString("yyyy/MM/dd HH:mm:ss"));
+
             sCrtDate = m_sCheckTime.Substring(0, 8);
+            App.LogOut("上書き確認中。");
             sSaveFileName = m_sSavePath + "\\" + sCrtDate + m_sPostFileName + ".csv";
             if (File.Exists(sSaveFileName) == true){
                 sMsg = sSaveFileName + "が存在します上書きしますか";
@@ -156,14 +164,19 @@ namespace CsvOut
                     return;
                 }
             }
-
+            App.LogOut("MDBファイルオープン。");
             if (ODBCOpenUnisDB() == true)
             {
+                App.LogOut("SQL実行。");
                 ODBCSelecttEnter();
+                App.LogOut("MDBファイルクローズ。");
                 ODBCCloseUnisDB();
+                App.LogOut("ファイル保存中。");
                 SaveCsvFile(sSaveFileName);
+                App.LogOut("ベース時間更新。");
                 m_sBaseDate = m_sCheckTime.Substring(0, 8);
                 m_sBaseTime = m_sCheckTime.Substring(8, 6);
+                App.LogOut("チェック日時更新。");
                 incrementCheckTime(m_sBaseDate, m_sCheckDDHHmm);
             }
         }
@@ -286,13 +299,13 @@ namespace CsvOut
             string sData;
             string[] aryLine;
 
-            sTitles = "社員番号,yyyy/mm/dd,hh:mm,出退勤フラグ,固定値";
+            sTitles = "社員番号,西暦/月/日,時:分,出退勤フラグ,固定値";
             m_aryCsvTitleTbl = sTitles.Split(',');
             sFilfkeys = "%L_UID%,%C_Date%,%C_Time%,%L_Mode%,0";
             m_aryFildKeyTbl = sFilfkeys.Split(',');
             sFncStrs = "出勤,退勤,出勤,退勤";
             m_aryFucStrTbl = sFncStrs.Split(',');
-            sLoadFileName = m_sEnvPath + "\\csvfild.env";
+            sLoadFileName = m_sEnvPath + "\\csvfield.env";
             sData = m_libCmn.LoadFileSJIS(sLoadFileName);
             if (sData != "")
             {
@@ -332,7 +345,7 @@ namespace CsvOut
         private void InitCmbDay()
         {
             string[] lst = new string[]
-            { "00", "01", "02", "03", "04"
+            { "01", "02", "03", "04"
             , "05", "06", "07", "08", "09"
             , "10", "11", "12", "13", "14"
             , "15", "16", "17", "18", "19"
@@ -378,8 +391,9 @@ namespace CsvOut
         private void btnSet_Click(object sender, RoutedEventArgs e)
         {
             int nSelect;
-            string sYY, sMM;
+            string sYY, sMM, sDD;
             string sDay, sHH, sMin;
+            int nYY, nMM;
 
             m_sSavePath = txtPath.Text;
             m_sPostFileName = txtPostFileName.Text;
@@ -407,6 +421,22 @@ namespace CsvOut
             DateTime dt = DateTime.Now;
             sYY = dt.ToString("yyyy");
             sMM = dt.ToString("MM");
+            sDD = dt.ToString("DD");
+            if (m_libCmn.StrToInt(sDD) < m_libCmn.StrToInt(sDay))
+            {
+                if (sMM == "01")
+                {
+                    nYY = m_libCmn.StrToInt(sYY);
+                    nYY = nYY - 1;
+                    sYY = nYY.ToString();
+                }
+                else
+                {
+                    nMM = m_libCmn.StrToInt(sMM);
+                    nMM = nMM - 1;
+                    sMM = nMM.ToString("D2");
+                }
+            }
             UpDateCheckTime(sYY, sMM, m_sCheckDDHHmm);
             if (m_sBaseDate == "0")
             {
@@ -481,7 +511,6 @@ namespace CsvOut
         }
         private void btnExit_Click(object sender, RoutedEventArgs e)
         {
-            EnvFileSave();
             this.Close();
         }
     }
