@@ -360,15 +360,16 @@ namespace CsvOut
                 sData = sData.Replace("\r\n", "\n");
                 aryLine = sData.Split('\n');
                 m_sSavePath = aryLine[1];
-                m_sPostFileName = aryLine[2];
-                m_sDelimiter = aryLine[3];
-                m_sFncStrs = aryLine[4];
-                m_nCheckKind = m_libCmn.StrToInt(aryLine[5]);
-                m_sIntervalList = aryLine[6];
-                m_sCheckTimeList = aryLine[7];
-                m_sInterval = aryLine[8];
-                m_sBaseDate = aryLine[9];
-                m_sBaseTime = aryLine[10];
+                m_sUnisDBPath = aryLine[2];
+                m_sPostFileName = aryLine[3];
+                m_sDelimiter = aryLine[4];
+                m_sFncStrs = aryLine[5];
+                m_nCheckKind = m_libCmn.StrToInt(aryLine[6]);
+                m_sIntervalList = aryLine[7];
+                m_sCheckTimeList = aryLine[8];
+                m_sInterval = aryLine[9];
+                m_sBaseDate = aryLine[10];
+                m_sBaseTime = aryLine[11];
             }
             m_aryFucStrTbl = m_sFncStrs.Split(',');
             m_aryInterval = m_sIntervalList.Split(',');
@@ -396,6 +397,7 @@ namespace CsvOut
             sSaveFileName = m_sEnvPath + "\\csvout.env";
             sData = "// csvout env\n";
             sData = sData + m_sSavePath + "\n";
+            sData = sData + m_sUnisDBPath + "\n";
             sData = sData + m_sPostFileName + "\n";
             sData = sData + m_sDelimiter + "\n";
             sData = sData + m_sFncStrs + "\n";
@@ -513,6 +515,7 @@ namespace CsvOut
             int nSelect;
 
             m_sSavePath = txtPath.Text;
+            m_sUnisDBPath = txtMDBPath.Text;
             m_sPostFileName = txtPostFileName.Text;
 
             nSelect = cmbDelimiter.SelectedIndex;
