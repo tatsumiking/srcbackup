@@ -1,0 +1,44 @@
+﻿<UserControl x:Class="umail.C100SendMailControl"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Height="200" Width="500">
+    <UserControl.Background>
+        <ImageBrush ImageSource="Pic/baseback.jpg"/>
+    </UserControl.Background>
+    <Grid>
+        <TextBlock Text="チェック日付" HorizontalAlignment="Left" Margin="10,30,0,0" VerticalAlignment="Top" Width="85"/>
+        <TextBlock x:Name="txtDate" HorizontalAlignment="Left" Margin="100,30,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="133"/>
+        <ListBox x:Name="lstLog" HorizontalAlignment="Left" Height="116" Margin="10,53,0,0" VerticalAlignment="Top" Width="270" Opacity="0.75" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+            <ListBox.Background>
+                <ImageBrush ImageSource="Pic/BackAlpha.png"/>
+            </ListBox.Background>
+        </ListBox>
+        <Button x:Name="btnEnv" Content="基本設定"
+        	HorizontalAlignment="Left" Margin="290,10,0,0" 
+        	VerticalAlignment="Top" Width="200" 
+        	Click="btnEnv_Click"
+            >
+            <Button.Background>
+                <ImageBrush ImageSource="Pic/BtnUBack.jpg"/>
+            </Button.Background>
+        </Button>
+        <Button x:Name="btnMail" Content="メール設定"
+        	HorizontalAlignment="Left" Margin="290,40,0,0" 
+        	VerticalAlignment="Top" Width="200" Click="btnMail_Click" 
+                >
+            <Button.Background>
+                <ImageBrush ImageSource="Pic/BtnUBack.jpg"/>
+            </Button.Background>
+        </Button>
+        <Button x:Name="btnExit" Content="終了"
+                HorizontalAlignment="Left" Margin="290,170,0,0" 
+                VerticalAlignment="Top" Width="200" 
+                Click="btnExit_Click"
+                >
+            <Button.Background>
+                <ImageBrush ImageSource="Pic/BtnUBack.jpg"/>
+            </Button.Background>
+        </Button>
+        <TextBlock x:Name="txtStat" HorizontalAlignment="Left" Margin="10,174,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="270" Height="20"/>
+    </Grid>
+</UserControl>

@@ -1,0 +1,10 @@
+﻿<Window x:Class="umail.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="メール送信システム" Height="240" Width="516" Icon="umail.ico"
+        ResizeMode="NoResize" Closing="Window_Closing">
+    <DockPanel>
+        <Grid Name="MainGrid">
+        </Grid>
+    </DockPanel>
+</Window>

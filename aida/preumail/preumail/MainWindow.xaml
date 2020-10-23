@@ -1,0 +1,10 @@
+﻿<Window x:Class="preumail.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="UMail管理" Height="70" Width="105" Icon="preumail.ico"
+        WindowState="Minimized">
+    <Grid Loaded="Grid_Loaded">
+        <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="UNIS監視中" Width="77" FontWeight="Bold" TextAlignment="Center" Height="16" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+
+    </Grid>
+</Window>
