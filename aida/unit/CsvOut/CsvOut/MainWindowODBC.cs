@@ -99,14 +99,27 @@ namespace CsvOut
             string sSql;
             OdbcDataReader reader;
             string sCsvStr;
+            string sCheckDate;
+            string sCheckTime;
+            string sDate;
+            string sTime;
 
-            sSql = "SELECT * FROM tEnter WHERE ((StrComp(C_Date,'" + m_sBaseDate + "') = 0)AND(StrComp(C_Time, '" + m_sBaseTime + "') >= 0));";
+            sCheckDate = m_sCheckTime.Substring(0, 8);
+            sCheckTime = m_sCheckTime.Substring(8, 6);
+            // 最後に集計した日の集計時間以降に発生したデータを取得
+            sSql = "SELECT * FROM tEnter WHERE (";
+            sSql = sSql + "(StrComp(C_Date,'" + m_sBaseDate + "') = 0)";
+            sSql = sSql + "AND(StrComp(C_Time, '" + m_sBaseTime + "') >= 0)";
+            sSql = sSql + ");";
             m_com = new OdbcCommand(sSql, m_conn);
             try
             {
                 reader = m_com.ExecuteReader();
                 while (reader.Read())
                 {
+                    sDate = GetReaderString(reader, 0);
+                    sTime = GetReaderString(reader, 1);
+                    UpdateLastDateTime(reader);
                     sCsvStr = PicupCsvStrRecordElement(reader);
                     m_lstCsvStr.Add(sCsvStr);
                 }
@@ -116,14 +129,42 @@ namespace CsvOut
             {
                 return;
             }
-            // 23時59分59秒より後に発生した入力を処理
-            sSql = "SELECT * FROM tEnter WHERE (StrComp(C_Date,'" + m_sBaseDate + "') > 0);";
+            // 最後に集計した日以降で締め日前までに発生したデータを取得
+            sSql = "SELECT * FROM tEnter WHERE (";
+            sSql = sSql + "(StrComp(C_Date,'" + m_sBaseDate + "') > 0)";
+            sSql = sSql + "AND (StrComp(C_Date,'" + sCheckDate + "') < 0)";
+            sSql = sSql + ");";
             m_com = new OdbcCommand(sSql, m_conn);
             try
             {
                 reader = m_com.ExecuteReader();
                 while (reader.Read())
                 {
+                    sDate = GetReaderString(reader, 0);
+                    sTime = GetReaderString(reader, 1);
+                    UpdateLastDateTime(reader);
+                    sCsvStr = PicupCsvStrRecordElement(reader);
+                    m_lstCsvStr.Add(sCsvStr);
+                }
+            }
+            catch (Exception ex)
+            {
+                return;
+            }
+            // 最後に集計した日以降で締め日前までに発生したデータを取得
+            sSql = "SELECT * FROM tEnter WHERE (";
+            sSql = sSql + "(StrComp(C_Date,'" + sCheckDate + "') = 0)";
+            sSql = sSql + "AND (StrComp(C_Time,'" + sCheckTime + "') < 0)";
+            sSql = sSql + ");";
+            m_com = new OdbcCommand(sSql, m_conn);
+            try
+            {
+                reader = m_com.ExecuteReader();
+                while (reader.Read())
+                {
+                    sDate = GetReaderString(reader, 0);
+                    sTime = GetReaderString(reader, 1);
+                    UpdateLastDateTime(reader);
                     sCsvStr = PicupCsvStrRecordElement(reader);
                     m_lstCsvStr.Add(sCsvStr);
                 }
@@ -134,28 +175,17 @@ namespace CsvOut
             }
             return;
         }
-        public String PicupCsvStrRecordElement(OdbcDataReader reader)
+        private void UpdateLastDateTime(OdbcDataReader reader)
         {
-            String strRet;
-            string sLTid;
-            int nLTid;
-            string sLMode;
-            int nLMode;
             string sDate;
             string sTime;
             int nDate;
             int nTime;
-            string sLUid;
 
             sDate = GetReaderString(reader, 0);
             sTime = GetReaderString(reader, 1);
-            sLTid = GetReaderString(reader, 2);
-            sLUid = GetReaderString(reader, 3);
-            sLMode = GetReaderString(reader, 10);
             nDate = m_libCmn.StrToInt(sDate);
             nTime = m_libCmn.StrToInt(sTime);
-            nLTid = m_libCmn.StrToInt(sLTid);
-            nLMode = m_libCmn.StrToInt(sLMode);
             if (m_nLastDate < nDate)
             {
                 m_nLastDate = nDate;
@@ -171,26 +201,59 @@ namespace CsvOut
                     m_sLastTime = sTime;
                 }
             }
-            if (sDate.Length < 8)
-            {
-                sDate = "00000000";
-            }
-            if (sTime.Length < 8)
-            {
-                sTime = "000000";
-            }
+        }
+        public String PicupCsvStrRecordElement(OdbcDataReader reader)
+        {
+            string strRet;
+            int fldmax, fldidx;
+            string key;
+            int fldno;
+            string sStr, sTmp;
+            int nLMode;
+
             strRet = "";
-            strRet = strRet + sLUid + ",";
-            strRet = strRet + sDate.Substring(0, 4) + "/" + sDate.Substring(4, 2) + "/" + sDate.Substring(6, 2) + ",";
-            strRet = strRet + sTime.Substring(0, 2) + ":" + sDate.Substring(2, 2) + ",";
-            if (nLMode == 1)
+            fldmax = m_aryFildKeyTbl.Length;
+            for (fldidx = 0; fldidx < fldmax; fldidx++)
             {
-                strRet = strRet + "出勤" + ",0,\n";
+                key = m_aryFildKeyTbl[fldidx];
+                fldno = CnvOdbcKeyToIndex(key);
+                if (fldno == -1)
+                {
+                    sStr = key;
+                }
+                else
+                {
+                    sStr = GetReaderString(reader, fldno);
+                }
+                if (fldno == 0)
+                {
+                    if (sStr.Length < 8)
+                    {
+                        sStr = "00000000";
+                    }
+                    sTmp = sStr.Substring(0, 4) + "/" + sStr.Substring(4, 2) + "/" + sStr.Substring(6, 2);
+                    sStr = sTmp;
+                }
+                else if (fldno == 1)
+                {
+                    if (sStr.Length < 6)
+                    {
+                        sStr = "0000";
+                    }
+                    sTmp = sStr.Substring(0, 2) + ":" + sStr.Substring(2, 2);
+                    sStr = sTmp;
+                }
+                else if (fldno == 10)
+                {
+                    nLMode = m_libCmn.StrToInt(sStr);
+                    if (0 <= nLMode && nLMode < m_aryFucStrTbl.Length)
+                    {
+                        sStr = m_aryFucStrTbl[nLMode-1];
+                    }
+                }
+                strRet = strRet + sStr + m_sDelimiter;
             }
-            else
-            {
-                strRet = strRet + "退勤" + ",0,\n";
-            }
+            strRet = strRet + "\n"; 
             return (strRet);
         }
         private string GetReaderString(OdbcDataReader reader, int idx)
@@ -211,6 +274,54 @@ namespace CsvOut
                 str = "";
             }
             return(str);
+        }
+        private int CnvOdbcKeyToIndex(string key)
+        {
+            if (key == "%C_Date%")
+            {
+                return (0);
+            }
+            else if (key == "%C_Time%")
+            {
+                return (1);
+            }
+            else if (key == "%L_TID%")
+            {
+                return (2);
+            }
+            else if (key == "%L_UID%")
+            {
+                return (3);
+            }
+            else if (key == "%C_Name%")
+            {
+                return (4);
+            }
+            else if (key == "%C_Unique%")
+            {
+                return (5);
+            }
+            else if (key == "%C_Office%")
+            {
+                return (6);
+            }
+            else if (key == "%C_Post%")
+            {
+                return (7);
+            }
+            else if (key == "%C_Card%")
+            {
+                return (8);
+            }
+            else if (key == "%L_UserType%")
+            {
+                return (8);
+            }
+            else if (key == "%L_Mode%")
+            {
+                return (10);
+            }
+            return (-1);
         }
     }
 }
