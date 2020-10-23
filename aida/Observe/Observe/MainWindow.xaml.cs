@@ -122,7 +122,7 @@ namespace Observe
             m_cnvsMove.RenderTransform = null;
             initMapArea();
             initBlockWin();
-            initUnderWin();
+            //initUnderWin();
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -405,7 +405,7 @@ namespace Observe
             cnvsMarkArea.Children.Clear();
             if (m_nMapBase == 15)
             {
-                addCnvsMoveCardMark(m_clsCardCrt.m_dLat, m_clsCardCrt.m_dLnd, m_clsCardCrt.m_sSetNo);
+                addCnvsMoveCardMark(m_clsCardCrt.m_dLat, m_clsCardCrt.m_dLnd, m_clsCardCrt.m_sSyoNo);
                 max = m_clsCardCrt.m_lstGpsPos.Count;
                 for (idx = 0; idx < max; idx++)
                 {
@@ -501,11 +501,11 @@ namespace Observe
             }
             //nNo = m_clsObserve.m_lstClsCard.Count+1;
             //m_clsCardCrt.m_sSetNo = nNo.ToString("0000000");
-            m_clsCardCrt.m_sSetNo = "";
+            m_clsCardCrt.m_sSyoNo = "";
             clsLatLnd = getMousePosToLatLnd(nxmap, nymap);
             m_clsCardCrt.m_dLat = clsLatLnd.m_dLat;
             m_clsCardCrt.m_dLnd = clsLatLnd.m_dLnd;
-            addCnvsMoveCardMark(m_clsCardCrt.m_dLat, m_clsCardCrt.m_dLnd, m_clsCardCrt.m_sSetNo);
+            addCnvsMoveCardMark(m_clsCardCrt.m_dLat, m_clsCardCrt.m_dLnd, m_clsCardCrt.m_sSyoNo);
 
             cardWin = new CardWin();
             cardWin.SetMainWindow(this);
@@ -557,7 +557,7 @@ namespace Observe
                 m_clsCardCrt.m_sTel2 = m_clsCardBack.m_sTel2;
                 m_clsCardCrt.m_sName = m_clsCardBack.m_sName;
                 m_clsCardCrt.m_sBikou = m_clsCardBack.m_sBikou;
-                addCnvsMoveCardMark(m_clsCardCrt.m_dLat, m_clsCardCrt.m_dLnd, m_clsCardCrt.m_sSetNo);
+                addCnvsMoveCardMark(m_clsCardCrt.m_dLat, m_clsCardCrt.m_dLnd, m_clsCardCrt.m_sSyoNo);
             }
             m_blockWin.SetCardElement();
 
