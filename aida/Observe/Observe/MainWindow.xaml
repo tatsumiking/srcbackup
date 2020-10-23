@@ -13,7 +13,7 @@
 <Window x:Class="Observe.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow"
+        Title="Map"
         Height="1080" Width="910"
         Left="1010" Top="0"
         Topmost="True"
@@ -33,12 +33,9 @@
         <Grid Grid.Row="0">
             <ComboBox x:Name="cmbGroup" Margin="5,2,0,0" Width="60" HorizontalAlignment="Left" VerticalAlignment="Top" SelectionChanged="cmbGroup_SelectionChanged"/>
             <ComboBox x:Name="cmbPlaceName" Margin="70,2,0,0" Width="130" HorizontalAlignment="Left" VerticalAlignment="Top" SelectionChanged="cmbPlaceName_SelectionChanged"/>
-            <TextBlock Margin="205,5,0,0" Height="23" Width="30" Text="緯度" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden"/>
-            <TextBox x:Name="txtLat" Text="35.0000" Margin="235,2,0,0" Width="80" Height="23" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden"/>
-            <TextBlock Margin="325,5,0,0" Height="23" Width="30" Text="経度" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden"/>
-            <TextBox x:Name="txtLnd" Text="156.0000" Margin="355,2,0,0" Width="80" Height="23" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden"/>
-            <Button x:Name="btnMove" Content="移動" Margin="440,4,0,0" Width="50" VerticalAlignment="Top" HorizontalAlignment="Left" Click="btnMove_Click" Visibility="Hidden"/>
-            <TextBlock x:Name="tbMsg" Height="24" Width="250" Margin="500,5,0,0" Text="TextBlock" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden"/>
+            <TextBlock Margin="205,5,0,0" Height="23" Width="30" Text="住所" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <TextBox x:Name="txtAddress" Text="" Margin="235,2,0,0" Width="341" Height="23" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <Button x:Name="btnMove" Content="移動" Margin="590,2,0,0" Width="50" VerticalAlignment="Top" HorizontalAlignment="Left" Click="btnMove_Click"/>
         </Grid>
         <Grid Grid.Row="1">
             <Grid x:Name="gridDrawArea"
@@ -50,8 +47,7 @@
             </Grid>
         </Grid>
         <Grid Grid.Row="2">
-            <TextBlock x:Name="tbLatLnd" Height="24" Width="400" Margin="0,3,0,0" Text="TextBlock" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden"/>
-            <TextBlock x:Name="tbMouseCrt" Height="24" Width="400" Margin="400,3,0,0" Text="TextBlock" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden"/>
+            <Button x:Name="btnTool" Content="ツール" Margin="10,3,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="75" Click="btnTool_Click"/>
             <Button x:Name="btnExit" Content="終了" Margin="803,3,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="75" Click="btnExit_Click"/>
         </Grid>
     </Grid>

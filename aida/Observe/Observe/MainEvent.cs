@@ -82,10 +82,6 @@ namespace Observe
 
             setMapPosition();
 
-            posMap = evnt.GetPosition(m_cnvsMove);
-            cx = posMap.X;
-            cy = posMap.Y;
-            tbMouseCrt.Text = "MouseDown (" + nx + "," + ny + ")(" + (int)cx + "," + (int)cy + ")" + m_dZoomTime;
         }
         private void gridDrawArea_MouseMove(object sender, MouseEventArgs evnt)
         {
@@ -164,7 +160,6 @@ namespace Observe
             }
             else
             {
-                tbMouseCrt.Text = "MouseUp   (" + nx + "," + ny + ")(" + m_nDownX + "," + m_nDownY + ")" + m_dZoomTime;
                 if (m_bRetouMode == false)
                 {
                     m_nMoveX = properMapMoveX(m_nMoveX);
@@ -207,10 +202,13 @@ namespace Observe
                     m_nCrtY = m_nCrtY + m_tblTopY[m_nMapTblIdx] + m_nHeightDiv;
                     m_nMapBase = m_nMapBase - 1;
                     m_nMapTblIdx = m_nMapBase - 10;
+                    m_nLastX = m_tblEndX[m_nMapTblIdx] - m_tblTopX[m_nMapTblIdx] - m_nWidthDiv * 3 + 2;
+                    m_nLastY = m_tblEndY[m_nMapTblIdx] - m_tblTopY[m_nMapTblIdx] - m_nHeightDiv * 3 + 2;
                     nblkx = m_nCrtX / 2;
                     nblky = m_nCrtY / 2;
                     nmodx = m_nCrtX % 2;
                     nmody = m_nCrtY % 2;
+
                     m_nCrtX = nblkx - m_tblTopX[m_nMapTblIdx] - m_nWidthDiv;
                     m_nCrtY = nblky - m_tblTopY[m_nMapTblIdx] - m_nHeightDiv;
                     m_nAddX = m_nAddX / 2 - nmodx * Constants.MAPDOTSIZE / 2;
@@ -221,7 +219,6 @@ namespace Observe
                     m_dZoomCenterTime = 1.0;
                     m_nZoomAddX = 0;
                     m_nZoomAddY = 0;
-                    tbMouseCrt.Text = "MouseWheel0.5->1,0 (" + m_nCrtX + "," + m_nCrtY + ") block= " + m_nMapBase + " time=" + m_dZoomTime;
                     setProperValue(m_nAddX, m_nAddY);
                     return;
                 }
@@ -241,6 +238,8 @@ namespace Observe
                     m_nCrtY = m_nCrtY + m_tblTopY[m_nMapTblIdx] + m_nHeightDiv;
                     m_nMapBase = m_nMapBase + 1;
                     m_nMapTblIdx = m_nMapBase - 10;
+                    m_nLastX = m_tblEndX[m_nMapTblIdx] - m_tblTopX[m_nMapTblIdx] - m_nWidthDiv * 3 + 2;
+                    m_nLastY = m_tblEndY[m_nMapTblIdx] - m_tblTopY[m_nMapTblIdx] - m_nHeightDiv * 3 + 2;
                     nblkx = m_nCrtX * 2;
                     nblky = m_nCrtY * 2;
                     m_nCrtX = nblkx - m_tblTopX[m_nMapTblIdx] - m_nWidthDiv;
@@ -252,7 +251,6 @@ namespace Observe
                     m_dZoomCenterTime = 1.0;
                     m_nZoomAddX = 0;
                     m_nZoomAddY = 0;
-                    tbMouseCrt.Text = "MouseWheel2,0->1,0 (" + m_nCrtX + "," + m_nCrtY + ") block=" + m_nMapBase + " time=" + m_dZoomTime;
                     setProperValue(m_nAddX, m_nAddY);
                     return;
                 }else{
@@ -268,11 +266,9 @@ namespace Observe
                 cy = (cy - m_dZoomCenterY) / m_dZoomCenterTime + m_dZoomCenterY;
                 m_nAddX = m_nAddX - (int)((cx - posMap.X) / m_dZoomTime);
                 m_nAddY = m_nAddY - (int)((cy - posMap.Y) / m_dZoomTime);
-                tbMouseCrt.Text = "MouseWheelTrans (" + m_nCrtX + "," + m_nCrtY + ") block=" + m_nMapBase + " time=" + m_dZoomTime;
             }
             else
             {
-                tbMouseCrt.Text = "MouseWheelnon   (" + m_nCrtX + "," + m_nCrtY + ") block=" + m_nMapBase + "time=" + m_dZoomTime;
             }
             m_dZoomCenterX = cx;
             m_dZoomCenterY = cy;
@@ -416,9 +412,6 @@ namespace Observe
             wd = m_nCanvasWidth;
             hi = m_nCanvasHeight;
             string newPath = "M 0,0 L 0," + hi + " " + wd + "," + hi + " " + wd + ",0 Z";
-
-            tbLatLnd.Text = "AddXY=" + m_nAddX + "," + m_nAddY;
-
             cnvsMapArea.Clip = Geometry.Parse(newPath);
             sx = m_tblTopX[m_nMapTblIdx] + m_nCrtX;
             sy = m_tblTopY[m_nMapTblIdx] + m_nCrtY;

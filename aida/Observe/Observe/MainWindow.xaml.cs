@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Odbc;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -39,6 +40,7 @@ namespace Observe
         private Boolean m_bUDPFlag;
         public LibCommon m_libCmn;
         public LibCanvas m_libCnvs;
+        public LibOdbc m_libOdbc;
         DispatcherTimer m_dsptCheckTime;
         public BlockWin m_blockWin;
         public UnderWin m_underWin;
@@ -70,8 +72,12 @@ namespace Observe
             m_sExecPath = initExePath();
             m_libCmn = new LibCommon();
             m_libCnvs = new LibCanvas();
+            m_libOdbc = new LibOdbc();
+            m_libOdbc.setLibCommonClass(m_libCmn);
+            m_libOdbc.setExecPath(m_sExecPath);
 
             m_sEnvPath = initEnvPath();
+            m_libOdbc.setEnvPath(m_sEnvPath);
             loadEnv();
 
             odbcLoadEnv();
@@ -79,6 +85,8 @@ namespace Observe
             m_sMapPath = m_sEnvPath + "\\東京都";
             m_nMapBase = 15;
             m_nMapTblIdx = m_nMapBase - 10;
+            m_nLastX = m_tblEndX[m_nMapTblIdx] - m_tblTopX[m_nMapTblIdx] - m_nWidthDiv * 3 + 2;
+            m_nLastY = m_tblEndY[m_nMapTblIdx] - m_tblTopY[m_nMapTblIdx] - m_nHeightDiv * 3 + 2;
             m_bRetouMode = false;
             m_clsCardCrt = null;
             m_tbCrt = null;
@@ -181,7 +189,6 @@ namespace Observe
             currentMem = currentMem / 1024;
             currentCGMem = currentCGMem / 1024;
             currentCGMem = currentCGMem / 1024;
-            tbMsg.Text = "Mem" + currentMem.ToString("N0") + "MByte CGMem" + currentMem.ToString("N0") + "MByte";
         }
         private string initExePath()
         {
@@ -359,20 +366,16 @@ namespace Observe
         {
             m_dsptWaitTime.Stop();
         }
-        private void btnMove_Click(object sender, RoutedEventArgs e)
-        {
-            double dLat, dLnd;
-
-            dLat = m_libCmn.StrToDouble(txtLat.Text);
-            dLnd = m_libCmn.StrToDouble(txtLnd.Text);
-            moveLatLnd(dLat, dLnd);
-        }
         private void moveLatLnd(double dLat, double dLnd)
         {
             double dSubLat, dSubLnd;
             int setxblock, setyblock;
             int setxdot, setydot;
 
+            m_nMapBase = 15;
+            m_nMapTblIdx = m_nMapBase - 10;
+            m_nLastX = m_tblEndX[m_nMapTblIdx] - m_tblTopX[m_nMapTblIdx] - m_nWidthDiv * 3 + 2;
+            m_nLastY = m_tblEndY[m_nMapTblIdx] - m_tblTopY[m_nMapTblIdx] - m_nHeightDiv * 3 + 2;
             dSubLat = (dLat - Constants.TOKYOUTOPLAT);
             dSubLnd = (dLnd - Constants.TOKYOUTOPLND);
             setyblock = (int)(dSubLat / Constants.TOKYOULATADD);
@@ -518,7 +521,6 @@ namespace Observe
             {
                 return;
             }
-            //tbLatLnd.Text = "緯度" + m_clsCardCrt.m_dLat + "経度" + m_clsCardCrt.m_dLnd;
         }
         public void SetClsCardElement(ClsCard clsCard)
         {
@@ -591,12 +593,14 @@ namespace Observe
             {
                 return;
             }
-            m_nMapBase = 15;
-            m_nMapTblIdx = m_nMapBase - 10;
             sPlace = m_aryPlaceNameLine[idx + 1];
             ary = sPlace.Split(',');
             if (cmbGroup.SelectedIndex == 2)
             {
+                m_nMapBase = 15;
+                m_nMapTblIdx = m_nMapBase - 10;
+                m_nLastX = m_tblEndX[m_nMapTblIdx] - m_tblTopX[m_nMapTblIdx] - m_nWidthDiv * 3 + 2;
+                m_nLastY = m_tblEndY[m_nMapTblIdx] - m_tblTopY[m_nMapTblIdx] - m_nHeightDiv * 3 + 2;
                 m_bRetouMode = true;
                 nSXBlock = m_libCmn.StrToInt(ary[3]) - m_tblTopX[m_nMapTblIdx];
                 nSYBlock = m_libCmn.StrToInt(ary[4]) - m_tblTopY[m_nMapTblIdx];
@@ -611,11 +615,78 @@ namespace Observe
             else
             {
                 m_bRetouMode = false;
-                txtLat.Text = ary[1];
-                txtLnd.Text = ary[2];
-                dLat = m_libCmn.StrToDouble(txtLat.Text);
-                dLnd = m_libCmn.StrToDouble(txtLnd.Text);
+                dLat = m_libCmn.StrToDouble(ary[1]);
+                dLnd = m_libCmn.StrToDouble(ary[2]);
                 moveLatLnd(dLat, dLnd);
+            }
+        }
+        private void btnTool_Click(object sender, RoutedEventArgs e)
+        {
+            string sFileName;
+            string[] aryLine;
+            string msg;
+
+            m_libOdbc.createAdrsLatLndTable();
+            sFileName = m_sEnvPath + "\\adrslatlnd.csv";
+            aryLine = m_libCmn.LoadFileLineSJIS(sFileName);
+            m_libOdbc.initAdrsLatLndTable(aryLine);
+            msg = "adrslatlndテーブルを作成しました";
+            MessageBox.Show(msg, "確認", MessageBoxButton.OK);
+        }
+
+        private void btnMove_Click(object sender, RoutedEventArgs e)
+        {
+            string sAddress;
+            OdbcConnection con;
+            int max, len;
+            string sBeforeSql;
+            string sSql;
+            OdbcCommand com;
+            OdbcDataReader reader;
+            string sSubStr;
+            double dLat, dLnd;
+
+            sAddress = txtAddress.Text;
+            sAddress = m_libCmn.StrNumToKan(sAddress);
+            con = m_libOdbc.openMdb();
+            if (con != null)
+            {
+                sBeforeSql = "";
+                max = sAddress.Length;
+                for(len = 2; len < max; len++){
+                    sSubStr = sAddress.Substring(0, len);
+                    sSql = "SELECT * FROM adrslatlnd";
+                    sSql = sSql + " WHERE address LIKE '%"+sSubStr+"%';";
+                    com = new OdbcCommand(sSql, con);
+                    try
+                    {
+                        reader = com.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            sBeforeSql = sSql;
+                            break;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+                }
+                com = new OdbcCommand(sBeforeSql, con);
+                try
+                {
+                    reader = com.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        dLat = reader.GetDouble(2);
+                        dLnd = reader.GetDouble(3);
+                        moveLatLnd(dLat, dLnd);
+                        break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                }
+                m_libOdbc.closeMdb(con);
             }
         }
     }

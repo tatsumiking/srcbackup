@@ -105,6 +105,76 @@ namespace Observe
             }
             return (retstr);
         }
+        public string StrNumToKan(string sStr)
+        {
+            string sChar;
+            string sRetStr;
+            int max, idx;
+
+            max = sStr.Length;
+            sRetStr = "";
+            for (idx = 0; idx < max; idx++)
+            {
+                if ((idx + 1) == max)
+                {
+                    sChar = sStr.Substring(idx, 1);
+                }
+                else
+                {
+                    sChar = sStr.Substring(idx, 2);
+                }
+                if (sChar == "10" || sChar == "１０")
+                {
+                    sRetStr = sRetStr + "＋";
+                    idx++;
+                }
+                else
+                {
+                    sChar = sStr.Substring(idx, 1);
+                    if (sChar == "1" || sChar == "１")
+                    {
+                        sRetStr = sRetStr + "一";
+                    }
+                    else if (sChar == "2" || sChar == "２")
+                    {
+                        sRetStr = sRetStr + "二";
+                    }
+                    else if (sChar == "3" || sChar == "３")
+                    {
+                        sRetStr = sRetStr + "三";
+                    }
+                    else if (sChar == "4" || sChar == "４")
+                    {
+                        sRetStr = sRetStr + "四";
+                    }
+                    else if (sChar == "5" || sChar == "５")
+                    {
+                        sRetStr = sRetStr + "五";
+                    }
+                    else if (sChar == "6" || sChar == "６")
+                    {
+                        sRetStr = sRetStr + "六";
+                    }
+                    else if (sChar == "7" || sChar == "７")
+                    {
+                        sRetStr = sRetStr + "七";
+                    }
+                    else if (sChar == "8" || sChar == "８")
+                    {
+                        sRetStr = sRetStr + "八";
+                    }
+                    else if (sChar == "9" || sChar == "９")
+                    {
+                        sRetStr = sRetStr + "九";
+                    }
+                    else
+                    {
+                        sRetStr = sRetStr + sChar;
+                    }
+                }
+            }
+            return (sRetStr);
+        }
         public string AnlizeNengou(String sYear)
         {
             int nYear;
