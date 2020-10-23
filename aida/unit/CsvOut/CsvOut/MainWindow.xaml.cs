@@ -29,6 +29,7 @@ namespace CsvOut
         private LibCommon m_libCmn;
         DispatcherTimer m_dsptCheckTime;
         private List<string> m_lstCsvStr;
+        private List<string> m_lstErrorStr;
         private string[] m_aryCsvTitleTbl;
         private string[] m_aryFildKeyTbl;
         private string[] m_aryFucStrTbl;
@@ -243,6 +244,8 @@ namespace CsvOut
             string sData;
             int idx, max;
             Boolean ret;
+            int count;
+            string sMsg;
 
             lblMsg.Content = "保存中";
             sData = "";
@@ -264,8 +267,19 @@ namespace CsvOut
             {
                 sData = sData + m_lstCsvStr[idx];
             }
-
             ret = m_libCmn.SaveFileSJIS(sSaveFileName, sData);
+            if (ret == true)
+            {
+                sMsg = m_sCheckTime.Substring(0, 4) + "/" + m_sCheckTime.Substring(4, 2);
+                sMsg = sMsg + "/" + m_sCheckTime.Substring(6, 2) + " " + m_sCheckTime.Substring(8, 2);
+                sMsg = sMsg + ":" + m_sCheckTime.Substring(10, 2) + ":" + m_sCheckTime.Substring(12, 2)+" "+ max + "件";
+                App.OutLogAppend(sMsg);
+                max = m_lstErrorStr.Count;
+                for (idx = 0; idx < max; idx++)
+                {
+                    App.ErrorDataAppend(m_lstErrorStr[idx]);
+                }
+            }
             lblMsg.Content = "待機中";
             return (ret);
         }
@@ -349,6 +363,7 @@ namespace CsvOut
                     }
                     catch (Exception ex)
                     {
+                        App.ErrorLogAppend("time day add" + nYY + "/" + nMM + "/" + nDD);
                         dt = DateTime.Now;
                     }
                 }
@@ -360,6 +375,7 @@ namespace CsvOut
                     }
                     catch (Exception ex)
                     {
+                        App.ErrorLogAppend("time day add" + nYY + "/" + nMM + "/" + nDD);
                         dt = DateTime.Now;
                     }
                 }
@@ -383,6 +399,7 @@ namespace CsvOut
                         }
                         catch (Exception ex)
                         {
+                            App.ErrorLogAppend("time day add" + nYY + "/" + nMM + "/" + nDD);
                             dt = DateTime.Now;
                         }
                         break;
@@ -397,6 +414,7 @@ namespace CsvOut
                         }
                         catch (Exception ex)
                         {
+                            App.ErrorLogAppend("time day add" + nYY + "/" + nMM + "/" + nDD);
                             dt = DateTime.Now;
                         }
                         break;
@@ -417,6 +435,7 @@ namespace CsvOut
                     }
                     catch (Exception ex)
                     {
+                        App.ErrorLogAppend("time day add" + nYY + "/" + nMM + "/" + nDD);
                         dt = DateTime.Now;
                     }
                 }
@@ -536,18 +555,18 @@ namespace CsvOut
             string[] aryLine;
 
             sTitles = "社員番号,西暦/月/日,時:分,出退勤フラグ,固定値";
-            m_aryCsvTitleTbl = sTitles.Split(',');
             sFilfkeys = "%C_OCODE%,%C_Date%,%C_Time%,%L_Mode%,0";
-            m_aryFildKeyTbl = sFilfkeys.Split(',');
             sLoadFileName = m_sEnvPath + "\\csvfield.env";
             sData = m_libCmn.LoadFileSJIS(sLoadFileName);
             if (sData != "")
             {
                 sData = sData.Replace("\r\n", "\n");
                 aryLine = sData.Split('\n');
-                m_aryCsvTitleTbl = aryLine[1].Split(',');
-                m_aryFildKeyTbl = aryLine[2].Split(',');
+                sTitles = aryLine[1];
+                sFilfkeys = aryLine[2];
             }
+            m_aryCsvTitleTbl = sTitles.Split(',');
+            m_aryFildKeyTbl = sFilfkeys.Split(',');
         }
         private void FildKeyFileSave()
         {
@@ -585,35 +604,53 @@ namespace CsvOut
         private string InitEnvPath()
         {
             string sEnvPath;
-            string sEnvFile;
+            string sCsvOutEnvPath;
+            string sLogPath;
             string sOldFile;
+            string sEnvFile;
 
             sEnvPath = "c:\\UsesProgram";
             if (!Directory.Exists(sEnvPath))
             {
                 Directory.CreateDirectory(sEnvPath);
-                sEnvPath = sEnvPath + "\\csvout";
-                Directory.CreateDirectory(sEnvPath);
+                sCsvOutEnvPath = sEnvPath + "\\csvout";
+                Directory.CreateDirectory(sCsvOutEnvPath);
+                sLogPath = sEnvPath + "\\csvout\\log";
+                Directory.CreateDirectory(sLogPath);
 
             }
             else
             {
-                sEnvPath = sEnvPath + "\\csvout";
-                if (!Directory.Exists(sEnvPath))
+                sCsvOutEnvPath = sEnvPath + "\\csvout";
+                if (!Directory.Exists(sCsvOutEnvPath))
                 {
-                    Directory.CreateDirectory(sEnvPath);
+                    Directory.CreateDirectory(sCsvOutEnvPath);
+                    sLogPath = sEnvPath + "\\csvout\\log";
+                    Directory.CreateDirectory(sLogPath);
+                }
+                else
+                {
+                    sLogPath = sEnvPath + "\\csvout\\log";
+                    if (!Directory.Exists(sLogPath))
+                    {
+                        Directory.CreateDirectory(sLogPath);
+                    }
                 }
             }
             sOldFile = "c:\\ProgramData\\csvout\\csvout.env";
-            sEnvFile = "c:\\UsesProgram\\csvout\\csvout.env";
-            try{
-                File.Copy(sOldFile,sEnvFile);
-            }
-            catch (Exception exp)
+            if (File.Exists(sOldFile))
             {
-
+                sEnvFile = "c:\\UsesProgram\\csvout\\csvout.env";
+                try
+                {
+                    File.Copy(sOldFile, sEnvFile);
+                }
+                catch (Exception exp)
+                {
+                    App.ErrorLogAppend(sOldFile + "　fileCopy");
+                }
             }
-            return (sEnvPath);
+            return (sCsvOutEnvPath);
         }
         private void InitCmbDelimiter()
         {

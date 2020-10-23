@@ -192,6 +192,7 @@ namespace CsvOut
             }
             catch (Exception ex)
             {
+                App.ErrorLogAppend(sFileName + "　SaveFileSJIS");
                 return (false);
             }
         }
@@ -206,6 +207,7 @@ namespace CsvOut
             }
             catch (Exception ex)
             {
+                App.ErrorLogAppend(sFileName + "　SaveFileUTF8");
                 return (false);
             }
         }
@@ -219,6 +221,7 @@ namespace CsvOut
             }
             catch (Exception exp)
             {//例外発生
+                App.ErrorLogAppend(sSrcFileName + "->" + sDstFileName + "　CopyFile");
                 err = exp.Message;
             }
 
@@ -245,6 +248,7 @@ namespace CsvOut
             }
             catch (Exception exp)
             {//例外発生
+                App.ErrorLogAppend(xmlfile + "　DataXmlSave");
                 err = exp.Message;
             }
             finally
@@ -275,6 +279,7 @@ namespace CsvOut
             }
             catch (Exception exp)
             {//例外発生
+                App.ErrorLogAppend(xmlfile + "　DataXmlLoad");
                 err = exp.Message;
                 return (null);
             }
