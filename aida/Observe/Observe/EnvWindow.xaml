@@ -1,0 +1,11 @@
+﻿<Window x:Class="Observe.EnvWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="EnvWindow" Height="300" Width="300" Icon="Observe.ico">
+    <Grid>
+        <TextBlock Margin="5,5,0,0" Height="23" Width="80" Text="地図保存位置" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtMapPath" Text="" Margin="10,28,0,0" Width="217" Height="23" HorizontalAlignment="Left" VerticalAlignment="Top" Loaded="txtMapPath_Loaded"/>
+        <Button x:Name="btnSelect" Content="参照" Margin="0,27,10,0" Width="50" VerticalAlignment="Top" HorizontalAlignment="Right" Click="btnSelect_Click"/>
+        <Button x:Name="btnRet" Content="戻る" Margin="0,0,10,10" Width="50" HorizontalAlignment="Right" Height="24" VerticalAlignment="Bottom" Click="btnRet_Click" />
+    </Grid>
+</Window>
