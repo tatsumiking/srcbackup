@@ -81,20 +81,31 @@ namespace CsvOut
 
         private void Window_ContentRendered(object sender, EventArgs e)
         {
+            string sYY, sMM, sDD, sHH, sMin, sSS;
+            string sBaseDate, sBaseTime;
             string sMsg;
             if (m_sBaseDate == "0")
             {
-                sMsg = "間隔指定か時刻指定などを設定し「適応」ボタンを押してください";
+                sMsg = "間隔指定か時刻指定などを設定し「適用」ボタンを押してください";
                 MessageBox.Show(sMsg);
             }
             else
             {
+                DateTime dt = DateTime.Now;
+                sYY = dt.ToString("yyyy");
+                sMM = dt.ToString("MM");
+                sDD = dt.ToString("dd");
+                sHH = dt.ToString("HH");
+                sMin = dt.ToString("mm");
+                sSS = "00";
+                sBaseDate = sYY + sMM + sDD;
+                sBaseTime = sHH + sMin + sSS;
+                SetNextCheckTime(sBaseDate, sBaseTime);
                 CheckLoopExec();
             }
         }
         private void CheckLoopExec()
         {
-            SetNextCheckTime(m_sBaseDate, m_sBaseTime);
             m_dsptCheckTime = new DispatcherTimer(DispatcherPriority.Normal);
             m_dsptCheckTime.Interval = TimeSpan.FromMilliseconds(1000 * 30);
             m_dsptCheckTime.Tick += new EventHandler(TickCheckTimeLoop);
@@ -377,6 +388,12 @@ namespace CsvOut
             SortSetLstCheckTime(m_sCheckTimeList);
             m_libCmn.CreatePath(m_sSavePath);
         }
+        private string EnvFileLoadFile()
+        {
+            string data;
+            data = "";
+            return (data);
+        }
         private void EnvFileSave()
         {
             string sSaveFileName;
@@ -492,11 +509,34 @@ namespace CsvOut
         private string InitEnvPath()
         {
             string sEnvPath;
+            string sEnvFile;
+            string sOldFile;
 
-            sEnvPath = "c:\\ProgramData";
-            m_libCmn.CreatePath(sEnvPath);
-            sEnvPath = sEnvPath + "\\csvout";
-            m_libCmn.CreatePath(sEnvPath);
+            sEnvPath = "c:\\UsesProgram";
+            if (!Directory.Exists(sEnvPath))
+            {
+                Directory.CreateDirectory(sEnvPath);
+                sEnvPath = sEnvPath + "\\csvout";
+                Directory.CreateDirectory(sEnvPath);
+
+            }
+            else
+            {
+                sEnvPath = sEnvPath + "\\csvout";
+                if (!Directory.Exists(sEnvPath))
+                {
+                    Directory.CreateDirectory(sEnvPath);
+                }
+            }
+            sOldFile = "c:\\ProgramData\\csvout\\csvout.env";
+            sEnvFile = "c:\\UsesProgram\\csvout\\csvout.env";
+            try{
+                File.Copy(sOldFile,sEnvFile);
+            }
+            catch (Exception exp)
+            {
+
+            }
             return (sEnvPath);
         }
         private void InitCmbDelimiter()
@@ -561,6 +601,7 @@ namespace CsvOut
             }
             m_sSavePath = txtPath.Text;
             m_sUnisDBPath = txtMDBPath.Text;
+            MainWindowODBCInit(); 
             m_sPostFileName = txtPostFileName.Text;
 
             nSelect = cmbDelimiter.SelectedIndex;
@@ -598,6 +639,7 @@ namespace CsvOut
             m_aryFucStrTbl[3] = txtF4.Text;
             if (m_sBaseDate == "0")
             {
+                SetNextCheckTime(m_sBaseDate, m_sBaseTime);
                 CheckLoopExec();
             }
         }

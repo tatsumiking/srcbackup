@@ -282,9 +282,25 @@ namespace CsvOut
                 else if (fldno == 5)
                 {
                     nLMode = m_libCmn.StrToInt(sStr);
-                    if (0 <= nLMode && nLMode <= m_aryFucStrTbl.Length)
+                    if (nLMode == 1)
                     {
-                        sStr = m_aryFucStrTbl[nLMode-1];
+                        sStr = m_aryFucStrTbl[0];
+                    }
+                    else if (nLMode == 2)
+                    {
+                        sStr = m_aryFucStrTbl[1];
+                    }
+                    else if (nLMode == 3)
+                    {
+                        sStr = "その他";
+                    }
+                    else if (nLMode == 4)
+                    {
+                        sStr = m_aryFucStrTbl[2];
+                    }
+                    else if (nLMode == 5)
+                    {
+                        sStr = m_aryFucStrTbl[3];
                     }
                 }
                 strRet = strRet + sStr + m_sDelimiter;
