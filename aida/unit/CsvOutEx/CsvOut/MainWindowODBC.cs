@@ -272,7 +272,7 @@ namespace CsvOut
                             sTimeI = sTimeJ;
                             sTimeJ = sTimeTmp;
                         }
-                        else if (sDateI == sDateJ && sTimeI.CompareTo(sTimeJ) < 0)
+                        else if (sDateI == sDateJ && sTimeI.CompareTo(sTimeJ) > 0)
                         {
                             sCsvTmp = m_lstCsvStr[i];
                             m_lstCsvStr[i] = m_lstCsvStr[j];
