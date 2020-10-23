@@ -58,6 +58,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="LibOdbc.cs" />
+    <Compile Include="MainMapEvent.cs" />
+    <Compile Include="MainMarkEvent.cs" />
     <Compile Include="UnderWin.xaml.cs">
       <DependentUpon>UnderWin.xaml</DependentUpon>
     </Compile>

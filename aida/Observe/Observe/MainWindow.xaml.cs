@@ -38,31 +38,41 @@ namespace Observe
         private Thread m_rcvUDPThread;
         private UdpClient m_rcvUDPClient;
         private Boolean m_bUDPFlag;
+        public Boolean m_bUDPInFlag;
         public LibCommon m_libCmn;
         public LibCanvas m_libCnvs;
         public LibOdbc m_libOdbc;
-        DispatcherTimer m_dsptCheckTime;
         public BlockWin m_blockWin;
         public UnderWin m_underWin;
+        public CardWin m_cardWin;
+        private DispatcherTimer m_dsptCheckTime;
         private DispatcherTimer m_dsptWaitTime;
         public string m_sMapPath;
-        private int m_nMapBase;
-        private int m_nMapTblIdx;
-        //                          10   11    12    13    14     15     16     17      18
-        private int[] m_tblTopX = { 900, 1810, 3624, 7253, 14511, 29026, 58057, 116119, 232243 };
-        private int[] m_tblTopY = { 395,  800, 1605, 3215,  6435, 12874, 25748,  51496, 102992 };
-        private int[] m_tblEndX = { 915, 1823, 3643, 7283, 14563, 29123, 58247, 116495, 232991 };
-        private int[] m_tblEndY = { 410,  811, 1619, 3234,  6465, 12927, 25855,  51711, 103423 };
-        //                               10         11         12         13         14
-        //                               15         16         17         18
-        private double[] m_tblTopLat = { 35.906629, 35.906629, 35.906629, 35.906629, 35.906629 
-                                       , 35.90685, 35.906629, 35.906629, 35.906629, };
-        private double[] m_tblTopLnd = { 138.93274, 138.93274, 138.93274, 138.93274, 138.93274
-                                       , 138.9331, 138.93274, 138.93274, 138.93274, };
-        private double[] m_tblLatBlock = { -0.0089050, -0.0089050, -0.0089050, -0.0089050, -0.0089050
-                                         , -0.0089050, -0.0089050, -0.0089050, -0.0089050, };
-        private double[] m_tblLndBlock = {  0.0109850,  0.0109850,  0.0109850,  0.0109850,  0.0109850
-                                         ,  0.0109850,  0.0109850,  0.0109850,  0.0109850, };
+        //実際の地図は+-4データあり 10   11    12    13    14     15     16     17      18
+        private int[] m_tblTopX = { 907, 1814, 3628, 7257, 14515, 29030, 58061, 116123, 232247 };
+        private int[] m_tblTopY = { 402,  804, 1609, 3219,  6439, 12878, 25757,  51513, 103031 };
+        private int[] m_tblEndX = { 909, 1819, 3639, 7279, 14559, 29119, 58239, 116479, 232959 };
+        private int[] m_tblEndY = { 403,  807, 1615, 3230,  6461, 12923, 25849,  51693, 103387 };
+        //private int[] m_tblTopX = { 903, 1810, 3624, 7253, 14511, 29026, 58057, 116119, 232243 };
+        //private int[] m_tblTopY = { 398, 800, 1605, 3215, 6435, 12874, 25748, 51496, 102992 };
+        //private int[] m_tblEndX = { 915, 1823, 3643, 7283, 14563, 29123, 58247, 116495, 232991 };
+        //private int[] m_tblEndY = { 410, 811, 1619, 3234, 6465, 12927, 25855, 51711, 103423 };
+        //                               10         11         12          13          14
+        //                               15         16         17          18
+        private double[] m_tblTopLat = {  36.03150,  36.03130,  35.9602,  35.92465,  35.90685
+                                       ,  36.03125,  35.90240,  35.900175,  35.899065,   0};
+        private double[] m_tblTopLnd = { 138.8672, 138.8672, 138.8671, 138.91115, 138.9331
+                                       , 138.93310, 138.93860, 138.941345, 138.942720,   0};
+
+        private double[] m_tblLatBlock = { -0.284444, -0.142222, -0.071111, -0.035555, -0.017777
+                                         , -0.008888, -0.004444, -0.002222, -0.001111,  0};
+        private double[] m_tblLndBlock = { 0.351562496,0.175781248,0.087890624,0.043945312,0.021972656
+                                          ,0.010986328,0.005493164,0.002746582,0.001373291,0};
+        private int[] m_tblBaseY = { 402, 804, 1608, 3216, 6432, 12864, 25728, 51456, 102912, 0 };
+        private double m_dBaseLat;
+        private int m_n18BlockLatLast;
+        private double m_d18BlockLatAdd; 
+        private double m_dStepLatSub;
         private int m_nCanvasWidth, m_nCanvasHeight;
         private int m_nWidthDiv, m_nHeightDiv;
         private int m_nCenterXBlock, m_nCenterYBlock;
@@ -73,7 +83,7 @@ namespace Observe
         private Boolean m_bRetouMode;
         private Image m_imgCamera;
         private TextBlock m_tbCrt;
-        public ClsCard m_clsCardCrt;
+        public int m_nClsCardCrtIdx;
         private ClsCard m_clsCardBack;
         public ClsObserve m_clsObserve;
 
@@ -94,28 +104,19 @@ namespace Observe
             odbcLoadEnv();
 
             m_sMapPath = m_sEnvPath + "\\東京都";
-            m_nMapBase = 15;
-            setTableElement();
+            m_dBaseLat = 36.03150;
+            m_d18BlockLatAdd = -0.0011105;
+            m_dStepLatSub = -0.0000001579;
+            m_n18BlockLatLast = m_tblEndY[8] - m_tblBaseY[8];
             m_bRetouMode = false;
-            m_clsCardCrt = null;
             m_tbCrt = null;
-
-            m_clsObserve = new ClsObserve();
-        }
-        private void setTableElement()
-        {
-            m_nMapTblIdx = m_nMapBase - 10;
-            m_nLastX = m_tblEndX[m_nMapTblIdx] - m_tblTopX[m_nMapTblIdx] - m_nWidthDiv * 3 + 2;
-            m_nLastY = m_tblEndY[m_nMapTblIdx] - m_tblTopY[m_nMapTblIdx] - m_nHeightDiv * 3 + 2;
-            m_dLatDotStep = m_tblLatBlock[m_nMapTblIdx] / Constants.MAPDOTSIZE;
-            m_dLndDotStep = m_tblLndBlock[m_nMapTblIdx] / Constants.MAPDOTSIZE;
+            m_clsObserve = null;
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             Type type;
             string sXmlFile;
 
-            startCheckThread();
             //this.MaximizeBox
             sXmlFile = m_sEnvPath + "\\Observe.xml";
             type = typeof(ClsObserve);
@@ -124,17 +125,12 @@ namespace Observe
             {
                 m_clsObserve = new ClsObserve();
             }
-            if (m_clsObserve.m_lstClsCard.Count == 0)
-            {
-                m_clsCardCrt = null;
-            }
-            else
-            {
-                m_clsCardCrt = m_clsObserve.m_lstClsCard[0];
-            }
+            setCrtCardIdx(-1);
+
             m_cnvsMove = new Canvas();
-            initMapElement();
+
             initMouseEvent();
+            initMapElement();
             initCmbGroup();
             initCmbPlaceName();
             m_dZoomTime = 1.0;
@@ -142,12 +138,14 @@ namespace Observe
             initMapArea();
             initBlockWin();
             initUnderWin();
+            startCheckThread();
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             Type type;
             string sXmlFile;
 
+            saveCrtTizuPos();
             if (m_clsObserve == null)
             {
                 return;
@@ -156,40 +154,82 @@ namespace Observe
             type = typeof(ClsObserve);
             m_libCmn.DataXmlSave(sXmlFile, type, m_clsObserve);
         }
+        public void setCrtCardIdx(int idx)
+        {
+            m_nClsCardCrtIdx = idx;
+        }
+        public int getCrtCardIdx()
+        {
+            return (m_nClsCardCrtIdx);
+        }
         public void startCheckThread()
         {
-            setCheckMdbFlag(true);
             m_dsptCheckTime = new DispatcherTimer(DispatcherPriority.Normal);
             m_dsptCheckTime.Interval = TimeSpan.FromMilliseconds(1000 * 10);
             m_dsptCheckTime.Tick += new EventHandler(checkThread);
             m_dsptCheckTime.Start();
         }
-        public void setCheckMdbFlag(Boolean flag)
+        public void resetUDPFlag()
         {
-            if (flag == false)
+            int max, idx;
+
+            max = m_clsObserve.m_lstClsCard.Count;
+            for (idx = 0; idx < max; idx++)
             {
-                m_bUDPFlag = false;
+                if (m_clsObserve.m_lstClsCard[idx].m_sStat == "2")
+                {
+                    m_clsObserve.m_lstClsCard[idx].m_sStat = "";
+                    setUnderMsg("");
+                    setBlockWin();
+                }
             }
-            m_bCheckMdb = flag;
+            m_bUDPFlag = false;
+            m_bUDPInFlag = false;
+        }
+        public void setCheckStartUdp()
+        {
+            m_bUDPFlag = true;
         }
         private void checkThread(object sender, EventArgs e)
         {
-            if (m_bCheckMdb == true)
+            checkMdbElement();
+            if (m_bUDPFlag == true)
             {
-                checkIO6Event();
-            }
-            else
-            {
-                if (m_bUDPFlag == true)
+                if(m_bUDPInFlag == false)
                 {
-                    setCheckMdbFlag(true);
-                    m_rcvUDPClient.Close();
-                    m_rcvUDPThread.Abort();
-                    return;
+                    m_rcvUDPThread = new System.Threading.Thread(new System.Threading.ThreadStart(checkUdpThread));
+                    m_rcvUDPThread.Start();
                 }
-                m_rcvUDPThread = new System.Threading.Thread(new System.Threading.ThreadStart(checkUdpEvent));
-                m_rcvUDPThread.Start();
             }
+        }
+        public void checkUdpThread()
+        {
+            m_bUDPInFlag = true;
+            udpReceiveGPSData();
+            m_bUDPInFlag = false;
+            addCardMark();
+        }
+        private int searchCardIdx(String sId)
+        {
+            int max, idx;
+
+            max = m_clsObserve.m_lstClsCard.Count;
+            for (idx = 0; idx < max; idx++)
+            {
+                if (m_clsObserve.m_lstClsCard[idx].m_sSetNo == sId)
+                {
+                    return (idx);
+                }
+            }
+            return (-1);
+        }
+        private void setUnderMsg(String sMsg)
+        {
+            m_underWin.dispMsg(sMsg);
+        }
+        private void setBlockWin()
+        {
+            m_blockWin.SetListElement();
         }
         private void dispMameoryCrt()
         {
@@ -231,6 +271,7 @@ namespace Observe
             string sFileName;
             string[] aryLine;
 
+            // m_nPort = 5547;
             sFileName = m_sEnvPath + "\\Observe.env";
             aryLine = m_libCmn.LoadFileLineSJIS(sFileName);
             if (4 <= aryLine.Length)
@@ -345,8 +386,6 @@ namespace Observe
         {
             int width;
             int height;
-            int xidx, yidx, xmax, ymax;
-            int xpos, ypos, size;
 
             width = (int)gridDrawArea.ActualWidth;
             height = (int)gridDrawArea.ActualHeight;
@@ -368,8 +407,8 @@ namespace Observe
                 m_nHeightDiv++;
             }
 
-            m_nLastX = m_tblEndX[m_nMapTblIdx] - m_tblTopX[m_nMapTblIdx] - m_nWidthDiv * 3 + 2;
-            m_nLastY = m_tblEndY[m_nMapTblIdx] - m_tblTopY[m_nMapTblIdx] - m_nHeightDiv * 3 + 2;
+            m_nLastX = m_tblEndX[m_nMapTblIdx] - m_tblTopX[m_nMapTblIdx] - m_nWidthDiv;
+            m_nLastY = m_tblEndY[m_nMapTblIdx] - m_tblTopY[m_nMapTblIdx] - m_nHeightDiv;
 
             m_cnvsMove.Width = m_nWidthDiv * 3 * Constants.MAPDOTSIZE;
             m_cnvsMove.Height = m_nHeightDiv * 3 * Constants.MAPDOTSIZE;
@@ -385,27 +424,30 @@ namespace Observe
         {
             m_dsptWaitTime.Stop();
         }
-        private void moveLatLnd(double dLat, double dLnd)
+        public void moveLatLnd(ClsLatLnd clsLatLnd)
         {
-            double dSubLat, dSubLnd;
-            int setxblock, setyblock;
+            ClsPagePosXY clsPagePosXY;
+            int setxPage, setyPage;
             int setxdot, setydot;
 
-            m_nMapBase = 15;
-            m_nMapTblIdx = m_nMapBase - 10;
-            m_nLastX = m_tblEndX[m_nMapTblIdx] - m_tblTopX[m_nMapTblIdx] - m_nWidthDiv * 3 + 2;
-            m_nLastY = m_tblEndY[m_nMapTblIdx] - m_tblTopY[m_nMapTblIdx] - m_nHeightDiv * 3 + 2;
-            dSubLat = (dLat - m_tblTopLat[m_nMapTblIdx]);
-            dSubLnd = (dLnd - m_tblTopLnd[m_nMapTblIdx]);
-            setyblock = (int)(dSubLat / m_tblLatBlock[m_nMapTblIdx]);
-            setxblock = (int)(dSubLnd / m_tblLndBlock[m_nMapTblIdx]);
-            setydot = (int)((dSubLat - setyblock * m_tblLatBlock[m_nMapTblIdx]) / m_dLatDotStep);
-            setxdot = (int)((dSubLnd - setxblock * m_tblLndBlock[m_nMapTblIdx]) / m_dLndDotStep);
+            //m_nMapBase = 15;
+            //setTableElement(); // m_nMapTblIdx, m_nLastX, m_nLastY, m_dLatDotStep, m_dLndDotStep 設定
 
-            m_nCrtX = setxblock - m_nCenterXBlock;
-            m_nCrtY = setyblock - m_nCenterYBlock;
+            // ページ数＋ページ位置算出
+            clsPagePosXY = convLatLndToRltvPagePosXY(clsLatLnd);
+            // ページ数セット
+            setxPage = (int)(clsPagePosXY.m_dPagePosX);
+            setyPage = (int)(clsPagePosXY.m_dPagePosY);
+            // ドット数
+            setxdot = (int)((clsPagePosXY.m_dPagePosX - setxPage) * Constants.MAPDOTSIZE);
+            setydot = (int)((clsPagePosXY.m_dPagePosY - setyPage) * Constants.MAPDOTSIZE);
+
+            m_nCrtX = setxPage - m_nCenterXBlock - m_nWidthDiv;
+            m_nCrtY = setyPage - m_nCenterYBlock - m_nHeightDiv;
+            int nPageX = m_nCrtX + m_tblTopX[m_nMapTblIdx];
+            int nPageY = m_nCrtY + m_tblTopY[m_nMapTblIdx];
             m_nAddX = m_nCanvasWidth / 2 - (m_nCenterXBlock * Constants.MAPDOTSIZE + setxdot);
-            m_nAddY = m_nCanvasWidth / 2 - (m_nCenterYBlock * Constants.MAPDOTSIZE + setydot);
+            m_nAddY = m_nCanvasHeight / 2 - (m_nCenterYBlock * Constants.MAPDOTSIZE + setydot);
             m_nAddX = m_nAddX - m_nWidthDiv * Constants.MAPDOTSIZE;
             m_nAddY = m_nAddY - m_nHeightDiv * Constants.MAPDOTSIZE;
             m_dZoomTime = 1.0;
@@ -414,187 +456,141 @@ namespace Observe
             m_cnvsMove.RenderTransform = null;
             initMapArea();
         }
-        private void addCardMark()
+        private ClsPagePosXY convLatLndToRltvPagePosXY(ClsLatLnd clsLatLnd)
         {
-            int max, idx;
-            double dLat, dLnd;
-            string sStr;
+            ClsPagePosXY clsPagePosXY;
+            double dSubLat, dSubLnd;
 
-            if (m_clsCardCrt == null)
+            clsPagePosXY = new ClsPagePosXY();
+            dSubLnd = (clsLatLnd.m_dLnd - m_tblTopLnd[m_nMapTblIdx]);
+            clsPagePosXY.m_dPagePosX = dSubLnd / m_tblLndBlock[m_nMapTblIdx];
+            m_dLndDotStep = m_tblLndBlock[m_nMapTblIdx] / Constants.MAPDOTSIZE;
+            if (clsPagePosXY.m_dPagePosX < 0)
             {
-                return;
+                clsPagePosXY.m_dPagePosX = 0;
             }
-            cnvsMarkArea.Children.Clear();
-            if (m_nMapBase == 15)
+            if ((double)m_nLastX < clsPagePosXY.m_dPagePosX)
             {
-                addCnvsMoveCardMark(m_clsCardCrt.m_dLat, m_clsCardCrt.m_dLnd, m_clsCardCrt.m_sSyoNo);
-                max = m_clsCardCrt.m_lstGpsPos.Count;
-                for (idx = 0; idx < max; idx++)
-                {
-                    dLat = m_clsCardCrt.m_lstGpsPos[idx].m_dLat;
-                    dLnd = m_clsCardCrt.m_lstGpsPos[idx].m_dLnd;
-                    sStr = m_clsCardCrt.m_lstGpsPos[idx].m_sDate;
-                    addCnvsMoveGPSMark(dLat, dLnd, sStr);
+                clsPagePosXY.m_dPagePosX = (double)m_nLastX;
+            }
+
+            dSubLat = clsLatLnd.m_dLat - m_dBaseLat;
+            clsPagePosXY.m_dPagePosY = getLatBlockPagePos(dSubLat);
+            return (clsPagePosXY);
+        }
+        public double getLatBlockPagePos(double dSubLat)
+        {
+            double  dCrtSubLat;
+            double  d18AddStep;
+            double  dPagePos;
+            int     subPage;
+            int     n18LastY;
+            int     idx;
+
+            dCrtSubLat = 0;
+            d18AddStep = m_d18BlockLatAdd;
+            dPagePos = dSubLat / d18AddStep;
+            dPagePos = 0.0;
+            n18LastY = m_tblEndY[8] - m_tblBaseY[8];
+            // 18z時のページポジションを求める
+            for (subPage = 10; subPage < n18LastY; subPage += 10)
+            {
+                if((dCrtSubLat + d18AddStep * 10) < dSubLat){
+                    dPagePos = subPage - 10;
+                    dPagePos = dPagePos + ((dSubLat - dCrtSubLat) / (d18AddStep));
+                    break;
                 }
+                dCrtSubLat = dCrtSubLat + d18AddStep * 10;
+                d18AddStep = d18AddStep + m_dStepLatSub;
             }
-        }
-        private void addCnvsMoveCardMark(double dLat, double dLnd, string sSetNo)
-        {
-            double subx, suby;
-            int sx, sy;
-
-            suby = (dLat - (m_tblTopLat[m_nMapTblIdx] + m_nCrtY * m_tblLatBlock[m_nMapTblIdx]));
-            subx = (dLnd - (m_tblTopLnd[m_nMapTblIdx] + m_nCrtX * m_tblLndBlock[m_nMapTblIdx]));
-            sy = (int)(suby / m_dLatDotStep * m_dZoomTime);
-            sx = (int)(subx / m_dLndDotStep * m_dZoomTime);
-            sx = sx + (int)(m_nAddX * m_dZoomTime + m_nMoveX + m_nZoomAddX);
-            sy = sy + (int)(m_nAddY * m_dZoomTime + m_nMoveY + m_nZoomAddY);
-            if (sx < 0 || sy < 0 || cnvsMarkArea.ActualWidth < sx || cnvsMarkArea.ActualHeight < sy)
-            {
-                return;
+            m_dLatDotStep = d18AddStep / Constants.MAPDOTSIZE;
+            for(idx = 8; idx >= 0; idx--){
+                if(m_nMapTblIdx == idx){
+                    dPagePos = dPagePos + m_tblBaseY[m_nMapTblIdx] - m_tblTopY[m_nMapTblIdx];
+                    if(dPagePos < 0){
+                        dPagePos = 0;
+                    }
+                    if((double)m_nLastY < dPagePos){
+                        dPagePos = (double)m_nLastY;
+                    }
+                    return(dPagePos);
+                }
+                m_dLatDotStep = m_dLatDotStep * 2;
+                dPagePos = dPagePos / 2.0;
             }
-            m_libCnvs.setFontSize(24);
-            m_tbCrt = m_libCnvs.CreateTextBlock(0, 0, sSetNo);
-            subx = 24 * sSetNo.Length / 4 - 12;
-            Canvas.SetLeft(m_tbCrt, sx-subx);
-            Canvas.SetTop(m_tbCrt, sy-24);
-            cnvsMarkArea.Children.Add(m_tbCrt);
-            m_imgCamera = new Image();
-            Canvas.SetLeft(m_imgCamera, sx);
-            Canvas.SetTop(m_imgCamera, sy);
-            m_imgCamera.Width = 64;
-            m_imgCamera.Stretch = Stretch.Fill;
-            m_imgCamera.Source = new BitmapImage(new Uri("pic/camera.png", UriKind.Relative));
-            cnvsMarkArea.Children.Add(m_imgCamera);
+            return (0.0);
         }
-        private void addCnvsMoveGPSMark(double dLat, double dLnd, string sStr)
+        public void setCrtCardWinDisp()
         {
-            double subx, suby;
-            int sx, sy;
-            TextBlock tb;
+            int nCrtIdx;
+            ClsCard clsCard;
 
-            suby = (dLat - (m_tblTopLat[m_nMapTblIdx] + m_nCrtY * m_tblLatBlock[m_nMapTblIdx]));
-            subx = (dLnd - (m_tblTopLnd[m_nMapTblIdx] + m_nCrtX * m_tblLndBlock[m_nMapTblIdx]));
-            sy = (int)(suby / m_dLatDotStep * m_dZoomTime);
-            sx = (int)(subx / m_dLndDotStep * m_dZoomTime);
-            sx = sx + (int)(m_nAddX * m_dZoomTime + m_nMoveX + m_nZoomAddX);
-            sy = sy + (int)(m_nAddY * m_dZoomTime + m_nMoveY + m_nZoomAddY);
-            if (sx < 0 || sy < 0 || cnvsMarkArea.ActualWidth < sx || cnvsMarkArea.ActualHeight < sy)
-            {
-                return;
-            }
-            m_libCnvs.setFontSize(24);
-            tb = m_libCnvs.CreateTextBlock(0, 0, sStr);
-            tb.Foreground = Brushes.Red;
-            Canvas.SetLeft(tb, sx);
-            Canvas.SetTop(tb, sy);
-            cnvsMarkArea.Children.Add(tb);
-        }
-        private void setMarkPosition(int nxmap, int nymap, int nxdsp, int nydsp)
-        {
-            ClsLatLnd clsLatLnd;
-            int nNo;
-            CardWin cardWin;
-
-            //m_clsCardCrt = new ClsCard();
-            //m_clsObserve.m_lstClsCard.Add(m_clsCardCrt);
-            m_clsCardBack = m_clsCardCrt;
-            if (m_clsCardCrt == null)
+            nCrtIdx = getCrtCardIdx();
+            if (nCrtIdx == -1)
             {
                 m_clsCardBack = null;
-                m_clsCardCrt = new ClsCard();
-                m_clsObserve.m_lstClsCard.Add(m_clsCardCrt);
+                clsCard = new ClsCard();
+                nCrtIdx = m_clsObserve.m_lstClsCard.Count;
+                m_clsObserve.m_lstClsCard.Add(clsCard);
+                setCrtCardIdx(nCrtIdx);
             }
             else
             {
                 m_clsCardBack = new ClsCard();
-                m_clsCardBack.m_dLat = m_clsCardCrt.m_dLat;
-                m_clsCardBack.m_dLnd = m_clsCardCrt.m_dLnd;
-                m_clsCardBack.m_sSetNo = m_clsCardCrt.m_sSetNo;
-                m_clsCardBack.m_sIP = m_clsCardCrt.m_sIP;
-                m_clsCardBack.m_sSyoNo = m_clsCardCrt.m_sSyoNo;
-                m_clsCardBack.m_sAddress1 = m_clsCardCrt.m_sAddress1;
-                m_clsCardBack.m_sAddress2 = m_clsCardCrt.m_sAddress2;
-                m_clsCardBack.m_sTel1 = m_clsCardCrt.m_sTel1;
-                m_clsCardBack.m_sTel2 = m_clsCardCrt.m_sTel2;
-                m_clsCardBack.m_sName = m_clsCardCrt.m_sName;
-                m_clsCardBack.m_sBikou = m_clsCardCrt.m_sBikou;
-                m_clsCardBack.m_lstGpsPos = m_clsCardCrt.m_lstGpsPos;
+                m_clsCardBack.copySetElement(m_clsObserve.m_lstClsCard[nCrtIdx]);
+                clsCard = m_clsCardBack;
             }
-            //nNo = m_clsObserve.m_lstClsCard.Count+1;
-            //m_clsCardCrt.m_sSetNo = nNo.ToString("0000000");
-            m_clsCardCrt.m_sSyoNo = "";
-            clsLatLnd = getMousePosToLatLnd(nxmap, nymap);
-            m_clsCardCrt.m_dLat = clsLatLnd.m_dLat;
-            m_clsCardCrt.m_dLnd = clsLatLnd.m_dLnd;
-            addCnvsMoveCardMark(m_clsCardCrt.m_dLat, m_clsCardCrt.m_dLnd, m_clsCardCrt.m_sSyoNo);
+            m_cardWin = new CardWin();
+            m_cardWin.SetMainWindow(this);
+            m_cardWin.SetClsCard(clsCard);
+            m_cardWin.Owner = this;
+            m_cardWin.Show();
+        }
+        public void SetCrtCardElement(ClsCard clsCard)
+        {
+            int nCrtIdx;
 
-            cardWin = new CardWin();
-            cardWin.SetMainWindow(this);
-            cardWin.SetClsCard(m_clsCardCrt);
-            cardWin.Left = 400;
-            cardWin.Top = 500;
-            cardWin.Owner = this;
-            cardWin.ShowDialog();
-            if (m_clsCardCrt == null)
+            nCrtIdx = getCrtCardIdx();
+            if (nCrtIdx == -1)
             {
                 return;
             }
-        }
-        public void SetClsCardElement(ClsCard clsCard)
-        {
-            m_clsCardCrt.m_sSetNo = clsCard.m_sSetNo;
-            m_clsCardCrt.m_sIP = clsCard.m_sIP;
-            m_clsCardCrt.m_sSyoNo = clsCard.m_sSyoNo;
-            m_clsCardCrt.m_sName = clsCard.m_sName;
-            m_clsCardCrt.m_sAddress1 = clsCard.m_sAddress1;
-            m_clsCardCrt.m_sAddress2 = clsCard.m_sAddress2;
-            m_clsCardCrt.m_sTel1 = clsCard.m_sTel1;
-            m_clsCardCrt.m_sTel2 = clsCard.m_sTel2;
-            m_clsCardCrt.m_sBikou = clsCard.m_sBikou;
-            m_clsCardCrt.m_lstGpsPos.Clear();
+            m_clsObserve.m_lstClsCard[nCrtIdx].copySetElement(clsCard);
 
+            m_blockWin.SetListElement();
             addCardMark();
         }
         public void ResetClsCardElement()
         {
+            int nCrtIdx;
+
+            nCrtIdx = getCrtCardIdx();
+            if(nCrtIdx == -1)
+            {
+                return;
+            }
             if (m_clsCardBack == null)
             {
-                m_clsObserve.m_lstClsCard.Clear();
-                m_clsCardCrt = null;
+                // m_clsObserve.m_lstClsCard.Clear();
+                setCrtCardIdx(-1);
+                return;
             }
-            else
-            {
-                m_clsCardCrt.m_dLat = m_clsCardBack.m_dLat;
-                m_clsCardCrt.m_dLnd = m_clsCardBack.m_dLnd;
-                m_clsCardCrt.m_sSetNo = m_clsCardBack.m_sSetNo;
-                m_clsCardCrt.m_sIP = m_clsCardBack.m_sIP;
-                m_clsCardCrt.m_sSyoNo = m_clsCardBack.m_sSyoNo;
-                m_clsCardCrt.m_sAddress1 = m_clsCardBack.m_sAddress1;
-                m_clsCardCrt.m_sAddress2 = m_clsCardBack.m_sAddress2;
-                m_clsCardCrt.m_sTel1 = m_clsCardBack.m_sTel1;
-                m_clsCardCrt.m_sTel2 = m_clsCardBack.m_sTel2;
-                m_clsCardCrt.m_sName = m_clsCardBack.m_sName;
-                m_clsCardCrt.m_sBikou = m_clsCardBack.m_sBikou;
-                addCnvsMoveCardMark(m_clsCardCrt.m_dLat, m_clsCardCrt.m_dLnd, m_clsCardCrt.m_sSyoNo);
-            }
-
+            m_clsObserve.m_lstClsCard[nCrtIdx].copySetElement(m_clsCardBack);
             addCardMark();
         }
-        private ClsLatLnd getMousePosToLatLnd(int nx, int ny)
+        public void SetCrtCardLatLnd(double dLat, double dLnd)
         {
-            double dPosX, dPosY;
-            ClsLatLnd clsLatLnd;
-            double dCanvasOffsetX, dCanvasOffsetY;
+            int nCrtIdx;
 
-            clsLatLnd = new ClsLatLnd();
-            dPosX = (double)(nx);
-            dPosY = (double)(ny);
-            dCanvasOffsetX = dPosX;
-            dCanvasOffsetY = dPosY;
-            clsLatLnd.m_dLat = m_tblTopLat[m_nMapTblIdx] + m_nCrtY * m_tblLatBlock[m_nMapTblIdx] + dCanvasOffsetY * m_dLatDotStep;
-            clsLatLnd.m_dLnd = m_tblTopLnd[m_nMapTblIdx] + m_nCrtX * m_tblLndBlock[m_nMapTblIdx] + dCanvasOffsetX * m_dLndDotStep;
-            return (clsLatLnd);
+            nCrtIdx = getCrtCardIdx();
+            if (nCrtIdx == -1)
+            {
+                return;
+            }
+            m_clsObserve.m_lstClsCard[nCrtIdx].m_dLat = dLat;
+            m_clsObserve.m_lstClsCard[nCrtIdx].m_dLnd = dLnd;
+
+            addCardMark();
         }
         private void cmbPlaceName_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -602,7 +598,7 @@ namespace Observe
             string[] ary;
             int nSXBlock;
             int nSYBlock;
-            double dLat, dLnd;
+            ClsLatLnd clsLatLnd;
 
             int idx = cmbPlaceName.SelectedIndex;
             if (idx == -1)
@@ -631,14 +627,24 @@ namespace Observe
             else
             {
                 m_bRetouMode = false;
-                dLat = m_libCmn.StrToDouble(ary[1]);
-                dLnd = m_libCmn.StrToDouble(ary[2]);
-                moveLatLnd(dLat, dLnd);
+                clsLatLnd = new ClsLatLnd();
+                clsLatLnd.m_dLat = m_libCmn.StrToDouble(ary[1]);
+                clsLatLnd.m_dLnd = m_libCmn.StrToDouble(ary[2]);
+                moveLatLnd(clsLatLnd);
             }
         }
         private void btnMove_Click(object sender, RoutedEventArgs e)
         {
             string sAddress;
+            ClsLatLnd clsLatLnd;
+
+            sAddress = txtAddress.Text;
+            clsLatLnd = getAddressToLatLnd(sAddress);
+            moveLatLnd(clsLatLnd);
+        }
+        public ClsLatLnd getAddressToLatLnd(String sAddress)
+        {
+            ClsLatLnd latlnd;
             OdbcConnection con;
             int max, len;
             string sBeforeSql;
@@ -646,10 +652,15 @@ namespace Observe
             OdbcCommand com;
             OdbcDataReader reader;
             string sSubStr;
-            double dLat, dLnd;
 
-            sAddress = txtAddress.Text;
+            latlnd = new ClsLatLnd();
+            latlnd.m_dLat = 0;
+            latlnd.m_dLnd = 0;
             sAddress = m_libCmn.StrNumToKan(sAddress);
+            if (sAddress.Substring(0, 3) == "東京都")
+            {
+                sAddress = sAddress.Substring(3);
+            }
             con = m_libOdbc.openMdb();
             if (con != null)
             {
@@ -658,7 +669,7 @@ namespace Observe
                 for(len = 2; len < max; len++){
                     sSubStr = sAddress.Substring(0, len);
                     sSql = "SELECT * FROM adrslatlnd";
-                    sSql = sSql + " WHERE address LIKE '%"+sSubStr+"%';";
+                    sSql = sSql + " WHERE adrs LIKE '%"+sSubStr+"%';";
                     com = new OdbcCommand(sSql, con);
                     try
                     {
@@ -679,9 +690,8 @@ namespace Observe
                     reader = com.ExecuteReader();
                     while (reader.Read())
                     {
-                        dLat = reader.GetDouble(2);
-                        dLnd = reader.GetDouble(3);
-                        moveLatLnd(dLat, dLnd);
+                        latlnd.m_dLat = reader.GetDouble(2);
+                        latlnd.m_dLnd = reader.GetDouble(3);
                         break;
                     }
                 }
@@ -690,6 +700,7 @@ namespace Observe
                 }
                 m_libOdbc.closeMdb(con);
             }
+            return (latlnd);
         }
     }
 }

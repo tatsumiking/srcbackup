@@ -3,6 +3,10 @@
         Top="930" Left="0"
         Topmost="True" 
         WindowStyle="None"
+        // test
+        Height="150" Width="1020"
+        Top="930" Left="0"
+       
 -->
 <Window x:Class="Observe.UnderWin"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -10,9 +14,12 @@
         Title="UnderWin"
         Height="150" Width="1020"
         Top="930" Left="0"
+        Topmost="True" 
+        WindowStyle="None"
+        Icon="Observe.ico"
         BorderThickness="1"
         BorderBrush="#000">
     <Grid>
-        <Canvas Margin="1" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Canvas x:Name="cnvsMsg" Loaded="cnvsMsg_Loaded"/>
     </Grid>
 </Window>

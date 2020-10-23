@@ -2,9 +2,11 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="設置場所入力"
-        Height="260" Width="620"
+        Height="260" Width="640"
+        Top="240" Left="380"
+        Topmost="True" 
         Loaded="Window_Loaded"
-        FontFamily="MS Mincho" FontSize="12">
+        FontFamily="MS Mincho" FontSize="14" Icon="Observe.ico">
     <Grid>
         <TextBox Text="警報装置番号" Margin="20,20,0,0" Width="100" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Padding="0,2,0,0" IsReadOnly="True" IsTabStop="False" TextAlignment="Center"/>
         <TextBox x:Name="txtSetNo" Text="" Margin="120,20,0,0" Width="100" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0,2,0,0" TextAlignment="Center"/>
@@ -18,7 +20,8 @@
 
         <TextBox Text="設置場所" Margin="20,60,0,0" Width="100" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Padding="0,2,0,0" IsReadOnly="True" IsTabStop="False" TextAlignment="Center"/>
         <TextBox Text="住所１" Margin="120,60,0,0" Width="100" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0,2,0,0" IsReadOnly="True" IsTabStop="False" TextAlignment="Center"/>
-        <TextBox x:Name="txtAddress1" Text="" Margin="220,60,0,0" Width="380" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Padding="0,2,0,0"/>
+        <TextBox x:Name="txtAddress1" Text="" Margin="220,60,0,0" Width="322" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Padding="0,2,0,0"/>
+        <Button x:Name="btnMovePos" Content="移動" Margin="542,59,0,0" Width="58" Height="21" HorizontalAlignment="Left" VerticalAlignment="Top" Click="btnMovePos_Click"/>
 
         <TextBox Text="" Margin="20,80,0,0" Width="100" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Padding="0,2,0,0" IsReadOnly="True" IsTabStop="False"/>
         <TextBox Text="住所２" Margin="120,80,0,0" Width="100" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0,2,0,0" IsReadOnly="True" IsTabStop="False" TextAlignment="Center"/>

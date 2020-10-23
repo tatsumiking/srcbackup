@@ -38,14 +38,17 @@ namespace Observe
             sFileName = m_sEnvPath + "\\mdb.env";
             m_libCmn.SaveFileSJIS(sFileName, sData);
         }
-        public void checkIO6Event()
+        public void checkMdbElement()
         {
             OdbcConnection con;
             string sSql;
             OdbcCommand com;
             OdbcDataReader reader;
+            string sId;
             string sMsg;
             string sDateTime;
+            int max, idx;
+            
 
             // m_nCrtNo = 20;
             // m_sDateTime = "2018-07-04 09:45:27";
@@ -55,7 +58,7 @@ namespace Observe
             if (con != null)
             {
                 sSql = "SELECT ";
-                sSql = sSql + "NUM, MESSAGE, MESSAGETIME";
+                sSql = sSql + "NUM, ID, MESSAGE, MESSAGETIME";
                 sSql = sSql + " FROM EVENT";
                 sSql = sSql + " WHERE (NUM > " + m_nOdbcCrtNo + ");";
                 com = new OdbcCommand(sSql, con);
@@ -65,12 +68,9 @@ namespace Observe
                     while (reader.Read())
                     {
                         m_nOdbcCrtNo = reader.GetInt32(0);
-                        sMsg = GetReaderString(reader, 1);
-                        if (sMsg == "I/Oモージュル 1 - インプット 6 作動検知")
-                        {
-                            odbcSaveEnv();
-                            setCheckMdbFlag(false);
-                        }
+                        sId = GetReaderString(reader, 1);
+                        sMsg = GetReaderString(reader, 2);
+                        setCardStat(sId, sMsg);
                         sDateTime = GetReaderString(reader, 2);
                     }
                 }
@@ -80,7 +80,74 @@ namespace Observe
                 }
                 closeMdb(con);
                 odbcSaveEnv();
+
+                max = m_clsObserve.m_lstClsCard.Count;
+                for (idx = 0; idx < max; idx++)
+                {
+                    sMsg = m_clsObserve.m_lstClsCard[idx].m_sStat;
+                    if (sMsg == "1" || sMsg == "2")
+                    {
+                        return;
+                    }
+                }
+                setUnderMsg("");
             }
+        }
+        private void setCardStat(String sId, String sMsg)
+        {
+            int idx;
+            int len;
+            String sCheckStr;
+
+            idx = searchCardIdx(sId);
+            if (idx == -1)
+            {
+                return;
+            }
+            len = sMsg.Length;
+            sCheckStr = "";
+            if(10 < len){
+                sCheckStr = sMsg.Substring(0, 10);
+            }
+            if (sMsg == "ログイン")
+            {
+                if (m_clsObserve.m_lstClsCard[idx].m_sStat != "0")
+                {
+                    m_clsObserve.m_lstClsCard[idx].m_sStat = "0";
+                    setBlockWin();
+                }
+            }
+            else if (sMsg == "ログアウト")
+            {
+                if (m_clsObserve.m_lstClsCard[idx].m_sStat != "")
+                {
+                    m_clsObserve.m_lstClsCard[idx].m_sStat = "";
+                    setBlockWin();
+                }
+            }
+            else if (sCheckStr == "I/Oモジュール 1")
+            {
+                if (sMsg == "I/Oモジュール 1 - インプット 6 作動検知")
+                {
+                    if (m_clsObserve.m_lstClsCard[idx].m_sStat != "2")
+                    {
+                        m_clsObserve.m_lstClsCard[idx].m_sStat = "2";
+                        setCheckStartUdp();
+                        setUnderMsg("持ち去り警報");
+                        setBlockWin();
+                    }
+                }
+                else
+                {
+                    m_clsObserve.m_lstClsCard[idx].m_sStat = "1";
+                    setUnderMsg("センサー発報中　"+sMsg.Substring(13));
+                    setBlockWin();
+                }
+            }
+            //else
+            //{
+            //    m_clsObserve.m_lstClsCard[idx].m_sStat = "0";
+            //}
         }
         private string GetReaderString(OdbcDataReader reader, int idx)
         {

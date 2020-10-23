@@ -175,6 +175,19 @@ namespace Observe
             canvas.Children.Add(cvText);
             return (cvText);
         }
+        public Button drawButton(Canvas canvas, double sx, double sy, double wd, double hi, string str)
+        {
+            Button btn;
+
+            btn = new Button();
+            Canvas.SetLeft(btn, sx);
+            Canvas.SetTop(btn, sy);
+            btn.Width = wd;
+            btn.Height = hi;
+            btn.Content = str;
+            canvas.Children.Add(btn);
+            return (btn);
+        }
         // Imageオブジェクトの生成
         private Image CreateImage(double x, double y, double width, double height, string sFileName)
         {
@@ -221,6 +234,7 @@ namespace Observe
             tb.FontSize = m_dFontSize;
             return tb;
         }
+
         public void drawLine(Canvas canvas, double sx, double sy, double ex, double ey)
         {
             Line line;

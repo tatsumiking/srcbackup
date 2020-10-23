@@ -3,16 +3,22 @@
         Top="502" Left="0"
         Topmost="True" 
         WindowStyle="None"
+        // test
+        Height="430" Width="1020"
+        Top="700" Left="0"
+    
 -->
 <Window x:Class="Observe.BlockWin"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="BlockWin"
         Height="430" Width="1020"
-        Top="700" Left="0"
+        Top="502" Left="0"
+        Topmost="True" 
+        WindowStyle="None"
         Loaded="Window_Loaded"
-        Icon="Observe.ico" FontSize="14">
-    <Grid>
+        Icon="Observe.ico" FontSize="14" PreviewMouseDown="Window_PreviewMouseDown">
+    <Grid x:Name="gridBlock">
         <Canvas x:Name="cnvsList" Margin="1">
         </Canvas>
 

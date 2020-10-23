@@ -21,6 +21,7 @@ namespace Observe
     {
         private MainWindow m_wndMain;
         public LibCanvas m_libCnvs;
+        public double m_dOneCardHeight;
 
         public BlockWin()
         {
@@ -33,7 +34,10 @@ namespace Observe
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            SetListElement();
+            if (m_wndMain.m_clsObserve != null)
+            {
+                SetListElement();
+            }
         }
         public void SetListElement()
         {
@@ -45,11 +49,15 @@ namespace Observe
             double sx, sy, ex, ey;
             double addx, addy;
             int max, idx;
+            Grid grid;
+            ClsCard card;
 
+            cnvsList.Children.Clear();
             m_libCnvs.setStrokeBrush(Brushes.Black, 1.0);
             dWidth = cnvsList.ActualWidth;
             dHeight = cnvsList.ActualHeight;
             dLineSize = 38.0;
+            m_dOneCardHeight = dLineSize;
             dFontSize = 30.0;
             addx = 0;
             addy = 4;
@@ -59,6 +67,13 @@ namespace Observe
             {
                 sy = idx * dLineSize;
                 m_libCnvs.drawLine(cnvsList, sx, sy, ex, sy);
+                grid = new Grid();
+                Canvas.SetLeft(grid, sx);
+                Canvas.SetTop(grid, sy);
+                grid.Width = dWidth;
+                grid.Height = dHeight;
+                grid.Name = "grid" + idx;
+                //cnvsList.Children.Add(grid);
             }
             sy = 0;
             ey = dHeight;
@@ -107,11 +122,58 @@ namespace Observe
             {
                 return;
             }
+
+            hi = m_dOneCardHeight;
             max = m_wndMain.m_clsObserve.m_lstClsCard.Count;
             for (idx = 0; idx < max; idx++)
             {
+                card = m_wndMain.m_clsObserve.m_lstClsCard[idx];
 
+                sx = 0;
+                sy = m_dOneCardHeight * (idx + 1);
+                wd = x1;
+                if (card.m_sStat == "0")
+                {
+                    m_libCnvs.setFillBrush(Brushes.Black);
+                }
+                else if (card.m_sStat == "1")
+                {
+                    m_libCnvs.setFillBrush(Brushes.Red);
+                }
+                else if (card.m_sStat == "2")
+                {
+                    m_libCnvs.setFillBrush(Brushes.Green);
+                }
+                m_libCnvs.drawCenterText(cnvsList, sx, sy, wd, hi, addx, addy, "●");
+                sx = x1;
+                wd = x2 - x1;
+                m_libCnvs.setFillBrush(Brushes.Black);
+                m_libCnvs.drawCenterText(cnvsList, sx, sy, wd, hi, addx, addy, card.m_sSetNo);
+                sx = x2;
+                wd = dWidth - x2;
+                m_libCnvs.setFillBrush(Brushes.Black);
+                m_libCnvs.drawCenterText(cnvsList, sx, sy, wd, hi, addx, addy, card.m_sSyoNo);
             }
+        }
+        private void Window_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            int idx;
+            Point pos = e.GetPosition(gridBlock);
+            idx = (int)(pos.Y / m_dOneCardHeight) - 1;
+            if (0 > idx)
+            {
+                return;
+            }
+            if (m_wndMain.m_clsObserve.m_lstClsCard.Count <= idx)
+            {
+                m_wndMain.m_nClsCardCrtIdx = -1;
+                m_wndMain.setCrtCardIdx(-1);
+            }
+            else
+            {
+                m_wndMain.m_nClsCardCrtIdx = idx;
+            }
+            m_wndMain.setCrtCardWinDisp();
         }
     }
 }
