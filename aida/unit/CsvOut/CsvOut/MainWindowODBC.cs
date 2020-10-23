@@ -209,7 +209,58 @@ namespace CsvOut
                     return;
                 }
             }
+            SortListCsv();
             return;
+        }
+        private void SortListCsv()
+        {
+            int max, i, j;
+            string sCsvTmp;
+            string[] ary;
+            int dateI, timeI;
+            int dateJ, timeJ;
+            int dateTmp, timeTmp;
+
+            max = m_lstCsvStr.Count;
+            for (i = 0; i < max - 1; i++)
+            {
+                ary = m_lstCsvStr[i].Split(',');
+                dateI = m_libCmn.StrToInt(ary[0]);
+                timeI = m_libCmn.StrToInt(ary[1]);
+                for (j = i; j < max; j++)
+                {
+                    ary = m_lstCsvStr[j].Split(',');
+                    dateJ = m_libCmn.StrToInt(ary[0]);
+                    timeJ = m_libCmn.StrToInt(ary[1]);
+                    if (dateI > dateJ)
+                    {
+                        sCsvTmp = m_lstCsvStr[i];
+                        m_lstCsvStr[i] = m_lstCsvStr[j];
+                        m_lstCsvStr[j] = sCsvTmp;
+
+                        dateTmp = dateI;
+                        dateI = dateJ;
+                        dateJ = dateTmp;
+
+                        timeTmp = timeI;
+                        timeI = timeJ;
+                        timeJ = timeTmp;
+                    }
+                    else if(dateI == dateJ && timeI < timeJ){
+                        sCsvTmp = m_lstCsvStr[i];
+                        m_lstCsvStr[i] = m_lstCsvStr[j];
+                        m_lstCsvStr[j] = sCsvTmp;
+
+                        dateTmp = dateI;
+                        dateI = dateJ;
+                        dateJ = dateTmp;
+
+                        timeTmp = timeI;
+                        timeI = timeJ;
+                        timeJ = timeTmp;
+                    }
+                }
+            }
         }
         private void UpdateLastDateTime(OdbcDataReader reader)
         {
