@@ -1,0 +1,16 @@
+/**/
+body,select,input,button{
+	font-size:2.0vw;
+}
+option{
+    height: 0.0em;
+}
+.imgbtn{
+	font-size:2.5vw;
+}
+.cSize05ex{ width:0.5em; }
+.cSize1ex{ width:1.2em; }
+.cSize2ex{ width:2.5em; }
+.cSize355ex{ width:36em; }
+.cHSize26ex{ width:26.0em; }
+.cVSize18ex{ height:18.0em; }

@@ -1,0 +1,16 @@
+.vhcnter{
+	
+	align : center;
+	justify-content: center;
+	align-items: center;
+}
+.vcnter{
+   margin: 0;
+   position: absolute;               /* 2 */
+   top: 50%;                         /* 3 */
+   transform: translate(0, -50%) }   /* 4 */
+.hcnter{
+    display: block;
+    margin-left: auto;
+    margin-right: auto
+}

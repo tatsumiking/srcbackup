@@ -1,0 +1,10 @@
+.DefMenuTitle{
+    background-color: #00A497;
+    color: #fff;
+    font-weight:bold;
+    text-align: center;
+	border-radius: 5px;
+}
+.DefMenuArea{
+    background-color: #eee;
+}

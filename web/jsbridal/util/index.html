@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>Bridal</title>
+<link rel="shortcut icon" href="img/Bridal.ico" />
+<meta charset="utf-8">
+<meta http-equiv='X-UA-Compatible' content='IE=11'>
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="cache-control" content="no-cache" />
+<meta http-equiv="expires" content="0" />
+<link href="index.css" rel="stylesheet" type="text/css" />
+<style>
+.imgbtn{
+	background-image:url("img/btnU.png");
+	background-repeat:round;
+	background-size:8.5em;
+	border-radius: 3em;
+	padding: 0.5em;
+}
+.imgbtn:active {
+	background-image:url("img/btnD.png");
+}
+.imgbtn:hover {
+	background-image:url("img/btnD.png");
+}
+</style>
+<script language="javascript" src="../jslib/ajax.js"></script>
+<script language="javascript" src="index.js"></script>
+<script language="javascript" src="hotel.js"></script>
+<script language="JavaScript">
+
+</script>
+</head>
+<body onload="fncInit()">
+	<div class="cScrnArea cFlexHorizontal">
+		<div class="cSize22 cFlexVertical">
+			<div >
+				<label class="cTitle">ホテル名</label>
+				<select id="cmbHotelName" class="cSize12"></select>
+			</div>
+			<div >
+				<label class="cTitle">テーブル名</label>
+				<select id="cmbTableName" class="cSize12"></select>
+			</div>
+			<div >
+				<select size="20" id="idKonrei" class="cSize20">
+				</select>
+			</div>
+		</div>
+		<div  class="cFlexHorizontal ">
+			<BR>
+			<div >
+				<button class="imgbtn cSize8" id="btnHotelNew">ホテル初期化</button>
+			</div>
+			<BR>
+			<div >
+				<button class="imgbtn cSize8" id="btnTableList">テーブル表示</button>
+			</div>
+		</div >
+	</div>
+</body>
+</html>

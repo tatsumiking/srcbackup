@@ -1,0 +1,18 @@
+<div>
+01234567891123456789212345678931234567894123456789512345678961234567897123456789    
+</div>
+
+	console.log(window.location.href);
+	console.log(window.navigator.appAname);
+	console.log(window.navigator.appVersion);
+	console.log(window.screen.width);
+	console.log(window.screen.height);
+
+210/297=0.7
+
+45/65*30=21
+210/297*21=14
+21/40*50 = 26.25
+210/297*26=18.56
+
+

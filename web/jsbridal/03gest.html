@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Bridal</title>
+<link rel="shortcut icon" href="img/Bridal.ico" />
+<meta charset="utf-8">
+<meta http-equiv='X-UA-Compatible' content='IE=11'>
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="cache-control" content="no-cache" />
+<meta http-equiv="expires" content="0" />
+<link href="css/styles.css" rel="stylesheet" type="text/css" />
+<link href="bridal.css" rel="stylesheet" type="text/css" />
+<link href="03gest.css" rel="stylesheet" type="text/css" />
+<style>
+
+</style>
+<script language="javascript" src="jslib/ajax.js"></script>
+<script language="javascript" src="03gest.js"></script>
+</head>
+
+<body onload="fncInit()">
+<div class="cFlexVertical">
+	<div class="cFlexHorizontal">
+		<div class="cSize1 cClrFAA">
+		</div>
+		<div class="cSize34 cClrAFA">
+			<div  class="TopSpace cFlexHorizontal">
+				<div>
+					<div align="center" class="cBold">苗字</div>
+					<input id="idMyouji" type="text" class="cSize6"> 
+				</div>
+				<div>
+					<div align="center" class="cBold">名前</div>
+					<input id="idNamae" type="text" class="cSize6">
+				</div>
+				<div>
+					<div align="center" class="cBold">敬称</div>
+					<select id="idKeisyou" class="cSize4"></select>
+				</div>
+				<div>
+					<div align="center" class="cBold">区分</div>
+					<select id="idKubun" class="cSize6"></select>
+				</div>
+				<div>
+					<div align="center" class="cBold">連名区分</div>
+					<select id="idRenKubun" class="cSize6"></select>
+				</div>
+			</div>
+			<div  class="TopSpace cFlexHorizontal">
+				<div>
+					<label class="cBold">ｶﾅﾖﾐ</label>
+					<input id="idKanayomi" type="text" class="cSize12">
+				</div>
+				<div>
+					<label class="cBold">　電話番号</label>
+					<input id="idTel" type="text" class="cSize10" 
+							maxlengdiv="13" placeholder="000-0000-0000">
+				</div>
+			</div>
+			<div class="cVSpace"></div>
+			<div>
+				<label class="cBold">郵便番号</label>
+				<input id="idPostNo" type="text" class="cSize10" 
+						maxlengdiv="8" placeholder="000-0000">
+			</div>
+			<div>
+				<label class="cBold">　住所　</label>
+				<input id="idAddress1" type="text" class="cSize26"> 
+			</div>
+			<div>
+				<input id="idAddress2" type="text" class="cSize30s"> 
+			</div>
+			<div class="cVSpace"></div>
+			<div>
+				<div class="cBold">　　肩書</div>
+				<label class="cBold">１</label>
+				<input id="idKatagaki1" type="text" class="cSize13"> 
+				<label class="cBold">２</label>
+				<input id="idKatagaki2" type="text" class="cSize13"> 
+			</div>
+			<div>
+				<label class="cBold">３</label>
+				<input id="idKatagaki3" type="text" class="cSize13"> 
+				<label class="cBold">４</label>
+				<input id="idKatagaki4" type="text" class="cSize13"> 
+			</div>
+			<div class="cVSpace"></div>
+			<div>
+				<div class="cBold">　引出物</div>
+				<input id="idKatagaki1" type="text" class="cSize30s"> 
+			</div>
+			<div class="cVSpace"></div>
+			<div>
+				<div class="cBold">　　料理</div>
+				<input id="idKatagaki1" type="text" class="cSize30s"> 
+			</div>
+			<div class="cVSpace"></div>
+			<div>
+				<div class="cBold">　　備考</div>
+				<input id="idKatagaki1" type="text" class="cSize30s"> 
+			</div>
+			<div class="cVSpace"></div>
+		</div>
+		<div>
+			<div class="cSize14 cClrAAF">
+				<div  class="TopSpace">
+					<input type="radio" id="idAll" name="sort" class="cSize1">全体</input>
+					<input type="radio" id="idSinrou" name="sort" class="cSize1">新郎</input>
+					<input type="radio" id="idSinpu" name="sort" class="cSize1">新婦</input>
+				</div>
+				<div class="TopSpace">
+					<select size="15" id="idGestListi" class="cSize12">
+	<option value="0001">織田　信長　親族</option>
+	<option value="0001">織田　信康　親族</option>
+					</select>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="cFlexHorizontal">
+		<div class="cSize1">
+		</div>
+		<div class="cFlexVertical cSize40 cClrAAF">
+			<div class="cFlexHorizontal">
+				<div>
+					<button class="cSize5" id="btnNew">新規作成</button>
+				</div>
+				<div class="cSize1"></div>
+				<div>
+					<button class="cSize5" id="btnUpdate">修正</button>
+				</div>
+				<div class="cSize1"></div>
+				<div>
+					<button class="cSize5" id="btnDelete">削除</button>
+				</div>
+				<div class="cSize1"></div>
+				<div>
+					<button class="cSize5" id="btnFixed">確定</button>
+				</div>
+				<div class="cSize3"></div>
+				<div>
+					<button class="cSize8" id="btnGaiji">外字ファイル</button>
+				</div>
+			</div>
+			<div class="cVSpace"></div>
+			<div>
+				<input id="idInfoMsg" type="text" class="cSize38"> 
+			</div>
+			<div class="cVSpace"></div>
+		</div>
+		<div class="cSize6 cClrAFF">
+			<div >
+				<button class="imgbtn cSize4" id="btnReturn">戻る</button>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

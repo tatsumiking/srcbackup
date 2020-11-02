@@ -1,0 +1,106 @@
+body{
+	// ècï˚å¸Ç™ëSëÃÇ…Ç»ÇÈ
+	//position: absolute;
+	width:100%;
+	height:100%;
+}
+body,select,input,button{
+	font-size:20px;
+}
+.cScrnArea {
+	position: absolute;
+	align:center; 
+	//width:100%;
+	//height:100%;
+}
+.cFlexHorizontal {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+.cFlexVertical {
+	display: flex;
+	flex-direction: column;
+}
+.cSpaceBetween{
+	justify-content: space-between;
+}
+.cClrFAA {
+	background-color:#FAA;
+}
+.cClrAFA {
+	background-color:#AFA;
+}
+.cClrFFA {
+	background-color:#FFA;
+}
+.cClrAAF {
+	background-color:#AAF;
+}
+.cClrFAF {
+	background-color:#FAF;
+}
+.cClrAFF {
+	background-color:#AFF;
+}
+.cInputArea{
+}
+.cTitle{
+	font-weight:bold;
+	//display:block;
+	float:left;
+	margin-left: 0.5em;
+	width:6.5em;
+}
+.cBold{
+	font-weight:bold;
+	margin-left: 0.5em;
+}
+.cSize1{
+	width:1.5em;
+}
+.cSize2{
+	width:2.5em;
+}
+.cSize3{
+	width:3.5em;
+}
+.cSize4{
+	width:4.5em;
+}
+.cSize5{
+	width:5.5em;
+}
+.cSize6{
+	width:6.5em;
+}
+.cSize8{
+	width:8.5em;
+}
+.cSize10{
+	width:10.5em;
+}
+.cSize12{
+	width:12.5em;
+}
+.cSize14{
+	width:14.5em;
+}
+.cSize18{
+	width:18.5em;
+}
+.cSize19{
+	width:19.5em;
+}
+.cSize20{
+	width:20.5em;
+}
+.cSize22{
+	width:22.5em;
+}
+.cSize28{
+	width:28.5em;
+}
+.cSize29{
+	width:29.5em;
+}

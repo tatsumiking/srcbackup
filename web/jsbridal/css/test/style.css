@@ -1,0 +1,23 @@
+html {
+	padding: 0px;
+	margin: 0px;
+}
+body {
+	padding: 0px;
+	margin: 0px;
+}
+textarea{
+	border-radius: 5px;
+	border: solid 2px #f00;
+}
+.DefArea {
+	padding: 0px;
+	margin: 0px;
+}
+.TopSpace {
+	margin-top: 5px;
+}
+.HelpArea{
+	border-radius: 5px;
+	border: solid 2px #000;
+}

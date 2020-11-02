@@ -1,0 +1,12 @@
+/* #7EBEAB 48 56 120*/
+.AccordTitle{
+    background-color: #303878;
+    color: #fff;
+    font-weight:bold;
+    text-align: center;
+	border-radius: 5px;
+}
+.AccordionMenu {
+    overflow: hidden;
+    transition: all 0.5s;
+}

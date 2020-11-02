@@ -1,0 +1,13 @@
+/**/
+
+.hvcnter {
+	position: absolute;
+	left: 40%;
+	top: 40%;
+	margin-left: -100px;
+	margin-top: -50px;
+}
+
+body,select,input,button{
+	font-size:2.0vw;
+}

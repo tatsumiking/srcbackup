@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Bridal</title>
+<link rel="shortcut icon" href="img/Bridal.ico" />
+<meta charset="utf-8">
+<meta http-equiv='X-UA-Compatible' content='IE=11'>
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="cache-control" content="no-cache" />
+<meta http-equiv="expires" content="0" />
+<link href="css/styles.css" rel="stylesheet" type="text/css" />
+<link href="bridal.css" rel="stylesheet" type="text/css" />
+<link href="04tablelayout.css" rel="stylesheet" type="text/css" />
+<style>
+</style>
+<script language="javascript" src="jslib/ajax.js"></script>
+<script language="javascript" src="04tablelayout.js"></script>
+</head>
+
+<body onload="fncInit()">
+<div class="cScrnArea cFlexVertical">
+    <div class="cVSpace cSize40 cClrFFA"></div>
+    <div class="cFlexHorizontal">
+        <div class="cSize5"></div>
+        <div class="cCanvas cHSize29ex cVSize21ex cClrFAA">
+        </div>
+    </div>
+    <div class="cFlexHorizontal">
+        <div class="cSize5"></div>
+        <div class="cFlexHorizontal cHSize29ex cClrAFA">
+            <div class="cSize05ex"></div>
+            <div>
+                <div align="center">1列目</div>
+                <button class="cSize3" id="btnAdd1">追加</button>
+                <br>
+                <button class="cSize3" id="btnDel1">削除</button>
+            </div>        
+            <div class="cSize2"></div>
+            <div>
+                <div align="center">2列目</div>
+                <button class="cSize3" id="btnAdd2">追加</button>
+                <br>
+                <button class="cSize3" id="btnDel2">削除</button>
+            </div>        
+            <div class="cSize2"></div>
+            <div>
+                <div align="center">3列目</div>
+                <button class="cSize3" id="btnAdd3">追加</button>
+                <br>
+                <button class="cSize3" id="btnDel3">削除</button>
+            </div>        
+            <div class="cSize2"></div>
+            <div>
+                <div align="center">4列目</div>
+                <button class="cSize3" id="btnAdd4">追加</button>
+                <br>
+                <button class="cSize3" id="btnDel4">削除</button>
+            </div>        
+            <div class="cSize2"></div>
+            <div>
+                <div align="center">5列目</div>
+                <button class="cSize3" id="btnAdd5">追加</button>
+                <br>
+                <button class="cSize3" id="btnDel5">削除</button>
+            </div>        
+            <div class="cSize2"></div>
+            <div>
+                <div align="center">6列目</div>
+                <button class="cSize3" id="btnAdd6">追加</button>
+                <br>
+                <button class="cSize3" id="btnDel6">削除</button>
+            </div>        
+           
+        </div>
+    </div>
+    <div>
+        <label class="cBold cSize6">　左下文章</label>
+        <input id="idStr1" type="text" class="cSize29">
+    </div>
+    <div>
+        <label class="cBold cSize6">　右下文章</label>
+        <input id="idStr1" type="text" class="cSize29">
+    </div>
+    <div class="cFlexHorizontal">
+        <div class="cFlexVertical cSize35 cClrAFF">
+            <div class="cFlexHorizontal">
+                <div class="cSize1"></div>
+                <div>
+                    <div align="center" class="cBold">用紙方向</div>
+                    <select id="idPaperKind" class="cSize5">
+                        <option value="0001">横置き</option>
+                    </select>
+                </div>
+                <div class="cSize05ex"></div>
+                <div>
+                    <div align="center" class="cBold">用紙サイズ</div>
+                    <select id="idPaperSize" class="cSize5">
+                        <option value="0001">A 3</option>
+                    </select>
+                </div>
+                <div class="cSize05ex"></div>
+                <div>
+                    <div align="center" class="cBold">両家名種類</div>
+                    <select id="idRyoukeKind" class="cSize13">
+                        <option value="0001">両家結婚披露宴御案内</option>
+                    </select>
+                </div>
+                <div class="cSize05ex"></div>
+                <div>
+                    <div align="center" class="cBold">テーブル種類</div>
+                    <select id="idTableKind" class="cSize8">
+                        <option value="0001">丸テーブル</option>
+                    </select>
+                </div>
+            </div>
+            <div class="cFlexHorizontal">
+                <div class="cSize1"></div>
+                <div>
+                    <input id="idInfoMsg" type="text" class="cSize32"> 
+                 </div>
+           </div>
+        </div>
+        <div class="cClrAAF cSize5">
+			<button class="imgbtn cSize4" id="btnReturn">戻る</button>
+       </div>
+     </div>
+</div>
+</body>
+</html>

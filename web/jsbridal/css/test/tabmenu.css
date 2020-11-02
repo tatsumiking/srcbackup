@@ -1,0 +1,29 @@
+.TabMenuArea{
+    padding: 0px;
+    margin: 0px;
+}
+.TabItem{
+    display: inline-block;
+    background-color: #eee;
+    border: 0px;
+    color: #888;
+    border-radius: 6px 6px 0 0;
+    padding-top: 5px;
+    text-align: center;
+}
+.TabItem:hover{
+    display: inline-block;
+    background-color: #ddd;
+    color: #444;
+    margin: 0px;
+}
+.TabItem.is-active{
+    display: inline-block;
+    background-color: #ccc;
+    color: #000;
+}
+.TabSelectArea{
+    padding: 0px;
+    margin: 0px;
+    background-color: #ccc;
+}

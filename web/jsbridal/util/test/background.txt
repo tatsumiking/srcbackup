@@ -1,0 +1,15 @@
+.imgbtn{
+	background-image:url("img/btnU.png");
+	background-repeat:round;
+	background-size:6em;
+	line-height: 100%;
+	padding: 7px;
+}
+.imgbtn:active {/*ボタンを押したとき*/
+	background-image:url("img/btnD.png");
+	background-repeat:round;
+}
+.imgbtn:hover {/*ボタンを押したとき*/
+	background-image:url("img/btnD.png");
+	background-repeat:round;
+}

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Bridal</title>
+<link rel="shortcut icon" href="img/Bridal.ico" />
+<meta charset="utf-8">
+<meta http-equiv='X-UA-Compatible' content='IE=11'>
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="cache-control" content="no-cache" />
+<meta http-equiv="expires" content="0" />
+<link href="css/styles.css" rel="stylesheet" type="text/css" />
+<link href="bridal.css" rel="stylesheet" type="text/css" />
+<link href="05gestsit.css" rel="stylesheet" type="text/css" />
+<style>
+</style>
+<script language="javascript" src="jslib/ajax.js"></script>
+<script language="javascript" src="05gestsit.js"></script>
+</head>
+
+<body onload="fncInit()">
+<div class="cScrnArea cFlexVertical">
+    <div class="cFlexHorizontal">
+         <div class="cFlexVertical">
+            <div class="cFlexHorizontal">
+                <div class="cSize5"></div>
+                <div class="cCanvas cHSize26ex cVSize18ex cClrFAA">
+                </div>
+            </div>
+            <div class="cVSpace"></div>
+            <div class="cFlexHorizontal">
+                <div class="cSize1"></div>
+                <div class="cSize16">
+                    <div align="center">
+                        <input id="idTableName1" type="text" class="cSize6">
+                    </div>
+                    <div class="cFlexHorizontal">
+                        <div>
+                            <input id="idSit1R1" type="text" class="cSize8">
+                            <input id="idSit1R2" type="text" class="cSize8">
+                            <input id="idSit1R3" type="text" class="cSize8">
+                          <input id="idSit1R4" type="text" Class="cSize8">                    
+                          <input id="idSit1R5" type="text" Class="cSize8">                    
+                            <input id="idSit1R6" type="text" class="cSize8">
+                            <input id="idSit1R7" type="text" class="cSize8">
+                        </div>
+                        <div>
+                            <input id="idSit1L1" type="text" class="cSize8">
+                            <input id="idSit1L2" type="text" class="cSize8">
+                            <input id="idSit1L3" type="text" class="cSize8">
+                          <input id="idSit1L4" type="text" Class="cSize8">                    
+                          <input id="idSit1L5" type="text" Class="cSize8">                    
+                            <input id="idSit1L6" type="text" class="cSize8">
+                            <input id="idSit1L7" type="text" class="cSize8">
+                        </div>
+                    </div>
+                </div>
+                <div class="cSize2"></div>
+                <div class="cSize16">
+                    <div align="center">
+                        <input id="idTableName2" type="text" class="cSize6">
+                    </div>
+                     <div class="cFlexHorizontal">
+                        <div>
+                            <input id="idSit2R1" type="text" class="cSize8">
+                            <input id="idSit2R2" type="text" class="cSize8">
+                            <input id="idSit2R3" type="text" class="cSize8">
+                          <input id="idSit2R4" type="text" Class="cSize8">                    
+                          <input id="idSit2R5" type="text" Class="cSize8">                    
+                            <input id="idSit2R6" type="text" class="cSize8">
+                            <input id="idSit2R7" type="text" class="cSize8">
+                        </div>
+                        <div>
+                            <input id="idSit2L1" type="text" class="cSize8">
+                            <input id="idSit2L2" type="text" class="cSize8">
+                            <input id="idSit2L3" type="text" class="cSize8">
+                          <input id="idSit2L4" type="text" Class="cSize8">                    
+                          <input id="idSit2L5" type="text" Class="cSize8">                    
+                            <input id="idSit2L6" type="text" class="cSize8">
+                            <input id="idSit2L7" type="text" class="cSize8">
+                        </div>
+                    </div>
+                </div>
+                <div class="cSize1"></div>
+            </div>
+         </div>
+         <div class="cSize1"></div>
+         <div class="cFlexVertical">
+            <div>
+                <input type="radio" id="idAll" name="slct" class="">全体</input>
+                <input type="radio" id="idSinrou" name="slct" class="">新郎</input>
+                <input type="radio" id="idSinpu" name="slct" class="">新婦</input>
+            </div>
+            <div>
+                <input type="radio" id="idInput" name="sort" class="">入力順</input>
+                <input type="radio" id="idKana" name="sort" class="">ｶﾅﾖﾐ順</input>
+                <input type="checkbox" id="idInsert" class="">挿入</input>
+            </div>
+            <div class="TopSpace">
+                <select size="17" id="idGestList" class="cSize12">
+                    <option value="0001">織田　信長　親族</option>
+                    <option value="0001">織田　信康　親族</option>
+                </select>
+            </div>
+         </div>
+    </div>
+    <div class="cFlexHorizontal">
+        <div class="cFlexVertical cSize40">
+            <div class="cVSpace"></div>
+            <div class="cFlexHorizontal">
+                <div class="cSize1"></div>
+                <div>
+                    <div align="center" class="cBold">文字サイズ</div>
+                    <select id="idTextSize" class="cSize6">
+                        <option value="0001">標準</option>
+                    </select>
+                    <BR>
+                    <div class="cVSpace"></div>
+                    <button class="cSize6" id="btnSave">更新保存</button>
+                </div>
+                <div class="cSize05ex"></div>
+                <div>
+                    <div align="center" class="cBold">高砂設定</div>
+                    <select id="idTakasagoKind" class="cSize16">
+                        <option value="0001">横置き</option>
+                    </select>
+                    <BR>
+                    <div class="cVSpace"></div>
+                    <button class="cSize6" id="btnFixed">確定</button>
+                </div>
+                <div class="cSize1"></div>
+                <div>
+                    <button class="cSize6" id="btnPreView">プレビュー</button>
+                    <BR>
+                    <input type="radio" id="idSekiji" name="preview" class="cSize1ex"></input>
+ 					<input type="radio" id="idDish" name="preview" class="cSize2ex"></input>
+                    <input type="radio" id="idGift" name="preview" class="cSize1"></input>
+                    <BR>
+                    <label>席次</label>
+                    <label>料理</label>
+                    <label>引出物</label>
+               </div>
+                <div class="cSize05ex"></div>
+            </div>
+            <div class="cVSpace"></div>
+            <div class="cFlexHorizontal">
+                <div class="cSize1"></div>
+                <div>
+                    <input id="idInfoMsg" type="text" class="cSize36"> 
+                 </div>
+           </div>
+        </div>
+        <div>
+            <div class="cVSpace20"></div>
+            <div class="cSize6 cClrAFF">
+				<button class="imgbtn cSize4" id="btnReturn">戻る</button>
+			</div>
+        </div>
+     </div>
+</div>
+</body>
+</html>

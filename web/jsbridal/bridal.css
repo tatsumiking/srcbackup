@@ -1,0 +1,23 @@
+/* Bridal—p•”•i */
+button{
+	border-radius: 5px;
+}
+button:active {
+	-ms-transform: translate(2px,2px);
+	-webkit-transform: translate(2px,2px);
+	transform: translate(2px, 2px);/*‰º‚É“®‚­*/
+	border-bottom: none;/*ü‚ğÁ‚·*/
+}
+.imgbtn{
+	background-image:url("img/btnU.png");
+	background-repeat:round;
+	background-size:8.5em;
+	border-radius: 3em;
+	padding: 0.5em;
+}
+.imgbtn:active {
+	background-image:url("img/btnD.png");
+}
+.imgbtn:hover {
+	background-image:url("img/btnD.png");
+}

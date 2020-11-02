@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//Ddiv HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.ddiv">
+<html>
+<head>
+<title>Bridal</title>
+<link rel="shortcut icon" href="img/Bridal.ico" />
+<meta charset="utf-8">
+<meta http-equiv='X-UA-Compatible' content='IE=11'>
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="cache-control" content="no-cache" />
+<meta http-equiv="expires" content="0" />
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+<link href="css/layout.css" rel="stylesheet" type="text/css" />
+<link href="css/defmenu.css" rel="stylesheet" type="text/css" />
+<link href="css/button.css" rel="stylesheet" type="text/css" />
+<link href="css/accordion.css" rel="stylesheet" type="text/css" />
+<link href="css/tabmenu.css" rel="stylesheet" type="text/css" />
+<link href="02kihon.css" rel="stylesheet" type="text/css" />
+<script language="javascript" src="jslib/clsStruct.js"></script>
+<script language="javascript" src="jslib/clsObjFigu.js"></script>
+<script language="javascript" src="jslib/ajax.js"></script>
+<script language="javascript" src="jslib/global.js"></script>
+<script language="javascript" src="jslib/fnclib.js"></script>
+<script language="javascript" src="jslib/fncele.js"></script>
+<script language="javascript" src="jslib/fncctx.js"></script>
+<script language="javascript" src="jslib/accordion.js"></script>
+<script language="javascript" src="jslib/tabmenu.js"></script>
+<script language="javascript" src="jslib/fncSubDlgInit.js"></script>
+<script language="javascript" src="jslib/fncDlgInit.js"></script>
+<script language="javascript" src="jslib/fncWebFont.js"></script>
+<script language="javascript" src="jslib/globallayout.js"></script>
+<script language="javascript" src="jslib/scrn.js"></script>
+<script language="javascript" src="jslib/saveimage.js"></script>
+<script language="javascript" src="02kihon.js"></script>
+</head>
+<body onload="fncInit()">
+	<div class="clsScreenArea">
+		<div class="clsInputArea">
+			<div >
+				<label class="clsTitle">ホテル式場名</label>
+				<select id="idHotelName" class="clsW22"></select>
+			</div>
+			<div >
+				<label class="clsTitle">婚礼NO</label>
+				<input id="idKonreiNo" type="text" class="clsW5" 
+						maxlengdiv="6" placeholder="012345">
+				<label class="clsBold">婚礼管理番号</label>
+				<input id="idKanriNo" type="text" class="clsW5" 
+						maxlengdiv="6" placeholder="012345">
+			</div>
+			<div >
+				<label class="clsTitle">挙　式</label>
+				<select id="idKyosikiNengo" class="clsW6"></select>
+				<input id="idKyosikiGG" type="text" class="clsW2" 
+						maxlengdiv="2" placeholder="01">
+				<label class="clsTxt">年</label>
+				<input id="idKyosikiMM" type="text" class="clsW2" 
+						maxlengdiv="2" placeholder="01">
+				<label class="clsTxt">月</label>
+				<input id="idKyosikiDD" type="text" class="clsW2" 
+						maxlengdiv="2" placeholder="01"/>
+				<label class="clsTxt">日</label>
+			</div>
+			<div >
+				<label class="clsTitle">披露宴</label>
+				<select id="idHirouenNengo" class="clsW6"></select>
+				<input id="idHirouenGG" type="text" class="clsW2" 
+						maxlengdiv="2" placeholder="01"/>
+				<label class="clsTxt">年</label>
+				<input id="idHirouenMM" type="text" class="clsW2" 
+						maxlengdiv="2" placeholder="01"/>
+				<label class="clsTxt">月</label>
+				<input id="idHirouenDD" type="text" class="clsW2" 
+						maxlengdiv="2" placeholder="01"/>
+				<label class="clsTxt">日</label>
+			</div>
+			<div >
+				<label class="clsTitle">会場名</label>
+				<select id="idKaijyou" class="clsW22"></select>
+			</div>
+			<div >
+				<label class="clsTitle">　</label>
+				<input type="checkbox" id="idMukotori" class="clsW2">婿取</input>
+			</div>
+			<div >
+				<label class="clsTitle">新郎氏名</label>
+				<input id="idSinrouMyouji" type="text" class="clsW6" 
+						maxlengdiv="6" placeholder="新郎苗字"/>
+				<input id="idSinrouNamae" type="text" class="clsW6" 
+						maxlengdiv="6" placeholder="新郎名前"/>
+				<select id="idSinrouZokugara" class="clsW8"></select>
+			</div>
+			<div >
+				<label class="clsTitle">新郎氏名</label>
+				<input id="idSinpuMyouji" type="text" class="clsW6" 
+						maxlengdiv="6" placeholder="新婦苗字"/>
+				<input id="idSinpuNamae" type="text" class="clsW6" 
+						maxlengdiv="6" placeholder="新婦名前"/>
+				<select id="idSinpuZokugara" class="clsW8"></select>
+			</div>
+		</div>
+		<div class="clsSelectArea">
+			<label class="clsTitle">新郎氏名</label>
+		</div>
+	</div>
+</body>
+</html>
