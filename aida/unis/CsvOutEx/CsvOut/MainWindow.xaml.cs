@@ -26,6 +26,7 @@ namespace CsvOut
     {
         private string m_sExecPath;
         private string m_sProgName;
+        private string m_sDefTypeName;
         private string m_sDefSavePath;
         private string m_sDefPreFileName;
         private string m_sDefDateFileName;
@@ -70,6 +71,9 @@ namespace CsvOut
         {
             string[] aryLine;
             string sFileName;
+            string sFileNameDef;
+            string sFileNameMajerFlow;
+            string sFileNameVicsell;
             string sData;
 
             InitializeComponent();
@@ -95,27 +99,53 @@ namespace CsvOut
                 m_sBackupUnisDBPath = "";
                 m_sExecPath = InitExePath();
                 m_sEnvPath = InitEnvPath();
-                sFileName = m_sExecPath + "\\" + m_sProgName + "def.txt";
-                if (File.Exists(sFileName))
+                sFileNameDef = m_sExecPath + "\\" + m_sProgName + "def.txt";
+                sFileNameMajerFlow = m_sExecPath + "\\MajerFlow";
+                sFileNameVicsell = m_sExecPath + "\\Vicsell";
+                if (File.Exists(sFileNameDef))
                 {
-                    sData = m_libCmn.LoadFileSJIS(sFileName);
+                    sData = m_libCmn.LoadFileSJIS(sFileNameDef);
                     aryLine = sData.Split('\n');
                     m_sDefSavePath = aryLine[1];
                     m_sDefPreFileName = aryLine[2];
                     m_sDefDateFileName = aryLine[3];
                     m_sDefPostFileName = aryLine[4];
+                    m_sDefTypeName = aryLine[5];
+                }
+                else if (File.Exists(sFileNameMajerFlow))
+                {
+                    m_sDefSavePath = m_sEnvPath;
+                    m_sDefPreFileName = "";
+                    m_sDefDateFileName = "yyyyMMddHHmm";
+                    m_sDefPostFileName = "major";
+                    m_sDefTypeName = "MajerFlow";
+                }
+                else if (File.Exists(sFileNameVicsell))
+                {
+                    m_sDefSavePath = m_sEnvPath;
+                    m_sDefPreFileName = "KINTAIDAKOKU_";
+                    m_sDefDateFileName = "yyyyMMdd";
+                    m_sDefPostFileName = "00";
+                    m_sDefTypeName = "Vicsell";
                 }
                 else
                 {
-                    m_sDefSavePath = m_sEnvPath;
                     if(m_sProgName == "csvout"){
+                        // csvout デフォルト設定 "MajerFlow"
+                        m_sDefSavePath = m_sEnvPath;
                         m_sDefPreFileName = "";
                         m_sDefDateFileName = "yyyyMMddHHmm";
                         m_sDefPostFileName = "major";
-                    }else{
+                        m_sDefTypeName = "MajerFlow";
+                    }
+                    else
+                    {
+                        // csvex デフォルト設定 "Vicsell"
+                        m_sDefSavePath = m_sEnvPath;
                         m_sDefPreFileName = "KINTAIDAKOKU_";
                         m_sDefDateFileName = "yyyyMMdd";
                         m_sDefPostFileName = "00";
+                        m_sDefTypeName = "Vicsell";
                     }
                 }
                 sFileName = m_sEnvPath + "\\" + m_sProgName + "log.txt";
@@ -123,7 +153,6 @@ namespace CsvOut
                 {
                     App.m_sArgv = "log";
                 }
-
                 EnvFileLoad();
             }
             catch (Exception ex)
@@ -209,10 +238,16 @@ namespace CsvOut
             }
             /*
             m_sBaseDate = "20170101";
-            m_sBaseTime = "010101";
+            m_sBaseTime = "000000";
+            
             DateTime dt = DateTime.Now;
             m_sCheckTime = dt.ToString("yyyyMMddHHmmss");
+
+            m_bCheckOutIn = true;
+            lblMsg.Content = "データ取得中";
             GetODBCDataToFile();
+            m_bCheckOutIn = false;
+            
             */
             //testDataLoad();
         }
@@ -345,7 +380,7 @@ namespace CsvOut
                     m_nIncNo = 1;
                 }
                 sSafix = ".csv";
-                if (m_sTempDate == "")
+                if (m_sDelimiter == "")
                 {
                     sSafix = ".txt";
                 }
@@ -419,7 +454,7 @@ namespace CsvOut
             try
             {
                 lblMsg.Content = "保存中";
-                if (m_sTempDate == "")
+                if (m_sDelimiter == "")
                 {
                     ret = SaveFixsFildFile(sSaveFileName);
                 }
@@ -456,37 +491,50 @@ namespace CsvOut
         }
         private Boolean SaveCsvFildFile(string sSaveFileName)
         {
-            string sData;
-            int idx, max;
+            string sData, sBlkData;
+            int pos, idx, max;
+            int blk, blklest, blkmax;
             int fldmax, fldidx;
             Boolean ret;
 
-            sData = "";
+            sBlkData = "";
             ret = true;
             try
             {
                 max = m_lstCsvStr.Count;
                 if (max != 0)
                 {
-                    for (idx = 0; idx < max; idx++)
+                    pos = 0;
+                    blkmax = max / 10000;
+                    blklest = max % 10000;
+                    for (blk = 0; blk <= blkmax; blk++)
                     {
-                        m_aryCsvTitleTbl = m_lstCsvStr[idx].Split(',');
-                        fldmax = m_aryCsvTitleTbl.Length;
-                        for (fldidx = 0; fldidx < fldmax; fldidx++)
+                        sData = "";
+                        max = 10000;
+                        if (blk == blkmax)
                         {
-                            sData = sData + m_aryCsvTitleTbl[fldidx] + m_sDelimiter;
+                            max = blklest;
                         }
-                        sData = sData + "\r\n";
+                        for (idx = 0; idx < max; idx++, pos++)
+                        {
+                            m_aryCsvTitleTbl = m_lstCsvStr[pos].Split(',');
+                            fldmax = m_aryCsvTitleTbl.Length;
+                            for (fldidx = 0; fldidx < fldmax; fldidx++)
+                            {
+                                sData = sData + m_aryCsvTitleTbl[fldidx] + m_sDelimiter;
+                            }
+                            sData = sData + "\r\n";
+                        }
+                        sBlkData = sBlkData + sData;
                     }
                 }
-
                 if (m_nOutputType == 0)
                 {
-                    ret = m_libCmn.SaveFileSJIS(sSaveFileName, sData);
+                    ret = m_libCmn.SaveFileSJIS(sSaveFileName, sBlkData);
                 }
                 else
                 {
-                    ret = m_libCmn.AppendSaveFileSJIS(sSaveFileName, sData);
+                    ret = m_libCmn.AppendSaveFileSJIS(sSaveFileName, sBlkData);
                 }
                 return (ret);
             }
@@ -722,25 +770,22 @@ namespace CsvOut
                 m_sUnisDBPath = System.Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
                 m_sUnisDBPath = m_sUnisDBPath + "\\UNIS";
                 m_sPostFileName = m_sDefPostFileName;
-                m_sDelimiter = ",";
-                m_nOutputId = 0;
-                m_nOutputType = 0;
-                if (m_sPostFileName == "csvex")
+                if (m_sDefTypeName == "MajerFlow")
                 {
+                    m_sDelimiter = ",";
+                    m_sFncStrs = "出勤,退勤,外出,戻り";
+                }else{
+                    m_sDelimiter = "";
                     m_sFncStrs = "01,02,00,00";
                 }
-                else
-                {
-                    m_sFncStrs = "出勤,退勤,外出,戻り";
-                }
+                m_nOutputId = 1;
+                m_nOutputType = 0;
                 m_nCheckKind = 0;
                 m_sIntervalList = "05分,01時間,03時間,06時間,12時間";
                 m_sCheckTimeList = "0800,0900,1300,1700,1800,2300";
                 m_sInterval = "0005";
                 m_sBaseDate = "0";
                 m_sBaseTime = "0";
-                m_nOutputId = 1;
-                m_nOutputType = 0;
                 m_sPreFileName = m_sDefPreFileName;
                 m_sDateFileName = m_sDefDateFileName;
                 sLoadFileName = m_sEnvPath + "\\" + m_sProgName + ".env";
@@ -774,10 +819,8 @@ namespace CsvOut
                             }
                             else
                             {
-                                if (m_sPostFileName == "csvex")
+                                if (m_sDefTypeName != "Vicsell")
                                 {
-                                    m_sPostFileName = "00";
-                                    m_sDelimiter = "";
                                     m_sSaveFileName = m_sSavePath + "\\KINTAIDAKOKU.txt";
                                 }
                             }
@@ -851,8 +894,9 @@ namespace CsvOut
 
             try
             {
-                if (m_sPostFileName == "csvex")
+                if (m_sDelimiter == "")
                 {
+                    // 固定長
                     if (m_nOutputId == 0)
                     {
                         sTitles = "データ区分,打刻日,打刻時間,シフトコード,出退勤フラグ,ユーザID,例外コード,ターミナルNO";
@@ -866,18 +910,25 @@ namespace CsvOut
                 }
                 else
                 {
-                    sTitles = "社員番号,西暦/月/日,時:分,出退勤フラグ,固定値";
-                    sFilfkeys = "%C_OCODE%,%C_Date%,%C_Time%,%L_Mode%,0";
-                }
-
-                sFildKeyFileName = m_sEnvPath + "\\csvfield.env";
-                sData = m_libCmn.LoadFileSJIS(sFildKeyFileName);
-                if (sData != "")
-                {
-                    sData = sData.Replace("\r\n", "\n");
-                    aryLine = sData.Split('\n');
-                    sTitles = aryLine[1];
-                    sFilfkeys = aryLine[2];
+                    if (m_nOutputId == 0)
+                    {
+                        sTitles = "ユーザID,西暦/月/日,時:分,出退勤フラグ,固定値";
+                        sFilfkeys = "%L_UID%,%C_Date%,%C_Time%,%L_Mode%,0";
+                    }
+                    else
+                    {
+                        sTitles = "社員番号,西暦/月/日,時:分,出退勤フラグ,固定値";
+                        sFilfkeys = "%C_OCODE%,%C_Date%,%C_Time%,%L_Mode%,0";
+                    }
+                    sFildKeyFileName = m_sEnvPath + "\\csvfield.env";
+                    sData = m_libCmn.LoadFileSJIS(sFildKeyFileName);
+                    if (sData != "")
+                    {
+                        sData = sData.Replace("\r\n", "\n");
+                        aryLine = sData.Split('\n');
+                        sTitles = aryLine[1];
+                        sFilfkeys = aryLine[2];
+                    }
                 }
                 m_aryCsvTitleTbl = sTitles.Split(',');
                 m_aryFildKeyTbl = sFilfkeys.Split(',');
@@ -1005,20 +1056,29 @@ namespace CsvOut
 
         private void btnSetClick()
         {
+            string sSavePath;
             string sMsg;
-            string sy, sM, sd, sH, sm, ss;
             int nSelect;
 
             try
             {
-                if (System.IO.Directory.Exists(txtPath.Text) == false)
+                sSavePath = txtPath.Text;
+                // フォルダーがなかった場合作成するように修正
+                m_libCmn.CreatePath(sSavePath);
+                if (System.IO.Directory.Exists(sSavePath) == false)
                 {
-                    sMsg = "CSV保存場所「"+txtPath.Text+"」が見つかりません";
+                    sMsg = "CSV保存場所「" + sSavePath + "」が作成できません";
                     MessageBox.Show(sMsg);
                     return;
                 }
-                m_sSavePath = txtPath.Text;
+                m_sSavePath = sSavePath;
                 m_sUnisDBPath = txtMDBPath.Text;
+                if (System.IO.Directory.Exists(m_sUnisDBPath) == false)
+                {
+                    sMsg = "UNIS定義位置「" + m_sUnisDBPath + "」が見つかりません";
+                    MessageBox.Show(sMsg);
+                    return;
+                }
 
                 MainWindowODBCInit();
                 if (System.IO.File.Exists(m_sUnisDBFile) == false)
@@ -1093,19 +1153,11 @@ namespace CsvOut
                 m_aryFucStrTbl[1] = txtF2.Text;
                 m_aryFucStrTbl[2] = txtF3.Text;
                 m_aryFucStrTbl[3] = txtF4.Text;
-
-                SetNextCheckTime(m_sBaseDate, m_sBaseTime);
-                sy = m_sCheckTime.Substring(0,4);
-                sM = m_sCheckTime.Substring(4,2);
-                sd = m_sCheckTime.Substring(6,2);
-                sH = m_sCheckTime.Substring(8,2);
-                sm = m_sCheckTime.Substring(10,2);
-                ss = m_sCheckTime.Substring(12,2);
-                sMsg = "「適応」処理を行いました。\n　次回CSVファイル作成日時は\n";
-                sMsg = sMsg+"[" + sy +"/"+ sM +"/"+ sd +" "+ sH +":"+ sm +":"+ ss +"]　になります。";
-                MessageBox.Show(sMsg);
-
-                CheckLoopExec();
+                if (m_sBaseDate == "0")
+                {
+                    SetNextCheckTime(m_sBaseDate, m_sBaseTime);
+                    CheckLoopExec();
+                }
             }
             catch (Exception ex)
             {

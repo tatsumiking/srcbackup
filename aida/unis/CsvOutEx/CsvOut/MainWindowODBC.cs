@@ -165,6 +165,10 @@ namespace CsvOut
             string sCheckTime;
             string sDate;
             string sTime;
+            int max;
+            System.Diagnostics.Stopwatch sw;
+            TimeSpan ts;
+            string str;
 
             sSql = "";
             try
@@ -192,7 +196,10 @@ namespace CsvOut
                         m_lstCsvStr.Add(sCsvStr);
                     }
                 }
-                SortListCsv();
+                max = m_lstCsvStr.Count;
+                if (max < 10000){
+                    SortListCsv();
+                }
             }
             catch (Exception ex)
             {
@@ -362,7 +369,7 @@ namespace CsvOut
                         {
                             sStr = "00000000";
                         }
-                        if (m_sProgName == "csvout")
+                        if (m_sDelimiter != "")
                         {
                             sTmp = sStr.Substring(0, 4) + "/" + sStr.Substring(4, 2) + "/" + sStr.Substring(6, 2);
                             sStr = sTmp;
@@ -374,7 +381,7 @@ namespace CsvOut
                         {
                             sStr = "0000";
                         }
-                        if (m_sProgName == "csvout")
+                        if (m_sDelimiter != "")
                         {
                             sTmp = sStr.Substring(0, 2) + ":" + sStr.Substring(2, 2);
                             sStr = sTmp;
@@ -382,7 +389,7 @@ namespace CsvOut
                     }
                     else if (fldno == 2)
                     {
-                        if (m_sProgName == "csvex")
+                        if (m_sDelimiter == "")
                         {
                             nTNo = m_libCmn.StrToInt(sStr);
                             sStr = nTNo.ToString("00");
@@ -401,7 +408,7 @@ namespace CsvOut
                         }
                         else if (nLMode == 3)
                         {
-                            if (m_sProgName == "csvout")
+                            if (m_sDelimiter != "")
                             {
                                 sStr = "その他";
                             }
@@ -419,15 +426,9 @@ namespace CsvOut
                             sStr = m_aryFucStrTbl[3];
                         }
                     }
-                    if (fldidx == 0)
-                    {
-                        strRet = sStr;
-                    }
-                    else
-                    {
-                        strRet = strRet + m_sDelimiter + sStr;
-                    }
+                    strRet = strRet + sStr + ",";
                 }
+                //strRet = strRet + "\r\n";
             }
             catch (Exception ex)
             {

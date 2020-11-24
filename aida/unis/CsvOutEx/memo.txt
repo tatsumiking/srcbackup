@@ -3,3 +3,30 @@
         Icon="csvex.ico"
         Background="#FFF8CBAD"
 -->
+
+            System.Diagnostics.Stopwatch sw;
+            TimeSpan ts;
+            string str;
+                sw = new System.Diagnostics.Stopwatch();
+                sw.Start();
+                sw.Stop();
+                sw.Restart();
+                sw.Stop();
+                ts = sw.Elapsed;
+                str = ts.ToString();
+
+40000 00:03:00
+
+        public void DoDispatch()
+        {
+            DispatcherFrame frame = new DispatcherFrame();
+            Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Background, new DispatcherOperationCallback(ExitFrames), frame);
+            Dispatcher.PushFrame(frame);
+            System.Threading.Thread.Sleep(50);
+        }
+        public object ExitFrames(object frames)
+        {
+            ((DispatcherFrame)frames).Continue = false;
+            return null;
+        }
+

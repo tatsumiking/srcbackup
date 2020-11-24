@@ -7,13 +7,13 @@ using System.Windows;
 // アセンブリに関する一般情報は以下の属性セットをとおして制御されます。
 // アセンブリに関連付けられている情報を変更するには、
 // これらの属性値を変更してください。
-[assembly: AssemblyTitle("CsvOut")]
-[assembly: AssemblyDescription("CsvOutシステム")]
+[assembly: AssemblyTitle("CsvEx")]
+[assembly: AssemblyDescription("CsvExシステム")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("京栄社")]
-[assembly: AssemblyProduct("CsvOut")]
-[assembly: AssemblyCopyright("Copyright © 精株式会社 2018")]
-[assembly: AssemblyTrademark("CsvOut")]
+[assembly: AssemblyProduct("CsvEx")]
+[assembly: AssemblyCopyright("Copyright © 日精株式会社 2018")]
+[assembly: AssemblyTrademark("CsvEx")]
 [assembly: AssemblyCulture("")]
 
 // ComVisible を false に設定すると、その型はこのアセンブリ内で COM コンポーネントから
@@ -51,6 +51,6 @@ using System.Windows;
 // すべての値を指定するか、下のように '*' を使ってビルドおよびリビジョン番号を 
 // 既定値にすることができます:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.2.7")]
-[assembly: AssemblyFileVersion("1.0.2.7")]
+[assembly: AssemblyVersion("1.0.2.8")]
+[assembly: AssemblyFileVersion("1.0.2.8")]
 [assembly: NeutralResourcesLanguageAttribute("ja-JP")]

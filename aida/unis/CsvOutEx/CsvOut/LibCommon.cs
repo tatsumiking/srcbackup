@@ -139,12 +139,21 @@ namespace CsvOut
         }
         public void CreatePath(string sPath)
         {
+            string[] aryCsv;
+            int max, idx;
+            string sSubPath;
+
             try
             {
-                if (!System.IO.Directory.Exists(sPath))
+                aryCsv = sPath.Split('\\');
+                max = aryCsv.Length;
+                sSubPath = aryCsv[0];
+                for (idx = 1; idx < max; idx++)
                 {
-                    System.IO.Directory.CreateDirectory(sPath);
+                    sSubPath = sSubPath + "\\" + aryCsv[idx];
+                    System.IO.Directory.CreateDirectory(sSubPath);
                 }
+
             }
             catch (Exception ex)
             {
