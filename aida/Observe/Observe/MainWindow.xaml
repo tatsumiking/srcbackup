@@ -34,6 +34,7 @@
             <TextBlock Margin="205,5,0,0" Height="23" Width="30" Text="住所" HorizontalAlignment="Left" VerticalAlignment="Top"/>
             <TextBox x:Name="txtAddress" Text="" Margin="235,2,0,0" Width="341" Height="23" HorizontalAlignment="Left" VerticalAlignment="Top"/>
             <Button x:Name="btnMove" Content="移動" Margin="590,2,0,0" Width="50" VerticalAlignment="Top" HorizontalAlignment="Left" Click="btnMove_Click"/>
+            <TextBlock x:Name="txtInfo" Margin="0,5,5,0" Height="23" Width="240" Text="" HorizontalAlignment="Right" VerticalAlignment="Top"/>
         </Grid>
         <Grid Grid.Row="1">
             <Grid x:Name="gridDrawArea"

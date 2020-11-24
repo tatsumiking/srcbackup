@@ -49,25 +49,34 @@ namespace Observe
         private DispatcherTimer m_dsptWaitTime;
         public string m_sMapPath;
         //実際の地図は+-4データあり 10   11    12    13    14     15     16     17      18
+        private int[] m_tblTopX = { 903, 1810, 3624, 7253, 14511, 29026, 58057, 116119, 232243 };
+        private int[] m_tblTopY = { 398, 800, 1605, 3215, 6435, 12874, 25748, 51496, 102992 };
+        private int[] m_tblEndX = { 915, 1823, 3643, 7283, 14563, 29123, 58247, 116495, 232991 };
+        private int[] m_tblEndY = { 410, 811, 1619, 3234, 6465, 12927, 25855, 51711, 103423 };
+        //                               10         11         12         13         14
+        //                               15         16         17         18
+        private double[] m_tblTopLat = { 35.906629, 35.906629, 35.906629, 35.906629, 35.906629 
+                                       , 35.90685, 35.906629, 35.906629, 35.906629, };
+        private double[] m_tblTopLnd = { 137.46095, 138.1641, 138.51565, 138.73535, 138.8452
+                                       , 138.8892, 138.91665, 138.93036, 138.937225, };
+        /*
         private int[] m_tblTopX = { 907, 1814, 3628, 7257, 14515, 29030, 58061, 116123, 232247 };
         private int[] m_tblTopY = { 402,  804, 1609, 3219,  6439, 12878, 25757,  51513, 103031 };
         private int[] m_tblEndX = { 909, 1819, 3639, 7279, 14559, 29119, 58239, 116479, 232959 };
         private int[] m_tblEndY = { 403,  807, 1615, 3230,  6461, 12923, 25849,  51693, 103387 };
-        //private int[] m_tblTopX = { 903, 1810, 3624, 7253, 14511, 29026, 58057, 116119, 232243 };
-        //private int[] m_tblTopY = { 398, 800, 1605, 3215, 6435, 12874, 25748, 51496, 102992 };
-        //private int[] m_tblEndX = { 915, 1823, 3643, 7283, 14563, 29123, 58247, 116495, 232991 };
-        //private int[] m_tblEndY = { 410, 811, 1619, 3234, 6465, 12927, 25855, 51711, 103423 };
         //                               10         11         12          13          14
         //                               15         16         17          18
         private double[] m_tblTopLat = {  36.03150,  36.03130,  35.9602,  35.92465,  35.90685
                                        ,  36.03125,  35.90240,  35.900175,  35.899065,   0};
         private double[] m_tblTopLnd = { 138.8672, 138.8672, 138.8671, 138.91115, 138.9331
                                        , 138.93310, 138.93860, 138.941345, 138.942720,   0};
-
+        */
         private double[] m_tblLatBlock = { -0.284444, -0.142222, -0.071111, -0.035555, -0.017777
                                          , -0.008888, -0.004444, -0.002222, -0.001111,  0};
         private double[] m_tblLndBlock = { 0.351562496,0.175781248,0.087890624,0.043945312,0.021972656
                                           ,0.010986328,0.005493164,0.002746582,0.001373291,0};
+        //private double[] m_tblLndBlock = { 0.350332027,0.175166014,0.087583007,0.043791503,0.021895752
+        //                                  ,0.0109478768,0.005473938,0.002736969,0.001368484,0};
         private int[] m_tblBaseY = { 402, 804, 1608, 3216, 6432, 12864, 25728, 51456, 102912, 0 };
         private double m_dBaseLat;
         private int m_n18BlockLatLast;
@@ -105,8 +114,12 @@ namespace Observe
 
             m_sMapPath = m_sEnvPath + "\\東京都";
             m_dBaseLat = 36.03150;
-            m_d18BlockLatAdd = -0.0011105;
+            m_d18BlockLatAdd = -0.001111;
             m_dStepLatSub = -0.0000001579;
+            //m_d18BlockLatAdd = -0.0011185;
+            //m_dStepLatSub = -0.0000001578;
+            //m_d18BlockLatAdd = -0.001111;
+            //m_dStepLatSub = -0.0000006;
             m_n18BlockLatLast = m_tblEndY[8] - m_tblBaseY[8];
             m_bRetouMode = false;
             m_tbCrt = null;
@@ -407,8 +420,8 @@ namespace Observe
                 m_nHeightDiv++;
             }
 
-            m_nLastX = m_tblEndX[m_nMapTblIdx] - m_tblTopX[m_nMapTblIdx] - m_nWidthDiv;
-            m_nLastY = m_tblEndY[m_nMapTblIdx] - m_tblTopY[m_nMapTblIdx] - m_nHeightDiv;
+            m_nLastX = m_tblEndX[m_nMapTblIdx] - m_tblTopX[m_nMapTblIdx] - m_nWidthDiv * 3 + 2;
+            m_nLastY = m_tblEndY[m_nMapTblIdx] - m_tblTopY[m_nMapTblIdx] - m_nHeightDiv * 3 + 2;
 
             m_cnvsMove.Width = m_nWidthDiv * 3 * Constants.MAPDOTSIZE;
             m_cnvsMove.Height = m_nHeightDiv * 3 * Constants.MAPDOTSIZE;
@@ -473,7 +486,6 @@ namespace Observe
             {
                 clsPagePosXY.m_dPagePosX = (double)m_nLastX;
             }
-
             dSubLat = clsLatLnd.m_dLat - m_dBaseLat;
             clsPagePosXY.m_dPagePosY = getLatBlockPagePos(dSubLat);
             return (clsPagePosXY);

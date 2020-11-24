@@ -208,7 +208,7 @@ namespace Observe
                     nMoveX = -m_nWidthDiv * Constants.MAPDOTSIZE - m_nAddX + m_nCrtX * Constants.MAPDOTSIZE;
                 }
             }
-            if ((m_nLastX - m_nHeightDiv) <= m_nCrtX)
+            if ((m_nLastX - m_nWidthDiv) <= m_nCrtX)
             {
                 subdiv = m_nCrtX - m_nLastX;
                 if (-m_nWidthDiv * Constants.MAPDOTSIZE > (m_nAddX + nMoveX - subdiv * Constants.MAPDOTSIZE))

@@ -1006,6 +1006,7 @@ namespace CsvOut
         private void btnSetClick()
         {
             string sMsg;
+            string sy, sM, sd, sH, sm, ss;
             int nSelect;
 
             try
@@ -1026,6 +1027,7 @@ namespace CsvOut
                     MessageBox.Show(sMsg);
                     return;
                 }
+
                 m_sPreFileName = txtPreFileName.Text;
                 m_sDateFileName = txtDateFileName.Text;
                 m_sPostFileName = txtPostFileName.Text;
@@ -1091,11 +1093,19 @@ namespace CsvOut
                 m_aryFucStrTbl[1] = txtF2.Text;
                 m_aryFucStrTbl[2] = txtF3.Text;
                 m_aryFucStrTbl[3] = txtF4.Text;
-                if (m_sBaseDate == "0")
-                {
-                    SetNextCheckTime(m_sBaseDate, m_sBaseTime);
-                    CheckLoopExec();
-                }
+
+                SetNextCheckTime(m_sBaseDate, m_sBaseTime);
+                sy = m_sCheckTime.Substring(0,4);
+                sM = m_sCheckTime.Substring(4,2);
+                sd = m_sCheckTime.Substring(6,2);
+                sH = m_sCheckTime.Substring(8,2);
+                sm = m_sCheckTime.Substring(10,2);
+                ss = m_sCheckTime.Substring(12,2);
+                sMsg = "「適応」処理を行いました。\n　次回CSVファイル作成日時は\n";
+                sMsg = sMsg+"[" + sy +"/"+ sM +"/"+ sd +" "+ sH +":"+ sm +":"+ ss +"]　になります。";
+                MessageBox.Show(sMsg);
+
+                CheckLoopExec();
             }
             catch (Exception ex)
             {

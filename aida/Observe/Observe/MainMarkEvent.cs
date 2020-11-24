@@ -62,6 +62,10 @@ namespace Observe
             dLnd = m_dBackLnd + (nx - m_nDownX) * m_dLndDotStep / m_dZoomTime;
             dLat = m_dBackLat + (ny - m_nDownY) * m_dLatDotStep / m_dZoomTime;
             SetCrtCardLatLnd(dLat, dLnd);
+            if (m_cardWin != null)
+            {
+                m_cardWin.setCardLatLnd(dLat, dLnd);
+            }
         }
         private void markMouseUpEvent(int nx, int ny)
         {

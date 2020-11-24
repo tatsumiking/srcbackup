@@ -1,4 +1,3 @@
-CsvOutEx20190703ver1026
 <!--
         Title="CsvEx"
         Icon="csvex.ico"
