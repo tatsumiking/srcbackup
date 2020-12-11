@@ -1,8 +1,7 @@
 <?php   
-$argvs = $_POST['com'];
-$a = explode(",", $argvs);
+$filename = $_POST['file'];
 error_reporting(0);
-$fp = fopen($a[0], 'r');
+$fp = fopen($filename, 'r');
 $retstr = "0,";
 if($fp != 0){
 	$retstr=fread($fp,1048576);

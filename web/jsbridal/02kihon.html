@@ -12,124 +12,175 @@
 <link href="bridal.css" rel="stylesheet" type="text/css" />
 <link href="02kihon.css" rel="stylesheet" type="text/css" />
 <style>
-
+.cSizeLt0{ width:0.5em; }
+.cSizeLt1{ width:1.5em; }
+.cSizeLt2{ width:2.5em; }
+.cSizeLt3{ width:3.5em; }
+.cSizeLt4{ width:4.5em; }
+.cSize2ex{ width:2.5em; }
+.cSize6ex{ width:6.5em; }
+.cKonrei{
+	font-size:1.8vw;
+	width:22.0em;
+}
+.cVSpaceEx{ height:0.2em; }
+.cFileBtn{
+	padding: 0.05em 0.5em 0.05em 0.5em;
+	border: 2px #000 solid;
+	border-radius: 0.25em;
+}
+.cABtn{
+	padding: 0.05em 0.5em 0.05em 0.5em;
+	border: 2px #000 solid;
+	border-radius: 0.25em;
+	text-decoration: none;
+	color:black;
+}
+.cClrDDD { background-color:#EEE; }
 </style>
 <script language="javascript" src="jslib/ajax.js"></script>
+<script language="javascript" src="jslib/fnclib.js"></script>
+<script language="javascript" src="jslib/clsdate.js"></script>
 <script language="javascript" src="02kihon.js"></script>
+<script language="javascript" src="02kihoninit.js"></script>
 </head>
 
 <body onload="fncInit()">
 <div class="cScrnArea cFlexVertical">
 	<div class="cFlexHorizontal">
-		<div class="cSize1"></div>
-		<div class="cFlexVertical  cSize30">
+		<div class="cSizeLt0"></div>
+		<div class="cFlexVertical cSize28 cClrAFA">
 			<div class="cVSpace10"></div>
 			<div>
-				<label class="cTitle">婚礼NO</label>
-				<input id="idKonreiNo" type="text" class="cSize5" 
-						maxlengdiv="8" placeholder="000000" readonly> 
+				<label class="cTitle">婚礼ID</label>
+				<input id="txtKonreiId" type="text" class="cSize5" 
+						maxlengdiv="8" placeholder="000000" > 
 				<label class="cBold">	　婚礼管理番号</label>
-				<input id="idKanriNo" type="text" class="cSize5"
-						maxlengdiv="8" placeholder="000000" readonly> 
+				<input id="txtKanriNo" type="text" class="cSize5"
+						maxlengdiv="8" placeholder="000000" > 
 			</div>
 			<div class="cVSpace20"></div>
 			<div>
 				<label class="cTitle">挙　式</label>
-				<select id="idKyosikiNengo" class="cSize4"></select>
-				<input id="idKyosikiGG" type="text" class="cSize3" 
+				<select id="cmbKyosikiNengo" class="cSizeLt3"></select>
+				<input id="txtKyosikiGG" type="text" class="cSizeLt2" 
 						maxlengdiv="4" placeholder="2020">
 				<label class="cText">年</label>
-				<input id="idKyosikiMM" type="text" class="cSize2" 
+				<input id="txtKyosikiMM" type="text" class="cSizeLt1" 
 						maxlengdiv="2" placeholder="01">
 				<label class="cText">月</label>
-				<input id="idKyosikiDD" type="text" class="cSize2" 
+				<input id="txtKyosikiDD" type="text" class="cSizeLt1" 
 						maxlengdiv="2" placeholder="01">
 				<label class="cText">日</label>
-				<input id="idKyosikiHH" type="text" class="cSize2" 
+				<input id="txtKyosikiHH" type="text" class="cSizeLt1" 
 						maxlengdiv="2" placeholder="01">
 				<label class="cText">時</label>
-				<input id="idKyosikiMN" type="text" class="cSize2" 
+				<input id="txtKyosikiMN" type="text" class="cSizeLt1" 
 						maxlengdiv="2" placeholder="01">
 				<label class="cText">分</label>
 			</div>
 			<div class="cVSpace"></div>
 			<div>
 				<label class="cTitle">披露宴</label>
-				<select id="idHirouenNengo" class="cSize4"></select>
-				<input id="idHirouenGG" type="text" class="cSize3" 
+				<select id="cmbHirouenNengo" class="cSizeLt3"></select>
+				<input id="txtHirouenGG" type="text" class="cSizeLt2" 
 						maxlengdiv="4" placeholder="2020">
 				<label class="cText">年</label>
-				<input id="idHirouenMM" type="text" class="cSize2" 
+				<input id="txtHirouenMM" type="text" class="cSizeLt1" 
 						maxlengdiv="2" placeholder="01">
 				<label class="cText">月</label>
-				<input id="idHirouenDD" type="text" class="cSize2" 
+				<input id="txtHirouenDD" type="text" class="cSizeLt1" 
 						maxlengdiv="2" placeholder="01">
 				<label class="cText">日</label>
-				<input id="idHirouenHH" type="text" class="cSize2" 
+				<input id="txtHirouenHH" type="text" class="cSizeLt1" 
 						maxlengdiv="2" placeholder="01">
 				<label class="cText">時</label>
-				<input id="idHirouenMN" type="text" class="cSize2" 
+				<input id="txtHirouenMN" type="text" class="cSizeLt1" 
 						maxlengdiv="2" placeholder="01">
 				<label class="cText">分</label>
 			</div>
 			<div class="cVSpace"></div>
 			<div>
 				<label class="cTitle">会場名</label>
-				<select id="idKaijyou" class="cSize19"></select>
+				<select id="cmbKaijyou" class="cSize19"></select>
 			</div>
 			<div class="cVSpace"></div>
 			<div>
 				<label class="cTitle">　</label>
-				<input type="checkbox" id="idMukotori" class="cSize1">婿取</input>
+				<input type="checkbox" id="chkMukotori" class="cSize1">婿取</input>
 			</div>
 			<div class="cVSpace"></div>
 			<div>
 				<label class="cTitle">新郎氏名</label>
-				<input id="idSinrouMyouji" type="text" class="cSize6">
-				<input id="idSinrouNamae" type="text" class="cSize6">
-				<select id="idSinrouZokugara" class="cSize5"></select>
+				<input id="txtSinroMyouji" type="text" class="cSize6">
+				<input id="txtSinroNamae" type="text" class="cSize6">
+				<select id="cmbSinroZokugara" class="cSize5"></select>
 			</div>
 			<div class="cVSpace"></div>
 			<div>
-				<label class="cTitle">新郎氏名</label>
-				<input id="idSinpuMyouji" type="text" class="cSize6">
-				<input id="idSinpuNamae" type="text" class="cSize6">
-				<select id="idSinpuZokugara" class="cSize5"></select>
+				<label class="cTitle">新婦氏名</label>
+				<input id="txtSinpuMyouji" type="text" class="cSize6">
+				<input id="txtSinpuNamae" type="text" class="cSize6">
+				<select id="cmbSinpuZokugara" class="cSize5"></select>
 			</div>
 			<div class="cVSpace"></div>
 			<div>
 				<label class="cTitle">新郎料理</label>
-				<input id="idSinrouRyouri" type="text" class="cSize22">
+				<input id="txtSinroRyouri" type="text" class="cSize22">
 			</div>
 			<div class="cVSpace"></div>
 			<div>
 				<label class="cTitle">新婦料理</label>
-				<input id="idSinpuRyouri" type="text" class="cSize22">
+				<input id="txtSinpuRyouri" type="text" class="cSize22">
 			</div>
 			<div class="cVSpace"></div>
 			<div>
 				<label class="cTitle">新郎備考</label>
-				<input id="idSinrouBikou" type="text" class="cSize22">
+				<input id="txtSinroBikou" type="text" class="cSize22">
 			</div>
 			<div class="cVSpace"></div>
 			<div>
 				<label class="cTitle">新婦備考</label>
-				<input id="idSinpuBikou" type="text" class="cSize22">
+				<input id="txtSinpuBikou" type="text" class="cSize22">
 			</div>
 			<div class="cVSpace"></div>
 		</div>
+		<div class="cSizeLt0"></div>
+		<div class="cFlexVertical cSize20 cClrFAA" id="divKonreiListArea">
+			<div class="cVSpace10 cKonrei">
+				<input type="radio" id="rdoNoAsc" name="sort" class="cSize1ex" checked>NO昇順</input>
+				<input type="radio" id="rdoNoDesc" name="sort" class="cSize1ex">NO降順</input>
+				<input type="radio" id="rdoDateAsc" name="sort" class="cSize1ex">日付昇順</input>
+				<input type="radio" id="rdoDateDesc" name="sort" class="cSize1ex">日付降順</input>
+			</div>
+			<div class="TopSpace cKonrei">
+				<select size="20" id="lstKonrei" class="cKonrei">
+				</select>
+			</div>
+		</div>
 	</div>
 	<div class="cFlexHorizontal">
-		<div class="cSize1"></div>
-		<div class="cFlexVertical cSize30 cClrAAF">
+		<div class="cSizeLt0"></div>
+		<div class="cFlexVertical cSize28 cClrFFA">
 			<div class="cFlexHorizontal">
-				<div class="cSize15"></div>
-				<div>
-					<button class="cSize5" id="btnCsvLoad">CSV読込</button>
+				<div class="cSize6ex"></div>
+				<div class="cSize9">
+					<div class="cVSpaceEx"></div>
+					<label class="cSize7 cClrDDD cFileBtn">PCCSV読込
+						<input type = "file" id="btnPCCsvLoad" style="display:none"></input>
+					</label>
+				</div>
+				<div class="cSize6"></div>
+				<div class="cSize7">
+					<div class="cVSpaceEx"></div>
+					<label class="cSize6 cClrDDD cFileBtn">CSV読込
+						<input type = "file" id="btnCsvLoad" style="display:none"></input>
+					</label>
 				</div>
 				<div class="cSize1"></div>
-				<div>
-					<button class="cSize5" id="btnCsvSave">CSV保存</button>
+				<div class="cSize7">
+					<div class="cVSpaceEx"></div>
+					<a href="" class="cSize6 cClrDDD cABtn" id="aCsvSave">CSV保存</a>
 				</div>
 			</div>
 			<div class="cVSpace"></div>
@@ -145,21 +196,23 @@
 				<div>
 					<button class="cSize4" id="btnDelete">削除</button>
 				</div>
-				<div class="cSize1"></div>
+				<div class="cSize2ex"></div>
 				<div>
 					<button class="cSize5" id="btnFixed">確定</button>
 				</div>
 			</div>
 			<div class="cVSpace"></div>
 			<div>
-				<input id="idInfoMsg" type="text" class="cSize28"> 
+				<input id="txtInfoMsg" type="text" class="cSize28"> 
 			</div>
 			<div class="cVSpace"></div>
 		</div>
-		<div class="cSize1"></div>
-		<div class="cSize6 cClrAFF">
+		<div class="cSizeLt0"></div>
+
+		<div class="cSize6">
 			<div >
-				<button class="imgbtn cSize4" id="btnReturn">戻る</button>
+				<div class="cVSpace20"></div>
+				<button class="imgPinkbtn cSize4" id="btnReturn">戻る</button>
 			</div>
 		</div>
 	</div>

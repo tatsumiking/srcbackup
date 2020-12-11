@@ -1,12 +1,9 @@
 /**/
 body,select,input,button{
-	font-size:2.0vw;
-}
-option{
-    height: 0.0em;
+	font-size:1.6vw;
 }
 .imgbtn{
-	font-size:2.5vw;
+	font-size:2.0vw;
 }
 .cSize05ex{ width:0.5em; }
 .cSize1ex{ width:1.2em; }

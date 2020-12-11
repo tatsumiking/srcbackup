@@ -3,8 +3,15 @@
 $dbname = $_POST['dbnm'];
 $tblname = $_POST['tble'];
 $fildstr = $_POST['fild'];
+$typestr = $_POST['type'];
 $filename = $_POST['file'];
+//$dbname = "hotelsoa";
+//$tblname = "kubun";
+//$fildstr = "no,name";
+//$typestr = "20,48";
+//$filename = $dbname."/kubun.txt";
 $filds = explode(",", $fildstr);
+$types = explode(",", $typestr);
 
 $envfilename = "../env/dbenv.txt";
 $fp = fopen($envfilename, 'r');
@@ -15,35 +22,53 @@ $str = fgets($fp); $ary = explode(",", $str); $password = $ary[0];
 fclose($fp);
 
 $sql = "INSERT INTO ".$tblname." (";
-$max = $filds.length;
-$sql = $sql.$filds[$idx];
+$max = count($filds);
+$sql = $sql.$filds[0];
 for($idx = 1; $idx < $max; $idx++){
 	$sql = $sql.",".$filds[$idx];
 }
+$sql = $sql.")";
+
 $fp = fopen($filename, 'r');
-fgets($fp); // コメントスキップ
+//echo "[".$fp."]\r\n";
+// コメント行スキップ（BOM対応
+fgets($fp);
+// ２行目以降データはidカラムを含むため+1のカラムをセット
 $count = 0;
 while(TRUE){
 	$datas = fgets($fp);
+	if($datas == null || $datas == "")
+	{
+		break;
+	}
 	$ary = explode(",", $datas);
-	if($ary.length < $max){
+	if(count($ary) < $max){
 		break;
 	}
 	if($count == 0){
-		$sql = $sql.") VALUES (";
+		$sql = $sql." VALUES (";
 	}else{
 		$sql = $sql.",(";
 	}
-	$sql = $sql.$ary[0];
+	if($types[0] == "0"){
+		$sql = $sql.$ary[1];
+	}else{
+		$sql = $sql."'".$ary[1]."'";
+	}
+	// idx+1セットするデータはidカラムを含むため
 	for($idx = 1; $idx < $max; $idx++){
-		$sql = $sql.",".$ary[$idx];
+		if($types[idx] == "0"){
+			$sql = $sql.",".$ary[$idx+1];
+		}else{
+			$sql = $sql.",'".$ary[$idx+1]."'";
+		}
 	}
 	$sql = $sql.")";
 	$count++;
 }
-close($fp);
+fclose($fp);
 $sql = $sql.";";
-
+//echo "[".$sql."]\r\n";
 if($mysql = mysql_connect($server,$username,$password)){
 	$ret = mysql_select_db($dbname, $mysql);
 	if($ret == FALSE){

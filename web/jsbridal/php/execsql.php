@@ -1,34 +1,29 @@
-<?php
-$dbname = $_POST['com'];
-$sqlstr = $_POST['sql'];
-$filds = $_POST['fld'];
-$key = explode(",", $filds);
-$max = count($key);
 
-$filename = "env/dbenv.txt";
-$fp = fopen($filename, 'r');
-fgets($fp); // ƒRƒƒ“ƒgs
-$server = fgets($fp);$server = substr($server, 0, -2);
-$username = fgets($fp);$username = substr($username, 0, -2);
-$password = fgets($fp);$password = substr($password, 0, -2);
+<?php
+
+$dbname = $_POST['dbnm'];
+$sql = $_POST['sql'];
+
+$envfilename = "../env/dbenv.txt";
+$fp = fopen($envfilename, 'r');
+fgets($fp);
+$str = fgets($fp); $ary = explode(",", $str); $server = $ary[0];
+$str = fgets($fp); $ary = explode(",", $str); $username = $ary[0];
+$str = fgets($fp); $ary = explode(",", $str); $password = $ary[0];
 fclose($fp);
 
-$retstr="stat=1.0&list=";
 if($mysql = mysql_pconnect($server,$username,$password)){
 	mysql_select_db($dbname, $mysql);
-	$rows = mysql_query($sqlstr, $mysql);
-	while(1){
-		$row = mysql_fetch_array($rows);
-		if($row == NULL){
-			break;
-		}
-		$recode = "":
-		for($idx = 0; $idx < $max; $idx++){
-			$recode = $recode.$row[$key[$idx]]." ";
-		}
-		$retstr = $retstr.$recode."|";
-	}
+	$mysql_result = mysql_query($sql, $mysql);
 	mysql_close($mysql);
+	if($mysql_result == FALSE){
+		$str1 = "0,3,";
+		echo $str1;
+		return;
+	}
+	$str1 = "1.0";
+}else{
+	$str1 = "0,1,,";
 }
-echo $retstr;
+echo $str1;
 ?> 

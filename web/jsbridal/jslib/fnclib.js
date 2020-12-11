@@ -12,6 +12,14 @@ function fnclibMessageWindow(title, msg)
 		return("Cancel");
 	}
 }
+function fnclibStringToInt(str)
+{
+	var num = parseInt(str);
+	if(isNaN(num)){
+		num = 0;
+	}
+	return(num);
+}
 function fnclibStrnumToStrnum00(str)
 {
 	var num;
@@ -31,7 +39,10 @@ function fnclibNumToStrnum00(num)
 	}
 	return(str);
 }
-
+function fncZeroPadding(num,length)
+{
+    return ('0000000000' + num).slice(-length);
+}
 function fnclibPriceToTenprice(str)
 {
 	while(str != (str = str.replace(/^(-?\d+)(\d{3})/, "$1,$2")));

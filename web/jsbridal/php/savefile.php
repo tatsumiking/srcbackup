@@ -1,12 +1,17 @@
 <?php   
-$argvs = $_POST['com'];
-mb_convert_variables('SJIS', 'UTF-8', $argvs);
+$filename = $_POST['file'];
+$data = $_POST['data'];
+
+mb_convert_variables('SJIS', 'UTF-8', $filename);
 error_reporting(0);
-$fp = fopen("list/user.txt", 'w');
-$retstr = "0,";
-if($fp != 0){
-	$ret=fwrite($fp,$argvs);
-	fclose($fp);
+$fp = fopen($filename, 'w');
+$retstr = "0,1";
+if($fp == 0){
+	echo $retstr;
+	return;
 }
-echo $ret;
+$len=fwrite($fp,$data);
+fclose($fp);
+$retstr = "1,".$len.",";
+echo $retstr;
 ?> 

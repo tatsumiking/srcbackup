@@ -4,6 +4,11 @@ $dbname = $_POST['dbnm'];
 $tblname = $_POST['tble'];
 $fildstr = $_POST['fild'];
 $typestr = $_POST['type'];
+
+//$dbname = "hotelsoa";
+//$tblname = "kaijyou";
+//$fildstr = "name";
+//$typestr = "96";
 $filds = explode(",", $fildstr);
 $types = explode(",", $typestr);
 
@@ -15,19 +20,22 @@ $str = fgets($fp); $ary = explode(",", $str); $username = $ary[0];
 $str = fgets($fp); $ary = explode(",", $str); $password = $ary[0];
 fclose($fp);
 
-$sql = "CREATE TABLE `".$tblname."` ";
+$sql = "CREATE TABLE '".$tblname."' ";
 $sql = $sql."(`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY";
-$max = $filds.length;
+$max = count($filds);
+
 for($idx = 0; $idx < $max; $idx++){
 	$num = intval($types[$idx]);
 	if($num == 0){
 		$sql = $sql.",".$filds[$idx]." INT NOT NULL";
+	}else if($num == 1){
+		$sql = $sql.",".$filds[$idx]." DATETIME NOT NULL";
 	}else{
 		$sql = $sql.",".$filds[$idx]." VARCHAR(".$num.")";
 	}
 }
 $sql = $sql.");";
-
+//echo "[".$sql."]\r\n";
 if($mysql = mysql_connect($server,$username,$password)){
 	$ret = mysql_select_db($dbname, $mysql);
 	if($ret == FALSE){

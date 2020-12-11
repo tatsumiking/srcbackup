@@ -1,11 +1,17 @@
 //
 
+function fncCreateDB()
+{
+	var data = "dbnm="+m_szHotelDB;
+	var fnc = fncCreateDBCallback;
+	sendRequest("POST","initdb.php",data,false,fnc);
+}
 function fncCreateDBCallback(xmlhttp)
 {
 	var retstr = xmlhttp.responseText;
 	var ary = retstr.split(",");
 	if(ary[0] == "0"){
-		alert(m_szHotelDB+"�f�[�^�x�[�X�쐬�Ɏ��s���܂���");
+		alert("データベース"+m_szHotelDB+"の初期化に失敗しました");
 		return;
 	}
 
@@ -21,14 +27,14 @@ function fncCreateKubunTblCallback(xmlhttp)
 	var retstr = xmlhttp.responseText;
 	var ary = retstr.split(",");
 	if(ary[0] == "0"){
-		alert("�敪�e�[�u���쐬�Ɏ��s���܂���");
+		alert("区分テーブルの作成に失敗しました");
 		return;
 	}
 
 	var data = "dbnm="+m_szHotelDB;
 	data = data + "&tble=renmei";
-	data = data + "&fild=no,name";
-	data = data + "&type=20,48";
+	data = data + "&fild=name";
+	data = data + "&type=48";
 	var fnc = fncCreateRenmeiTblCallback;
 	sendRequest("POST","inittbl.php",data,false,fnc);
 }
@@ -38,7 +44,7 @@ function fncCreateRenmeiTblCallback(xmlhttp)
 	var retstr = xmlhttp.responseText;
 	var ary = retstr.split(",");
 	if(ary[0] == "0"){
-		alert("�A���敪�e�[�u���쐬�Ɏ��s���܂���");
+		alert("連名区分テーブルの作成に失敗しました");
 		return;
 	}
 
@@ -54,31 +60,36 @@ function fncCreateKaijyouTblCallback(xmlhttp)
 	var retstr = xmlhttp.responseText;
 	var ary = retstr.split(",");
 	if(ary[0] == "0"){
-		alert("���e�[�u���쐬�Ɏ��s���܂���");
+		alert("会場テーブルの作成に失敗しました");
 		return;
 	}
-	fild = "userno,tbllayout";
-	type = "0,24";
-	fild = fild + ",kihonlockflag,gestlockflag,tablelockflag,sitlockflag";
-	type = type + ",0,0,0,0";
+	var data = "dbnm="+m_szHotelDB;
+	data = data + "&tble=bridaluser";
+	fild = "flag,userno";
+	type = "0,0";
+	fild = fild + ",username,password,dbname,tablelayout";
+	type = type + ",6,32,16,16";
+	fild = fild + ",kihonlockflag,gestlockflag,sitlockflag";
+	type = type + ",0,0,0";
 	fild = fild + ",kyosiki,hirouen,kaijyou,mukotori";
-	type = type + ",32,32,96,0";
+	type = type + ",1,1,96,0";
 	fild = fild + ",sinrozoku,sinroname1,sinroname2";
-	type = type + ",24,24,24";
+	type = type + ",12,18,18";
 	fild = fild + ",sinpuzoku,sinpuname1,sinpuname2";
-	type = type + ",24,24,24";
+	type = type + ",12,18,18";
 	fild = fild + ",sinrodish,sinpudish,sinrosub,sinpusub";
-	type = type + ",24,24,96,96";
+	type = type + ",48,48,96,96";
 	fild = fild + ",paperlocate,papersize,ryoukekind,tablekind";
-	type = type + ",24,24,24,24";
+	type = type + ",18,12,48,24";
 	fild = fild + ",textsize,takasagokind,nametype";
-	type = type + ",24,24,24";
+	type = type + ",12,48,12";
+	fild = fild + ",flag1,flag2";
+	type = type + ",0,0";
 	fild = fild + ",lefttext,righttext";
 	type = type + ",96,96";
-	fild = fild + ",tablelayout";
+	fild = fild + ",tableposition";  //x1_y1:x2_y2:
 	type = type + ",255";
-	var data = "dbnm="+m_szHotelDB;
-	data = data + "&tble=konnrei&fild="+fild+"&type="+type;
+	data = data + "&fild="+fild+"&type="+type;
 	var fnc = fncCreateKihonTblCallback;
 	sendRequest("POST","inittbl.php",data,false,fnc);
 }
@@ -87,14 +98,15 @@ function fncCreateKihonTblCallback(xmlhttp)
 	var retstr = xmlhttp.responseText;
 	var ary = retstr.split(",");
 	if(ary[0] == "0"){
-		alert("�����{�e�[�u���쐬�Ɏ��s���܂���");
+		alert("婚礼テーブルの作成に失敗しました");
 		return;
 	}
 
 	var data = "dbnm="+m_szHotelDB;
 	data = data + "&tble=kubun";
 	data = data + "&fild=no,name";
-	data = data + "&file=list/kubun.txt";
+	data = data + "&type=20,48";
+	data = data + "&file="+m_szHotelDB+"/kubun.txt";
 	var fnc = fncSetDataKubunTblCallback;
 	sendRequest("POST","setdata.php",data,false,fnc);
 }
@@ -103,14 +115,15 @@ function fncSetDataKubunTblCallback(xmlhttp)
 	var retstr = xmlhttp.responseText;
 	var ary = retstr.split(",");
 	if(ary[0] == "0"){
-		alert("�敪�e�[�u���ւ̃f�[�^�ǉ��Ɏ��s���܂���");
+		alert("区分テーブルの初期化に失敗しました");
 		return;
 	}
 
 	var data = "dbnm="+m_szHotelDB;
 	data = data + "&tble=renmei";
-	data = data + "&fild=no,name";
-	data = data + "&file=list/renmei.txt";
+	data = data + "&fild=name";
+	data = data + "&type=48";
+	data = data + "&file="+m_szHotelDB+"/renmei.txt";
 	var fnc = fncSetDataRenmeiTblCallback;
 	sendRequest("POST","setdata.php",data,false,fnc);
 }
@@ -119,14 +132,15 @@ function fncSetDataRenmeiTblCallback(xmlhttp)
 	var retstr = xmlhttp.responseText;
 	var ary = retstr.split(",");
 	if(ary[0] == "0"){
-		alert("�A���敪�e�[�u���ւ̃f�[�^�ǉ��Ɏ��s���܂���");
+		alert("連名区分テーブルの初期化に失敗しました");
 		return;
 	}
 
 	var data = "dbnm="+m_szHotelDB;
 	data = data + "&tble=kaijyou";
-	data = data + "&fild=no,name";
-	data = data + "&file=list/renmei.txt";
+	data = data + "&fild=name";
+	data = data + "&type=96";
+	data = data + "&file="+m_szHotelDB+"/kaijyou.txt";
 	var fnc = fncSetDataKaijyouTblCallback;
 	sendRequest("POST","setdata.php",data,false,fnc);
 }
@@ -135,9 +149,9 @@ function fncSetDataKaijyouTblCallback(xmlhttp)
 	var retstr = xmlhttp.responseText;
 	var ary = retstr.split(",");
 	if(ary[0] == "0"){
-		alert("���e�[�u���쐬�Ɏ��s���܂���");
+		alert("会場テーブルの初期化に失敗しました");
 		return;
 	}
-	alert("�z�e��DB���������܂���");
+	alert("データベース"+m_szHotelDB+"の初期化を行いました");
 }
 

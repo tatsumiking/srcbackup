@@ -1,0 +1,97 @@
+
+http://133.167.70.158/bridalv1
+で使用しているMeeage
+// データベース名称
+bridal
+// 基本情報テーブル
+bridaluser
+// 
+http://133.167.70.158/bridalv1/temp/
+
+// 基本情報テーブル
+bridaluser
+// 
+CREATE TABLE 'bridaluser' ('id' INT NOT NULL AUTO_INCREMENT PRIMARY KEY
+,'flag' INT NOT NULL
+,'userno' INT NOT NULL
+,'username' VARCHAR(8)
+,'password' VARCHAR(32)
+,'dbname' VARCHAR(16)
+,'tablelayout' VARCHAR(16)
+,'kihonlockflag' INT NOT NULL
+,'gestlockflag' INT NOT NULL
+,'sitlockflag' INT NOT NULL
+,'kyosiki' DATETIME NOT NULL
+,'hirouen' DATETIME NOT NULL
+,'kaijyou' VARCHAR(64)
+,'mukotori' INT NOT NULL
+,'sinrozoku' VARCHAR(16)
+,'sinroname1' VARCHAR(16)
+,'sinroname2' VARCHAR(16)
+,'sinpuzoku' VARCHAR(16)
+,'sinpuname1' VARCHAR(16)
+,'sinpuname2' VARCHAR(16)
+,'sinrodish' VARCHAR(20)
+,'sinpudish' VARCHAR(20)
+,'sinrosub' VARCHAR(64)
+,'sinpusub' VARCHAR(64)
+,'paperlocate' VARCHAR(16)
+,'papersize' VARCHAR(16)
+,'ryoukekind' VARCHAR(16)
+,'tablekind' VARCHAR(16)
+,'takasagokind' VARCHAR(16)
+,'nametype' VARCHAR(16)
+,'textsize' VARCHAR(16)
+,'flag1' INT NOT NULL
+,'flag2' INT NOT NULL
+);;
+
+,'lefttext' VARCHAR(96)
+,'righttext' VARCHAR(96)
+,'tableposition' VARCHAR(255)
+
+	type = type + ",96,96";
+	fild = fild + ",tableposition";  //x1_y1:x2_y2:
+	type = type + ",255";
+
+招待者テーブル XXXXXXはbridaluserのuserno
+CREATE TABLE 'geXXXXXX' ('id' INT NOT NULL AUTO_INCREMENT PRIMARY KEY
+,'flag' INT NOT NULL
+,'tno' INT NOT NULL
+,'sno' INT NOT NULL
+,'name1' VARCHAR(24)
+,'name2' VARCHAR(24)
+,'yomi' VARCHAR(48)
+,'sama' VARCHAR(15)
+,'kind' VARCHAR(30)
+,'skind' VARCHAR(30)
+,'adrsno' VARCHAR(24)
+,'adrs1' VARCHAR(90)
+,'adrs2' VARCHAR(90)
+,'adrs3' VARCHAR(90)
+,'telno' VARCHAR(24)
+,'kt1' VARCHAR(60)
+,'kt2' VARCHAR(60)
+,'kt3' VARCHAR(60)
+,'kt4' VARCHAR(60)
+,'gno' INT NOT NULL
+,'sub1' VARCHAR(96)
+,'sub2' VARCHAR(96)
+,'gift' VARCHAR(30)
+,'dish' VARCHAR(30)
+);
+
+レイアウトテーブル XXXXXXはbridaluserのuserno
+CREATE TABLE 'tbXXXXXX' ('id' INT NOT NULL AUTO_INCREMENT PRIMARY KEY
+,'dx' INT NOT NULL
+,'dy' INT NOT NULL
+);
+
+レイアウトテーブル XXXXXXはbridaluserのuserno
+CREATE TABLE 'ssXXXXXX' ('id' INT NOT NULL AUTO_INCREMENT PRIMARY KEY
+,'leftstr' VARCHAR(192)
+,'rightstr' VARCHAR(192)
+);
+
+
+data

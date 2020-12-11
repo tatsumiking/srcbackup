@@ -1,23 +1,44 @@
-/* Bridal—p•”•i */
+/* Bridalï¿½pï¿½ï¿½ï¿½i */
+body{
+	background-image: url("img/back.jpg");
+	background-size: cover;
+}
+
 button{
 	border-radius: 5px;
 }
 button:active {
 	-ms-transform: translate(2px,2px);
 	-webkit-transform: translate(2px,2px);
-	transform: translate(2px, 2px);/*‰º‚É“®‚­*/
-	border-bottom: none;/*ü‚ğÁ‚·*/
+	transform: translate(2px, 2px);/*ï¿½ï¿½ï¿½É“ï¿½ï¿½ï¿½*/
+	border-bottom: none;/*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
 }
-.imgbtn{
-	background-image:url("img/btnU.png");
+.imgPinkbtn{
+	background-image:url("img/pinkbtnU.png");
 	background-repeat:round;
 	background-size:8.5em;
 	border-radius: 3em;
 	padding: 0.5em;
 }
-.imgbtn:active {
-	background-image:url("img/btnD.png");
+.imgPinkbtn:active {
+	background-image:url("img/pinkbtnD.png");
 }
-.imgbtn:hover {
-	background-image:url("img/btnD.png");
+.imgPinkbtn:hover {
+	background-image:url("img/pinkbtnD.png");
+}
+.imgBluebtn{
+	background-image:url("img/bluebtnU.png");
+	background-repeat:round;
+	background-size:8.5em;
+	border-radius: 3em;
+	padding: 0.5em;
+}
+.imgBluebtn:active {
+	background-image:url("img/bluebtnD.png");
+}
+.imgBluebtn:hover {
+	background-image:url("img/bluebtnD.png");
+}
+input::placeholder {
+	color: red;
 }

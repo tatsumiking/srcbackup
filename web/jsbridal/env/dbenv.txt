@@ -1,4 +1,5 @@
 //
-localhost
-root
-imts9876
+localhost,
+root,
+imts9876,
+http://localhost/jsbridal/temp/,

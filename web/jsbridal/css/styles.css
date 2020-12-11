@@ -8,10 +8,14 @@ body{
 	display: block;
 	margin: 0px;
 }
-body,select,input,button{
+.deffont,body,select,input,button{
 	font-size:20px;
 }
+option{
+    height: 0.0em;
+}
 .cScrnArea {
+	
 }
 .cFlexHorizontal {
 	display: flex;
@@ -55,13 +59,17 @@ textarea{
 .cClrAAF { background-color:#AAF; }
 .cClrFAF { background-color:#FAF; }
 .cClrAFF { background-color:#AFF; }
+.cClrFFF { background-color:#FFF; }
+.cClrAAA { background-color:#AAA; }
 .cSize1{ width:1.0em; }
 .cSize2{ width:2.0em; }
 .cSize3{ width:3.0em; }
 .cSize4{ width:4.0em; }
 .cSize5{ width:5.0em; }
 .cSize6{ width:6.0em; }
+.cSize7{ width:7.0em; }
 .cSize8{ width:8.0em; }
+.cSize9{ width:9.0em; }
 .cSize10{ width:10.0em; }
 .cSize11{ width:11.0em; }
 .cSize12{ width:12.0em; }
@@ -69,6 +77,7 @@ textarea{
 .cSize14{ width:14.0em; }
 .cSize15{ width:15.0em; }
 .cSize16{ width:16.0em; }
+.cSize17{ width:17.0em; }
 .cSize18{ width:18.0em; }
 .cSize19{ width:19.0em; }
 .cSize20{ width:20.0em; }
